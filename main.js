@@ -11,7 +11,7 @@ const createWindow = () => {
 
   Menu.setApplicationMenu(null);
 
-  win.loadFile("index.html");
+  win.loadFile("./html/index.html");
   win.maximize();
 
   if (!app.isPackaged) {

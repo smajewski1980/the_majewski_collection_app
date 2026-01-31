@@ -1,0 +1,4 @@
+body:has(#index-main) {
+  display: grid;
+  place-content: center;
+}

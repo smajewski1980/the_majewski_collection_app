@@ -1,0 +1,24 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+img {
+  display: block;
+}
+
+body {
+  background-color: light-dark(white, black);
+  min-height: 100dvh;
+}
+
+#home-logo {
+  max-width: 300px;
+}
