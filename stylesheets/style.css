@@ -6,8 +6,19 @@
   padding: 0;
 }
 
+:root {
+  --outline-purple: hsl(300, 82%, 33%);
+  --accent-purple: hsl(300, 34%, 70%);
+}
+
 html {
   color-scheme: light dark;
+}
+
+/* https://www.1001fonts.com/funky-fonts.html?page=3 */
+@font-face {
+  font-family: big-party;
+  src: url("../fonts/bigpartyc2blue.medium.ttf");
 }
 
 img {
@@ -17,8 +28,43 @@ img {
 body {
   background-color: light-dark(white, black);
   min-height: 100dvh;
+  font-family: big-party;
 }
 
 #home-logo {
-  max-width: 300px;
+  max-width: 400px;
+  margin-block-end: 2rem;
+}
+
+#index-main a {
+  font-size: 3rem;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  display: block;
+  text-align: center;
+  border: 2px solid var(--outline-purple);
+  color: var(--accent-purple);
+  border-radius: 50px;
+  corner-shape: squircle;
+  position: relative;
+  box-shadow:
+    0px 1px 0px 2px hsl(from var(--outline-purple) h s calc(l - 20)),
+    0px 2px 10px 1px hsl(from var(--accent-purple) h s calc(l - 10) / 0.25);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0.25rem 0.2rem;
+    border-radius: 50px;
+    corner-shape: squircle;
+    background: linear-gradient(
+      to bottom,
+      rgb(from var(--accent-purple) r g b / 0.15),
+      transparent 25%
+    );
+  }
+
+  &:nth-of-type(1) {
+    margin-block-end: 2rem;
+  }
 }
