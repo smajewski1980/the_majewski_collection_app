@@ -9,6 +9,7 @@
 :root {
   --outline-purple: hsl(300, 82%, 33%);
   --accent-purple: hsl(300, 34%, 70%);
+  --bg-color: light-dark(white, black);
 }
 
 html {
@@ -26,7 +27,7 @@ img {
 }
 
 body {
-  background-color: light-dark(white, black);
+  background-color: var(--bg-color);
   min-height: 100dvh;
   font-family: big-party;
 }
@@ -36,7 +37,14 @@ body {
   margin-block-end: 2rem;
 }
 
-a {
+select,
+button,
+input {
+  font: inherit;
+}
+
+a,
+button {
   font-size: 3rem;
   text-decoration: none;
   padding: 0.5rem 1rem;
@@ -63,8 +71,7 @@ a {
       transparent 25%
     );
   }
-
-  &:nth-of-type(1) {
-    margin-block-end: 2rem;
-  }
+}
+a:nth-of-type(1) {
+  margin-block-end: 2rem;
 }

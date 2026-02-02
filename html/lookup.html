@@ -27,6 +27,45 @@
     </header>
     <main>
       <h1>LOOKUP</h1>
+      <div class="query-options">
+        <div class="query-group">
+          <label for="query-format">FORMAT</label>
+          <select
+            name="format"
+            id="query-format"
+          >
+            <option value=""></option>
+            <option value="records">RECORDS</option>
+            <option value="tapes">TAPES</option>
+            <option value="cds">CDS MAIN</option>
+            <option value="cd-comps">CD COMPILATIONS</option>
+            <option value="cd-sing">CD SINGLES</option>
+          </select>
+        </div>
+        <div class="query-group">
+          <label for="query-field">FIELD</label>
+          <select
+            name="field"
+            id="query-field"
+          >
+            <option value=""></option>
+            <option value="">These will</option>
+            <option value="">be filled in</option>
+            <option value="">dynamically</option>
+            <option value="">later for the</option>
+            <option value="">selected format</option>
+          </select>
+        </div>
+        <div class="query-group">
+          <label for="query-term">SEARCH</label>
+          <input
+            type="text"
+            name="term"
+            id="query-term"
+          />
+          <button>LOOK IT UP</button>
+        </div>
+      </div>
     </main>
   </body>
 </html>
