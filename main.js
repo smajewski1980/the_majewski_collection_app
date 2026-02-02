@@ -14,9 +14,9 @@ const createWindow = () => {
   win.loadFile("./html/index.html");
   win.maximize();
 
-  if (!app.isPackaged) {
-    win.webContents.openDevTools();
-  }
+  // if (!app.isPackaged) {
+  //   win.webContents.openDevTools();
+  // }
 };
 
 app.whenReady().then(() => {

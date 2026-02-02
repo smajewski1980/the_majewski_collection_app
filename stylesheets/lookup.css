@@ -1,0 +1,52 @@
+#lookup-body {
+  padding: 2rem;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: 2.5rem;
+
+    img {
+      max-width: 200px;
+    }
+
+    a {
+      font-size: 2rem;
+      font-weight: 700;
+      /* text-decoration: none;
+      padding: 0.5rem 1rem;
+      display: block;
+      text-align: center;
+      border: 2px solid var(--outline-purple);
+      color: var(--accent-purple);
+      border-radius: 30px;
+      corner-shape: squircle;
+      position: relative;
+      box-shadow:
+        0px 1px 0px 2px hsl(from var(--outline-purple) h s calc(l - 20)),
+        0px 2px 10px 1px hsl(from var(--accent-purple) h s calc(l - 10) / 0.25); */
+
+      /* &::after {
+        content: "";
+        position: absolute;
+        inset: 0.25rem 0.2rem;
+        border-radius: 30px;
+        corner-shape: squircle;
+        background: linear-gradient(
+          to bottom,
+          rgb(from var(--accent-purple) r g b / 0.15),
+          transparent 25%
+        );
+      } */
+    }
+  }
+
+  main {
+    h1 {
+      font-size: 5rem;
+      text-align: center;
+      color: var(--accent-purple);
+    }
+  }
+}
