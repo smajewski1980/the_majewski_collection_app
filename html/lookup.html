@@ -15,6 +15,11 @@
       rel="stylesheet"
       href="../stylesheets/lookup.css"
     />
+    <script
+      type="module"
+      src="../renderer.js"
+      defer
+    ></script>
   </head>
   <body id="lookup-body">
     <header>
@@ -49,11 +54,11 @@
             id="query-field"
           >
             <option value=""></option>
-            <option value="">These will</option>
-            <option value="">be filled in</option>
-            <option value="">dynamically</option>
-            <option value="">later for the</option>
-            <option value="">selected format</option>
+            <option value="1">These will</option>
+            <option value="2">be filled in</option>
+            <option value="3">dynamically</option>
+            <option value="4">later for the</option>
+            <option value="5">selected format</option>
           </select>
         </div>
         <div class="query-group">
@@ -63,7 +68,7 @@
             name="term"
             id="query-term"
           />
-          <button>LOOK IT UP</button>
+          <button id="btn-lookup">LOOK IT UP</button>
         </div>
       </div>
     </main>

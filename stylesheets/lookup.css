@@ -27,6 +27,7 @@
     .query-options {
       display: flex;
       justify-content: space-evenly;
+      flex-wrap: wrap;
 
       .query-group {
         color: var(--accent-purple);
