@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu } = require("electron/main");
 const path = require("node:path");
-const handleRecordsFields = require("./ipc-handlers/handle-records-fields");
+const handleRecordsFields = require("./ipc-handlers/handleRecordsFields");
 
 const createWindow = () => {
   const win = new BrowserWindow({

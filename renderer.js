@@ -8,10 +8,11 @@ const getFormatFields = window.getFormatFields;
 ut.toggleInertEl(field, true);
 ut.toggleInertEl(term, true);
 
-format.addEventListener("change", (e) => {
+format.addEventListener("change", async (e) => {
   switch (e.target.value) {
     case "records":
-      getFormatFields.getRecordsFields("getRecordsFields");
+      const res = await getFormatFields.getRecordsFields("getRecordsFields");
+      console.log(res);
       ut.toggleInertEl(field, false);
       break;
     case "tapes":
