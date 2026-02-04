@@ -12,7 +12,7 @@ format.addEventListener("change", async (e) => {
   switch (e.target.value) {
     case "records":
       const res = await getFormatFields.getRecordsFields("getRecordsFields");
-      console.log(res);
+      ut.populateSelectOptions(res, field);
       ut.toggleInertEl(field, false);
       break;
     case "tapes":

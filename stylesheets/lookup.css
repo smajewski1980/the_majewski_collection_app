@@ -39,6 +39,10 @@
           font-size: 3rem;
         }
 
+        select {
+          min-width: 15rem;
+        }
+
         select,
         input[type="text"],
         button {
