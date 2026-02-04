@@ -11,12 +11,14 @@ ut.toggleInertEl(term, true);
 format.addEventListener("change", async (e) => {
   switch (e.target.value) {
     case "records":
-      const res = await getFormatFields.getRecordsFields("getRecordsFields");
-      ut.populateSelectOptions(res, field);
+      const recRes = await getFormatFields.getRecordsFields("getRecordsFields");
+      ut.populateSelectOptions(recRes, field);
       ut.toggleInertEl(field, false);
       break;
     case "tapes":
-      console.log("tapes was selected");
+      const tapesRes = await getFormatFields.getTapesFields("getTapesFields");
+      ut.populateSelectOptions(tapesRes, field);
+      ut.toggleInertEl(field, false);
       break;
     case "cds":
       console.log("cds qwas selected");

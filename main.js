@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu } = require("electron/main");
 const path = require("node:path");
 const handleRecordsFields = require("./ipc-handlers/handleRecordsFields");
+const handleTapesFields = require("./ipc-handlers/handleTapesFields");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -22,6 +23,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   ipcMain.handle("getRecordsFields", handleRecordsFields);
+  ipcMain.handle("getTapesFields", handleTapesFields);
 
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
