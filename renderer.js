@@ -21,7 +21,9 @@ format.addEventListener("change", async (e) => {
       ut.toggleInertEl(field, false);
       break;
     case "cds":
-      console.log("cds qwas selected");
+      const cdsRes = await getFormatFields.getCdsFields("getCdsFields");
+      ut.populateSelectOptions(cdsRes, field);
+      ut.toggleInertEl(field, false);
       break;
     case "cd-comps":
       console.log("cd-comps was selected");
