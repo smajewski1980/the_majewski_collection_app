@@ -29,7 +29,10 @@ format.addEventListener("change", async (e) => {
       console.log("cd-comps was selected");
       break;
     case "cd-sing":
-      console.log("cd-singles were selected");
+      const cdSingRes =
+        await getFormatFields.getCdSinglesFields("getCdSinglesFields");
+      ut.populateSelectOptions(cdSingRes, field);
+      ut.toggleInertEl(field, false);
       break;
     default:
       break;
