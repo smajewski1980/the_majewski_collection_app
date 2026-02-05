@@ -1,5 +1,5 @@
 const pool = require("../dbconnect.js");
-const cdSinglesQuery = require("./queries/cdSinglesQuery");
+const cdSinglesQuery = require("./queries/cdSinglesQuery.js");
 
 /**
  * query and return the fields of the cd singles and cd singles tracks table

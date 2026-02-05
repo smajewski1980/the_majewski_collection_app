@@ -26,7 +26,10 @@ format.addEventListener("change", async (e) => {
       ut.toggleInertEl(field, false);
       break;
     case "cd-comps":
-      console.log("cd-comps was selected");
+      const cdCompilationsRes =
+        await getFormatFields.getCdCompsFields("getCdCompsFields");
+      ut.populateSelectOptions(cdCompilationsRes, field);
+      ut.toggleInertEl(field, false);
       break;
     case "cd-sing":
       const cdSingRes =
@@ -43,7 +46,5 @@ function handleLookupBtn(e) {
   e.preventDefault();
   const vals = { format: format.value, field: field.value, term: term.value };
 }
-
-// console.log(getRecordsFields());
 
 btnLookup.addEventListener("click", handleLookupBtn);
