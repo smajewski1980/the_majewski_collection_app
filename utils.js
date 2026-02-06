@@ -35,6 +35,46 @@ const utils = {
       selEl.appendChild(newOpt);
     });
   },
+  /**
+   * this handles loading the options for the field
+   * HTML select element when a format is selected
+   * @param {Event} e
+   * @param {HTMLSelectElement} field
+   */
+  handleFormatSelection: async (e, field) => {
+    switch (e.target.value) {
+      case "records":
+        const recRes =
+          await getFormatFields.getRecordsFields("getRecordsFields");
+        utils.populateSelectOptions(recRes, field);
+        utils.toggleInertEl(field, false);
+        break;
+      case "tapes":
+        const tapesRes = await getFormatFields.getTapesFields("getTapesFields");
+        utils.populateSelectOptions(tapesRes, field);
+        utils.toggleInertEl(field, false);
+        break;
+      case "cds":
+        const cdsRes = await getFormatFields.getCdsFields("getCdsFields");
+        utils.populateSelectOptions(cdsRes, field);
+        utils.toggleInertEl(field, false);
+        break;
+      case "cd-comps":
+        const cdCompilationsRes =
+          await getFormatFields.getCdCompsFields("getCdCompsFields");
+        utils.populateSelectOptions(cdCompilationsRes, field);
+        utils.toggleInertEl(field, false);
+        break;
+      case "cd-sing":
+        const cdSingRes =
+          await getFormatFields.getCdSinglesFields("getCdSinglesFields");
+        utils.populateSelectOptions(cdSingRes, field);
+        utils.toggleInertEl(field, false);
+        break;
+      default:
+        break;
+    }
+  },
 };
 
 export default utils;

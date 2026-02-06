@@ -8,40 +8,11 @@ const getFormatFields = window.getFormatFields;
 ut.toggleInertEl(field, true);
 ut.toggleInertEl(term, true);
 
-format.addEventListener("change", async (e) => {
-  switch (e.target.value) {
-    case "records":
-      const recRes = await getFormatFields.getRecordsFields("getRecordsFields");
-      ut.populateSelectOptions(recRes, field);
-      ut.toggleInertEl(field, false);
-      break;
-    case "tapes":
-      const tapesRes = await getFormatFields.getTapesFields("getTapesFields");
-      ut.populateSelectOptions(tapesRes, field);
-      ut.toggleInertEl(field, false);
-      break;
-    case "cds":
-      const cdsRes = await getFormatFields.getCdsFields("getCdsFields");
-      ut.populateSelectOptions(cdsRes, field);
-      ut.toggleInertEl(field, false);
-      break;
-    case "cd-comps":
-      const cdCompilationsRes =
-        await getFormatFields.getCdCompsFields("getCdCompsFields");
-      ut.populateSelectOptions(cdCompilationsRes, field);
-      ut.toggleInertEl(field, false);
-      break;
-    case "cd-sing":
-      const cdSingRes =
-        await getFormatFields.getCdSinglesFields("getCdSinglesFields");
-      ut.populateSelectOptions(cdSingRes, field);
-      ut.toggleInertEl(field, false);
-      break;
-    default:
-      break;
-  }
+format.addEventListener("change", (e) => {
+  ut.handleFormatSelection(e, field);
 });
 
+// once this is "hooked up", move to utils
 function handleLookupBtn(e) {
   e.preventDefault();
   const vals = { format: format.value, field: field.value, term: term.value };
