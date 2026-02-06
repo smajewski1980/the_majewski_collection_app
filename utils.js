@@ -59,13 +59,13 @@ const utils = {
         utils.populateSelectOptions(cdsRes, field);
         utils.toggleInertEl(field, false);
         break;
-      case "cd-comps":
+      case "cd_compilations":
         const cdCompilationsRes =
           await getFormatFields.getCdCompsFields("getCdCompsFields");
         utils.populateSelectOptions(cdCompilationsRes, field);
         utils.toggleInertEl(field, false);
         break;
-      case "cd-sing":
+      case "cd_singles":
         const cdSingRes =
           await getFormatFields.getCdSinglesFields("getCdSinglesFields");
         utils.populateSelectOptions(cdSingRes, field);
@@ -74,6 +74,16 @@ const utils = {
       default:
         break;
     }
+  },
+  handleLookupBtn: async (e, format, field, term) => {
+    e.preventDefault();
+    const vals = { format: format, field: field, term: term };
+
+    const res = await handleQueryValues.handleQueryValues(
+      "handleQueryValues",
+      vals,
+    );
+    console.log(res);
   },
 };
 

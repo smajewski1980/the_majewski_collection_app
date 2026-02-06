@@ -7,3 +7,7 @@ contextBridge.exposeInMainWorld("getFormatFields", {
   getCdCompsFields: (channel, data) => ipcRenderer.invoke(channel, data),
   getCdSinglesFields: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("handleQueryValues", {
+  handleQueryValues: (channel, data) => ipcRenderer.invoke(channel, data),
+});

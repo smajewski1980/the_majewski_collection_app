@@ -18,10 +18,7 @@ field.addEventListener("change", (e) => {
   ut.toggleInertEl(term, false);
 });
 
-// once this is "hooked up", move to utils
-function handleLookupBtn(e) {
-  e.preventDefault();
-  const vals = { format: format.value, field: field.value, term: term.value };
-}
-
-btnLookup.addEventListener("click", handleLookupBtn);
+// send the data for the query
+btnLookup.addEventListener("click", (e) => {
+  ut.handleLookupBtn(e, format.value, field.value, term.value);
+});

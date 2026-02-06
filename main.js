@@ -5,6 +5,7 @@ const handleGetTapesFields = require("./ipc-handlers/handleGetTapesFields");
 const handleGetCdsFields = require("./ipc-handlers/handleGetCdsFields");
 const handleGetCdSinglesFields = require("./ipc-handlers/handleGetCdSinglesFields");
 const handleGetCdCompsFields = require("./ipc-handlers/handleGetCdCompsFields");
+const handleQueryValues = require("./ipc-handlers/handleQueryValues");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -30,6 +31,7 @@ app.whenReady().then(() => {
   ipcMain.handle("getCdsFields", handleGetCdsFields);
   ipcMain.handle("getCdSinglesFields", handleGetCdSinglesFields);
   ipcMain.handle("getCdCompsFields", handleGetCdCompsFields);
+  ipcMain.handle("handleQueryValues", handleQueryValues);
 
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
