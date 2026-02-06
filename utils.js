@@ -75,16 +75,38 @@ const utils = {
         break;
     }
   },
+  /**
+   * prob need to be adjusted later
+   * this takes the query vals and sends them to main.js
+   * the results are then added to the results element
+   * @param {Event} e
+   * @param {String} format
+   * @param {String} field
+   * @param {String} term
+   */
   handleLookupBtn: async (e, format, field, term) => {
     e.preventDefault();
     const vals = { format: format, field: field, term: term };
-
+    // send data to main.js
     const res = await handleQueryValues.handleQueryValues(
       "handleQueryValues",
       vals,
     );
-    console.log(res);
+    // clear the results div
+    utils.resultsElement.innerHTML = "";
+    // loop through the rows to get vals on the page
+    res.forEach((row) => {
+      // create a p element and add the values to it
+      const p = document.createElement("p");
+      // loop through the vals and append to the p tag text
+      Object.values(row).forEach((val) => {
+        p.innerText += `${val} `;
+      });
+      // add the p element to the results element
+      utils.resultsElement.appendChild(p);
+    });
   },
+  resultsElement: document.getElementById("query-results"),
 };
 
 export default utils;
