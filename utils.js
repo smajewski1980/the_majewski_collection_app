@@ -146,15 +146,19 @@ const utils = {
       });
       utils.resultsElement.append(p);
     });
-    // this will only work if all the same artist...
-    // check the width of the first row of data's span2
-    // and set the header span 2 to that width so the
-    // column is matched with text centered
-    const secondSpan = document.querySelector(
-      "#query-results p:nth-child(2) .span2",
-    );
-    const width = secondSpan.getBoundingClientRect().width;
-    span2.style.width = `${width}px`;
+    // for styling, the title field fills the available space, this finds
+    // the max width of values in the artist column and sets the width of all
+    // values in that column to that width, everything is centered nicely
+    const secondSpans = document.querySelectorAll("#query-results .span2");
+    const secondSpanWidths = new Set();
+    secondSpans.forEach((span) => {
+      secondSpanWidths.add(span.getBoundingClientRect().width);
+    });
+    const maxWidth = Math.max(...secondSpanWidths);
+    span2.style.width = `${maxWidth}px`;
+    secondSpans.forEach((span) => {
+      span.style.width = `${maxWidth}px`;
+    });
   },
   resultsElement: document.getElementById("query-results"),
 };
