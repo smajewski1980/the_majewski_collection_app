@@ -84,7 +84,7 @@ const utils = {
    * @param {String} field
    * @param {String} term
    */
-  handleLookupBtn: async (e, format, field, term) => {
+  handleLookupBtn: async (e, format, field, term, termEl) => {
     e.preventDefault();
     const vals = { format: format, field: field, term: term };
     // send data to main.js
@@ -94,17 +94,67 @@ const utils = {
     );
     // clear the results div
     utils.resultsElement.innerHTML = "";
-    // loop through the rows to get vals on the page
-    res.forEach((row) => {
-      // create a p element and add the values to it
-      const p = document.createElement("p");
-      // loop through the vals and append to the p tag text
-      Object.values(row).forEach((val) => {
-        p.innerText += `${val} `;
+    switch (format) {
+      case "cds":
+        utils.displayCdsMain(res, termEl);
+        break;
+      default:
+        break;
+    }
+  },
+  /**
+   * this gets and displays the cds main query results
+   * @param {QueryResultRow} rows
+   * @returns {void}
+   */
+  displayCdsMain: (rows, termEl) => {
+    if (rows.length === 0) {
+      termEl.value = "No matching results found.";
+      return;
+    }
+    // funcs to create the needed elements
+    const makeSpan = () => document.createElement("span");
+    const makeP = () => document.createElement("p");
+    // create a header for the result data
+    const p = makeP();
+    p.className = "result-header";
+
+    const span1 = makeSpan();
+    span1.className = "span1";
+    span1.textContent = "ID";
+    const span2 = makeSpan();
+    span2.className = "span2";
+    span2.textContent = "ARTIST";
+    const span3 = makeSpan();
+    span3.className = "span3";
+    span3.textContent = "TITLE";
+    const span4 = makeSpan();
+    span4.className = "span4";
+    span4.textContent = "LOCATION";
+
+    p.append(span1, span2, span3, span4);
+
+    utils.resultsElement.append(p);
+    // loop through the results, make and append elements to display the data
+    rows.forEach((row) => {
+      const p = makeP();
+      Object.values(row).forEach((val, idx) => {
+        const span = makeSpan();
+        span.className = `span${idx + 1}`;
+        span.textContent = val;
+        p.append(span);
       });
-      // add the p element to the results element
-      utils.resultsElement.appendChild(p);
+      utils.resultsElement.append(p);
     });
+    // this will only work if all the same artist...
+    // check the width of the first row of data's span2
+    // and set the header span 2 to that width so the
+    // column is matched with text centered
+    const secondSpan = document.querySelector(
+      "#query-results p:nth-child(2) .span2",
+    );
+    const width = secondSpan.getBoundingClientRect().width;
+    span2.style.width = `${width}px`;
   },
   resultsElement: document.getElementById("query-results"),
 };

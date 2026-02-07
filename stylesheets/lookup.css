@@ -70,6 +70,18 @@
           "Helvetica Neue",
           sans-serif;
         font-size: 1.25rem;
+        display: grid;
+        grid-template-columns: 10% auto 1fr 15%;
+
+        span {
+          text-align: center;
+        }
+      }
+
+      .result-header {
+        margin-block-start: 1.5rem;
+        outline: 1px solid var(--accent-purple);
+        background-color: hsla(0deg 100% 100% / 0.1);
       }
     }
   }
