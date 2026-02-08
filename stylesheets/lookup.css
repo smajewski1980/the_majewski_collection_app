@@ -56,7 +56,8 @@
     }
 
     #query-results {
-      p {
+      p,
+      summary {
         font-family: var(--reg-font);
         font-size: 1.25rem;
         display: grid;
