@@ -150,6 +150,7 @@ const utils = {
         const span = makeSpan();
         span.className = `span${idx + 1}`;
         span.textContent = val;
+        span.title = val;
         p.append(span);
       });
       utils.resultsElement.append(p);
@@ -168,9 +169,9 @@ const utils = {
     });
     // set the header and col vals to the max width
     const maxWidth = Math.max(...secondSpanWidths);
-    span2.style.width = `${maxWidth}px`;
+    span2.style.width = `${maxWidth > 650 ? 650 : maxWidth}px`;
     secondSpans.forEach((span) => {
-      span.style.width = `${maxWidth}px`;
+      span.style.width = `${maxWidth > 650 ? 650 : maxWidth}px`;
     });
   },
   displayRecords: (rows, termEl) => {

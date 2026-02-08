@@ -61,16 +61,23 @@
         font-size: 1.25rem;
         display: grid;
         grid-template-columns: 10% auto 1fr 15%;
+        color: var(--accent-purple);
 
         span {
           text-align: center;
+          overflow: hidden;
+          text-wrap: nowrap;
+          text-overflow: ellipsis;
         }
       }
 
       .result-header {
-        margin-block-start: 1.5rem;
+        margin-block: 1rem;
+        padding-block: 0.5rem;
         outline: 1px solid var(--accent-purple);
         background-color: hsla(0deg 100% 100% / 0.1);
+        border-radius: 50px;
+        corner-shape: squircle;
       }
     }
   }
