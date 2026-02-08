@@ -10,8 +10,8 @@ async function handleQueryValues(e, data) {
   // need to switch the format for the correct query
   const { format, field, term } = data;
   const result = await pool.query(
-    `SELECT * FROM ${format} WHERE ${field} = $1`,
-    [term],
+    `SELECT * FROM ${format} WHERE LOWER(${field}) like LOWER($1)`,
+    [`%${term}%`],
   );
   return result.rows;
 }
