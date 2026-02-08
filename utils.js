@@ -105,11 +105,23 @@ const utils = {
   /**
    * this gets and displays the cds main query results
    * @param {QueryResultRow} rows
+   * @param {HTMLInputElement} termEl
    * @returns {void}
    */
   displayCdsMain: (rows, termEl) => {
+    const md = utils.messageDiv;
+    const msg = `No matching results found for: ${termEl.value}`;
+    // if no results, show msg
     if (rows.length === 0) {
-      termEl.value = "No matching results found.";
+      document.startViewTransition(() => {
+        md.innerText = msg;
+      });
+      // make it go away
+      setTimeout(() => {
+        document.startViewTransition(() => {
+          md.innerText = "";
+        });
+      }, 3500);
       return;
     }
     // funcs to create the needed elements
@@ -146,14 +158,19 @@ const utils = {
       });
       utils.resultsElement.append(p);
     });
+
     // for styling, the title field fills the available space, this finds
     // the max width of values in the artist column and sets the width of all
     // values in that column to that width, everything is centered nicely
+
+    // get the spans and create an empty set
     const secondSpans = document.querySelectorAll("#query-results .span2");
     const secondSpanWidths = new Set();
+    // get the width vals into the set
     secondSpans.forEach((span) => {
       secondSpanWidths.add(span.getBoundingClientRect().width);
     });
+    // set the header and col vals to the max width
     const maxWidth = Math.max(...secondSpanWidths);
     span2.style.width = `${maxWidth}px`;
     secondSpans.forEach((span) => {
@@ -161,6 +178,7 @@ const utils = {
     });
   },
   resultsElement: document.getElementById("query-results"),
+  messageDiv: document.getElementById("message"),
 };
 
 export default utils;
