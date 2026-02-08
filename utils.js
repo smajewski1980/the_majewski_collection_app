@@ -98,6 +98,12 @@ const utils = {
       case "cds":
         utils.displayCdsMain(res, termEl);
         break;
+      case "records":
+        utils.displayRecords(res, termEl);
+        break;
+      case "tapes":
+        utils.displayRecords(res, termEl);
+        break;
       default:
         break;
     }
@@ -109,19 +115,9 @@ const utils = {
    * @returns {void}
    */
   displayCdsMain: (rows, termEl) => {
-    const md = utils.messageDiv;
-    const msg = `No matching results found for: ${termEl.value}`;
     // if no results, show msg
     if (rows.length === 0) {
-      document.startViewTransition(() => {
-        md.innerText = msg;
-      });
-      // make it go away
-      setTimeout(() => {
-        document.startViewTransition(() => {
-          md.innerText = "";
-        });
-      }, 3500);
+      utils.displayNotFound(termEl);
       return;
     }
     // funcs to create the needed elements
@@ -176,6 +172,35 @@ const utils = {
     secondSpans.forEach((span) => {
       span.style.width = `${maxWidth}px`;
     });
+  },
+  displayRecords: (rows, termEl) => {
+    // if no results, show msg
+    if (rows.length === 0) {
+      utils.displayNotFound(termEl);
+      return;
+    }
+    console.log(rows);
+  },
+  displayTapes: (rows, termEl) => {
+    // if no results, show msg
+    if (rows.length === 0) {
+      utils.displayNotFound(termEl);
+      return;
+    }
+    console.log(rows);
+  },
+  displayNotFound: (termEl) => {
+    const md = utils.messageDiv;
+    const msg = `No matching results found for: ${termEl.value}`;
+    document.startViewTransition(() => {
+      md.innerText = msg;
+    });
+    // make it go away
+    setTimeout(() => {
+      document.startViewTransition(() => {
+        md.innerText = "";
+      });
+    }, 3500);
   },
   resultsElement: document.getElementById("query-results"),
   messageDiv: document.getElementById("message"),
