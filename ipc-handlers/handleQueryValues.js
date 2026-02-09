@@ -14,7 +14,8 @@ async function handleQueryValues(e, data) {
     field === "artist" ||
     field === "title" ||
     field === "location" ||
-    field === "diameter"
+    field === "diameter" ||
+    field === "speed"
   ) {
     const result = await pool.query(
       `SELECT * FROM ${format} WHERE LOWER(${field}) like LOWER($1)`,

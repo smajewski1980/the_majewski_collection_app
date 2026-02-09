@@ -103,7 +103,7 @@ const utils = {
         utils.displayRecords(res, termEl);
         break;
       case "tapes":
-        utils.displayRecords(res, termEl);
+        utils.displayTapes(res, termEl);
         break;
       default:
         break;
@@ -143,19 +143,19 @@ const utils = {
    * @returns {void}
    */
   displayRecords: (rows, termEl) => {
-    // *********************** still need to finish this with summary/details <--------------
     // if no results, show msg
     if (rows.length === 0) {
       utils.displayNotFound(termEl);
       return;
     }
+    // get and append the header
     utils.resultsElement.append(utils.getHeader());
-
+    // loop through data and create elements
     rows.forEach((row) => {
       const det = document.createElement("details");
       const sum = document.createElement("summary");
       const p = utils.makeP();
-
+      // add the data to be always visible
       sum.append(
         utils.createLoadedSpan(row.id, 0),
         utils.createLoadedSpan(row.artist, 1),
@@ -163,13 +163,14 @@ const utils = {
         utils.createLoadedSpan(row.location, 3),
       );
       det.append(sum);
-
+      // add the data that is only shown when open
       const span1 = utils.makeSpan();
       const span2 = utils.makeSpan();
       const span3 = utils.makeSpan();
       const span4 = utils.makeSpan();
       const span5 = utils.makeSpan();
       span1.textContent = row.year;
+      // if the label name doesnt end with the word records, add it. 78s exempt
       span2.textContent =
         !row.label.toLowerCase().includes("records") &&
         !row.location.includes("78s")
@@ -179,19 +180,10 @@ const utils = {
       span4.textContent = `Record Condition: ${row.record_condition}`;
       span5.textContent = `Sleeve Condition: ${row.sleeve_condition}`;
       p.append(span1, span2, span3, span4, span5);
-
-      // p.textContent = `
-      // ${row.year} -
-      //   ${
-      //     !row.label.toLowerCase().includes("records") &&
-      //     !row.location.includes("78s")
-      //       ? row.label + " Records"
-      //       : row.label
-      //   } - ${row.diameter} - Record Condition: ${row.record_condition} - Sleeve Condition: ${row.sleeve_condition}`;
       det.append(p);
       utils.resultsElement.append(det);
     });
-
+    // adjust the second column widths for centering
     utils.setArtistColWidths();
   },
   displayTapes: (rows, termEl) => {
