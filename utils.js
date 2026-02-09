@@ -28,6 +28,7 @@ const utils = {
     arr.forEach((field) => {
       const newOpt = opt();
       if (field.includes("_")) {
+        newOpt.value = field;
         newOpt.textContent = field.replace("_", " ");
       } else {
         newOpt.textContent = field;
@@ -125,25 +126,73 @@ const utils = {
     // loop through the results, make and append elements to display the data
     rows.forEach((row) => {
       const p = utils.makeP();
+
       Object.values(row).forEach((val, idx) => {
-        const span = utils.makeSpan();
-        span.className = `span${idx + 1}`;
-        span.textContent = val;
-        span.title = val;
-        p.append(span);
+        p.append(utils.createLoadedSpan(val, idx));
       });
+
       utils.resultsElement.append(p);
     });
 
     utils.setArtistColWidths();
   },
+  /**
+   * this gets and displays the records query results
+   * @param {QueryResultRow} rows
+   * @param {HTMLInputElement} termEl
+   * @returns {void}
+   */
   displayRecords: (rows, termEl) => {
+    // *********************** still need to finish this with summary/details <--------------
     // if no results, show msg
     if (rows.length === 0) {
       utils.displayNotFound(termEl);
       return;
     }
-    console.log(rows);
+    utils.resultsElement.append(utils.getHeader());
+
+    rows.forEach((row) => {
+      const det = document.createElement("details");
+      const sum = document.createElement("summary");
+      const p = utils.makeP();
+
+      sum.append(
+        utils.createLoadedSpan(row.id, 0),
+        utils.createLoadedSpan(row.artist, 1),
+        utils.createLoadedSpan(row.title, 2),
+        utils.createLoadedSpan(row.location, 3),
+      );
+      det.append(sum);
+
+      const span1 = utils.makeSpan();
+      const span2 = utils.makeSpan();
+      const span3 = utils.makeSpan();
+      const span4 = utils.makeSpan();
+      const span5 = utils.makeSpan();
+      span1.textContent = row.year;
+      span2.textContent =
+        !row.label.toLowerCase().includes("records") &&
+        !row.location.includes("78s")
+          ? row.label + " Records"
+          : row.label;
+      span3.textContent = row.diameter;
+      span4.textContent = `Record Condition: ${row.record_condition}`;
+      span5.textContent = `Sleeve Condition: ${row.sleeve_condition}`;
+      p.append(span1, span2, span3, span4, span5);
+
+      // p.textContent = `
+      // ${row.year} -
+      //   ${
+      //     !row.label.toLowerCase().includes("records") &&
+      //     !row.location.includes("78s")
+      //       ? row.label + " Records"
+      //       : row.label
+      //   } - ${row.diameter} - Record Condition: ${row.record_condition} - Sleeve Condition: ${row.sleeve_condition}`;
+      det.append(p);
+      utils.resultsElement.append(det);
+    });
+
+    utils.setArtistColWidths();
   },
   displayTapes: (rows, termEl) => {
     // if no results, show msg
@@ -153,6 +202,10 @@ const utils = {
     }
     console.log(rows);
   },
+  /**
+   * this takes the current term value and displays an error msg
+   * @param {HTMLInputElement} termEl
+   */
   displayNotFound: (termEl) => {
     const md = utils.messageDiv;
     const msg = `No matching results found for: ${termEl.value}`;
@@ -212,6 +265,19 @@ const utils = {
     secondSpans.forEach((span) => {
       span.style.width = `${maxWidth > 600 ? 600 : maxWidth}px`;
     });
+  },
+  /**
+   * creates and sets attributes then returns a span
+   * @param {String} val
+   * @param {Number} idx
+   * @returns {HTMLSpanElement}
+   */
+  createLoadedSpan: (val, idx) => {
+    const span = utils.makeSpan();
+    span.className = `span${idx + 1}`;
+    span.textContent = val;
+    span.title = val;
+    return span;
   },
   resultsElement: document.getElementById("query-results"),
   messageDiv: document.getElementById("message"),

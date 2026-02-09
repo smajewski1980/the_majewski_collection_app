@@ -56,7 +56,7 @@
     }
 
     #query-results {
-      p,
+      p:not(details p),
       summary {
         font-family: var(--reg-font);
         font-size: 1.25rem;
@@ -69,6 +69,21 @@
           overflow: hidden;
           text-wrap: nowrap;
           text-overflow: ellipsis;
+        }
+      }
+
+      details {
+        &[open] {
+          border-block: 1px solid hsl(from var(--accent-purple) h s l / 0.5);
+          padding-block-start: 0.25rem;
+        }
+        p {
+          font-family: var(--reg-font);
+          color: var(--accent-purple);
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          text-align: center;
+          padding-block: 0.5rem;
         }
       }
 
