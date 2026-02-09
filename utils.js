@@ -152,17 +152,17 @@ const utils = {
     utils.resultsElement.append(utils.getHeader());
     // loop through data and create elements
     rows.forEach((row) => {
-      const det = document.createElement("details");
-      const sum = document.createElement("summary");
+      const details = utils.makeDetails();
+      const summary = utils.makeSummary();
       const p = utils.makeP();
       // add the data to be always visible
-      sum.append(
+      summary.append(
         utils.createLoadedSpan(row.id, 0),
         utils.createLoadedSpan(row.artist, 1),
         utils.createLoadedSpan(row.title, 2),
         utils.createLoadedSpan(row.location, 3),
       );
-      det.append(sum);
+      details.append(summary);
       // add the data that is only shown when open
       const span1 = utils.makeSpan();
       const span2 = utils.makeSpan();
@@ -180,19 +180,54 @@ const utils = {
       span4.textContent = `Record Condition: ${row.record_condition}`;
       span5.textContent = `Sleeve Condition: ${row.sleeve_condition}`;
       p.append(span1, span2, span3, span4, span5);
-      det.append(p);
-      utils.resultsElement.append(det);
+      details.append(p);
+      utils.resultsElement.append(details);
     });
     // adjust the second column widths for centering
     utils.setArtistColWidths();
   },
+  /**
+   * this gets and displays the tapes query results
+   * @param {QueryResultRow} rows
+   * @param {HTMLInputElement} termEl
+   * @returns {void}
+   */
   displayTapes: (rows, termEl) => {
     // if no results, show msg
     if (rows.length === 0) {
       utils.displayNotFound(termEl);
       return;
     }
-    console.log(rows);
+    // get and append the header
+    utils.resultsElement.append(utils.getHeader());
+    // loop throught the data and create and append the elements
+    rows.forEach((row) => {
+      const details = utils.makeDetails();
+      const summary = utils.makeSummary();
+      const p = utils.makeP();
+
+      // add the always visible fields
+      summary.append(
+        utils.createLoadedSpan(row.id, 0),
+        utils.createLoadedSpan(row.artist, 1),
+        utils.createLoadedSpan(row.title, 2),
+        utils.createLoadedSpan(row.location, 3),
+      );
+      details.append(summary);
+      // add the data that is only shown when open
+      const span1 = utils.makeSpan();
+      const span2 = utils.makeSpan();
+      const span3 = utils.makeSpan();
+      span1.textContent = row.year;
+      span2.textContent = `Needs Repair: ${row.needs_repair}`;
+      span3.textContent = row.speed ? row.speed : "n/a";
+      p.append(span1, span2, span3);
+      details.append(p);
+      utils.resultsElement.append(details);
+    });
+
+    // adjust the second column widths for centering
+    utils.setArtistColWidths();
   },
   /**
    * this takes the current term value and displays an error msg
@@ -275,6 +310,8 @@ const utils = {
   messageDiv: document.getElementById("message"),
   makeSpan: () => document.createElement("span"),
   makeP: () => document.createElement("p"),
+  makeDetails: () => document.createElement("details"),
+  makeSummary: () => document.createElement("summary"),
 };
 
 export default utils;
