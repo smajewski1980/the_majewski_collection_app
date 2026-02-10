@@ -31,7 +31,8 @@
         "from": ".env",
         "to": "."
       }
-    ]
+    ],
+    "icon": "assets/tmc_icon.ico"
   },
   "devDependencies": {
     "electron": "^39.2.7",
