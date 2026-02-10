@@ -8,7 +8,30 @@
   "main": "main.js",
   "scripts": {
     "dev": "nodemon --ext js,css,html --exec electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "scm.tmca.47",
+    "productName": "The Majewski Collection App",
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "extraFiles": [
+      {
+        "from": ".env",
+        "to": "."
+      }
+    ],
+    "extraResources": [
+      {
+        "from": ".env",
+        "to": "."
+      }
+    ]
   },
   "devDependencies": {
     "electron": "^39.2.7",
