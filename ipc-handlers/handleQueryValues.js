@@ -8,14 +8,15 @@ const pool = require("../dbconnect.js");
  */
 async function handleQueryValues(e, data) {
   let { format, field, term } = data;
-
   // for the fields that need a case-insensitive non-exact comparison
   if (
     field === "artist" ||
     field === "title" ||
     field === "location" ||
     field === "diameter" ||
-    field === "speed"
+    field === "label" ||
+    field === "speed" ||
+    field === "needs_repair"
   ) {
     const result = await pool.query(
       `SELECT * FROM ${format} WHERE LOWER(${field}) like LOWER($1)`,
