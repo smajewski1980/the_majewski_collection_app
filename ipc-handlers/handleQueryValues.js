@@ -19,14 +19,18 @@ async function handleQueryValues(e, data) {
     field === "needs_repair"
   ) {
     const result = await pool.query(
-      `SELECT * FROM ${format} WHERE LOWER(${field}) like LOWER($1)`,
+      `SELECT * FROM ${format} WHERE LOWER(${field}) like LOWER($1) ORDER BY ${field}`,
       [`%${term}%`],
     );
     return result.rows;
   }
+  if (field === "id" && !term) {
+    const result = await pool.query(`SELECT * FROM ${format} ORDER BY id`);
+    return result.rows;
+  }
   // for the other fields
   const result = await pool.query(
-    `SELECT * FROM ${format} WHERE ${field} = $1`,
+    `SELECT * FROM ${format} WHERE ${field} = $1 ORDER BY artist`,
     [term],
   );
   return result.rows;
