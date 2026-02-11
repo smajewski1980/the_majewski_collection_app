@@ -93,9 +93,11 @@
         outline: 1px solid var(--accent-purple);
         border-radius: 50px;
         corner-shape: squircle;
+        /* do we leave this sticky?... */
         position: sticky;
         top: 1rem;
         background-color: var(--bg-color);
+
         &::after {
           content: "";
           position: absolute;

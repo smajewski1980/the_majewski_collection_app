@@ -116,6 +116,17 @@ const utils = {
       return;
     }
 
+    // the needs repair field should only be a yes or no search term
+    const needs_repair_valid = ["y", "yes", "n", "no"];
+    if (
+      format === "tapes" &&
+      field === "needs_repair" &&
+      !needs_repair_valid.includes(term.toLowerCase())
+    ) {
+      utils.displayNotFound("For that field, term must be yes(y) or no(n).");
+      return;
+    }
+
     // send data to main.js
     const res = await handleQueryValues.handleQueryValues(
       "handleQueryValues",
