@@ -20,7 +20,7 @@ async function handleQueryValues(e, data) {
   ) {
     // if the selected field is 'location', order by location, artist
     const result = await pool.query(
-      `SELECT * FROM ${format} WHERE LOWER(${field}) like LOWER($1) ORDER BY ${field !== "location" ? field : "location, artist"}`,
+      `SELECT * FROM ${format} WHERE LOWER(${field}) like LOWER($1) ORDER BY ${field !== "location" ? field : "substring(location FROM '([0-9]+)$')::integer, artist"}`,
       [`%${term}%`],
     );
     return result.rows;
