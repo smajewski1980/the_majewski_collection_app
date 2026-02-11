@@ -41,10 +41,13 @@ body {
   margin-block-end: 2rem;
 }
 
-select,
-button,
-input {
+button {
   font: inherit;
+}
+
+select,
+input {
+  font-family: monospace;
 }
 
 a,

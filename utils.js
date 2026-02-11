@@ -29,9 +29,10 @@ const utils = {
       const newOpt = opt();
       if (field.includes("_")) {
         newOpt.value = field;
-        newOpt.textContent = field.replace("_", " ");
+        newOpt.textContent = field.replace("_", " ").toUpperCase();
       } else {
-        newOpt.textContent = field;
+        newOpt.value = field;
+        newOpt.textContent = field.toUpperCase();
       }
       selEl.appendChild(newOpt);
     });
