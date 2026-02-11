@@ -88,6 +88,34 @@ const utils = {
   handleLookupBtn: async (e, format, field, term, termEl) => {
     e.preventDefault();
     const vals = { format: format, field: field, term: term };
+
+    // validate id or year are numbers
+    if ((field === "id" || field === "year") && !parseInt(term)) {
+      utils.displayNotFound(
+        "Please enter a valid number to search by that field.",
+      );
+      return;
+    }
+    // validate that the year is lower than the current year and higher than 1885
+    // (1885?... maybe have some grammophone discs someday...)
+    if (field === "year") {
+      const parsedYear = parseInt(term);
+      const currentYear = new Date().getFullYear();
+
+      if (1885 > parsedYear || parsedYear > currentYear) {
+        utils.displayNotFound("Please enter a valid 4 digit year.");
+        return;
+      }
+    }
+    // check that the condition field only consists of 1-5 asterisks
+    if (
+      (field === "sleeve_condition" || field === "record_condition") &&
+      !/^\*{1,5}$/.test(term)
+    ) {
+      utils.displayNotFound("Please enter 1-5 *'s to search by condition.");
+      return;
+    }
+
     // send data to main.js
     const res = await handleQueryValues.handleQueryValues(
       "handleQueryValues",
@@ -118,7 +146,7 @@ const utils = {
   displayCdsMain: (rows, termEl) => {
     // if no results, show msg
     if (rows.length === 0) {
-      utils.displayNotFound(termEl);
+      utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
 
@@ -145,7 +173,7 @@ const utils = {
   displayRecords: (rows, termEl) => {
     // if no results, show msg
     if (rows.length === 0) {
-      utils.displayNotFound(termEl);
+      utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
     // get and append the header
@@ -195,7 +223,7 @@ const utils = {
   displayTapes: (rows, termEl) => {
     // if no results, show msg
     if (rows.length === 0) {
-      utils.displayNotFound(termEl);
+      utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
     // get and append the header
@@ -233,9 +261,9 @@ const utils = {
    * this takes the current term value and displays an error msg
    * @param {HTMLInputElement} termEl
    */
-  displayNotFound: (termEl) => {
+  displayNotFound: (msg) => {
     const md = utils.messageDiv;
-    const msg = `No matching results found for: ${termEl.value}`;
+    // const msg = `No matching results found for: ${termEl.value}`;
     document.startViewTransition(() => {
       md.innerText = msg;
     });
