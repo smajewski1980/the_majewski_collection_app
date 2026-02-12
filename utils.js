@@ -141,6 +141,7 @@ const utils = {
         break;
       case "records":
         utils.displayRecords(res, termEl);
+        utils.currentRecordsData = res;
         break;
       case "tapes":
         utils.displayTapes(res, termEl);
@@ -182,11 +183,14 @@ const utils = {
    * @param {HTMLInputElement} termEl
    * @returns {void}
    */
-  displayRecords: (rows, termEl) => {
+  displayRecords: (rows, termEl = null) => {
     // if no results, show msg
     if (rows.length === 0) {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
+    }
+    if (!termEl) {
+      utils.resultsElement.innerHTML = "";
     }
     // get and append the header
     utils.resultsElement.append(utils.getHeader());
@@ -297,15 +301,27 @@ const utils = {
     const span1 = utils.makeSpan();
     span1.className = "span1";
     span1.textContent = "ID";
+    span1.addEventListener("click", (e) => {
+      utils.sortRecords("id");
+    });
     const span2 = utils.makeSpan();
     span2.className = "span2";
     span2.textContent = "ARTIST";
+    span2.addEventListener("click", (e) => {
+      utils.sortRecords("artist");
+    });
     const span3 = utils.makeSpan();
     span3.className = "span3";
     span3.textContent = "TITLE";
+    span3.addEventListener("click", (e) => {
+      utils.sortRecords("title");
+    });
     const span4 = utils.makeSpan();
     span4.className = "span4";
     span4.textContent = "LOCATION";
+    span4.addEventListener("click", (e) => {
+      utils.sortRecords("location");
+    });
 
     p.append(span1, span2, span3, span4);
 
@@ -346,12 +362,29 @@ const utils = {
     span.title = val;
     return span;
   },
+  /**
+   * sorts and displays the current records data sorted by the given field
+   * @param {String} field
+   */
+  sortRecords: (field) => {
+    if (utils.currentRecordsData !== null) {
+      const sortedRecords = utils.currentRecordsData.sort((a, b) => {
+        if (field !== "id") {
+          return a[field].localeCompare(b[field]);
+        } else {
+          return a[field] - b[field];
+        }
+      });
+      utils.displayRecords(sortedRecords);
+    }
+  },
   resultsElement: document.getElementById("query-results"),
   messageDiv: document.getElementById("message"),
   makeSpan: () => document.createElement("span"),
   makeP: () => document.createElement("p"),
   makeDetails: () => document.createElement("details"),
   makeSummary: () => document.createElement("summary"),
+  currentRecordsData: null,
 };
 
 export default utils;
