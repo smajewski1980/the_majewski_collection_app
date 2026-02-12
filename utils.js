@@ -138,6 +138,7 @@ const utils = {
     switch (format) {
       case "cds":
         utils.displayCdsMain(res, termEl);
+        utils.currentCdsMainData = res;
         break;
       case "records":
         utils.displayRecords(res, termEl);
@@ -145,6 +146,7 @@ const utils = {
         break;
       case "tapes":
         utils.displayTapes(res, termEl);
+        utils.currentTapesData = res;
         break;
       default:
         break;
@@ -162,8 +164,11 @@ const utils = {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
+    if (!termEl) {
+      utils.resultsElement.innerHTML = "";
+    }
 
-    utils.resultsElement.append(utils.getHeader());
+    utils.resultsElement.append(utils.getHeader("CdsMain"));
     // loop through the results, make and append elements to display the data
     rows.forEach((row) => {
       const p = utils.makeP();
@@ -242,8 +247,11 @@ const utils = {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
+    if (!termEl) {
+      utils.resultsElement.innerHTML = "";
+    }
     // get and append the header
-    utils.resultsElement.append(utils.getHeader());
+    utils.resultsElement.append(utils.getHeader("Tapes"));
     // loop throught the data and create and append the elements
     rows.forEach((row) => {
       const details = utils.makeDetails();
@@ -304,16 +312,16 @@ const utils = {
     span1.addEventListener("click", (e) => {
       if (format) {
         // format will need capital letter
-        utils[`sort${format}`]("id");
+        utils.sortResults("id", format);
+        // utils[`sort${format}`]("id");
       }
-      // utils.sortRecords("id");
     });
     const span2 = utils.makeSpan();
     span2.className = "span2";
     span2.textContent = "ARTIST";
     span2.addEventListener("click", (e) => {
       if (format) {
-        utils[`sort${format}`]("artist");
+        utils.sortResults("artist", format);
       }
     });
     const span3 = utils.makeSpan();
@@ -321,7 +329,7 @@ const utils = {
     span3.textContent = "TITLE";
     span3.addEventListener("click", (e) => {
       if (format) {
-        utils[`sort${format}`]("title");
+        utils.sortResults("title", format);
       }
     });
     const span4 = utils.makeSpan();
@@ -329,7 +337,7 @@ const utils = {
     span4.textContent = "LOCATION";
     span4.addEventListener("click", (e) => {
       if (format) {
-        utils[`sort${format}`]("location");
+        utils.sortResults("location", format);
       }
     });
 
@@ -376,16 +384,26 @@ const utils = {
    * sorts and displays the current records data sorted by the given field
    * @param {String} field
    */
-  sortRecords: (field) => {
-    if (utils.currentRecordsData !== null) {
-      const sortedRecords = utils.currentRecordsData.sort((a, b) => {
-        if (field !== "id") {
-          return a[field].localeCompare(b[field]);
-        } else {
-          return a[field] - b[field];
-        }
-      });
-      utils.displayRecords(sortedRecords);
+  sortResults: (field, format) => {
+    let sorted;
+    // determine which dataset needs to be sorted
+    sorted = utils[`current${format}Data`];
+
+    // sort the string data, ids are numeric
+    sorted.sort((a, b) => {
+      if (field !== "id") {
+        return a[field].localeCompare(b[field]);
+      } else {
+        return a[field] - b[field];
+      }
+    });
+    // display the results
+    if (format === "Records") {
+      utils.displayRecords(sorted);
+    } else if (format === "Tapes") {
+      utils.displayTapes(sorted);
+    } else if (format === "CdsMain") {
+      utils.displayCdsMain(sorted);
     }
   },
   resultsElement: document.getElementById("query-results"),
@@ -395,6 +413,8 @@ const utils = {
   makeDetails: () => document.createElement("details"),
   makeSummary: () => document.createElement("summary"),
   currentRecordsData: null,
+  currentCdsMainData: null,
+  currentTapesData: null,
 };
 
 export default utils;
