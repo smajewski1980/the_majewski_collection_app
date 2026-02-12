@@ -193,7 +193,7 @@ const utils = {
       utils.resultsElement.innerHTML = "";
     }
     // get and append the header
-    utils.resultsElement.append(utils.getHeader());
+    utils.resultsElement.append(utils.getHeader("Records"));
     // loop through data and create elements
     rows.forEach((row) => {
       const details = utils.makeDetails();
@@ -294,7 +294,7 @@ const utils = {
    * constructs and return the p element that is the results header
    * @returns {HTMLParagraphElement}
    */
-  getHeader: () => {
+  getHeader: (format = undefined) => {
     const p = utils.makeP();
     p.className = "result-header";
 
@@ -302,25 +302,35 @@ const utils = {
     span1.className = "span1";
     span1.textContent = "ID";
     span1.addEventListener("click", (e) => {
-      utils.sortRecords("id");
+      if (format) {
+        // format will need capital letter
+        utils[`sort${format}`]("id");
+      }
+      // utils.sortRecords("id");
     });
     const span2 = utils.makeSpan();
     span2.className = "span2";
     span2.textContent = "ARTIST";
     span2.addEventListener("click", (e) => {
-      utils.sortRecords("artist");
+      if (format) {
+        utils[`sort${format}`]("artist");
+      }
     });
     const span3 = utils.makeSpan();
     span3.className = "span3";
     span3.textContent = "TITLE";
     span3.addEventListener("click", (e) => {
-      utils.sortRecords("title");
+      if (format) {
+        utils[`sort${format}`]("title");
+      }
     });
     const span4 = utils.makeSpan();
     span4.className = "span4";
     span4.textContent = "LOCATION";
     span4.addEventListener("click", (e) => {
-      utils.sortRecords("location");
+      if (format) {
+        utils[`sort${format}`]("location");
+      }
     });
 
     p.append(span1, span2, span3, span4);
