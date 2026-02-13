@@ -308,8 +308,10 @@ const utils = {
 
     const span1 = utils.makeSpan();
     span1.className = "span1";
-    span1.textContent = "ID";
-    span1.addEventListener("click", (e) => {
+    const inner1 = utils.makeSpan();
+    inner1.textContent = "ID";
+    span1.append(inner1);
+    inner1.addEventListener("click", (e) => {
       if (format) {
         // format will need capital letter
         utils.sortResults("id", format);
@@ -318,24 +320,30 @@ const utils = {
     });
     const span2 = utils.makeSpan();
     span2.className = "span2";
-    span2.textContent = "ARTIST";
-    span2.addEventListener("click", (e) => {
+    const inner2 = utils.makeSpan();
+    inner2.textContent = "ARTIST";
+    span2.append(inner2);
+    inner2.addEventListener("click", (e) => {
       if (format) {
         utils.sortResults("artist", format);
       }
     });
     const span3 = utils.makeSpan();
     span3.className = "span3";
-    span3.textContent = "TITLE";
-    span3.addEventListener("click", (e) => {
+    const inner3 = utils.makeSpan();
+    inner3.textContent = "TITLE";
+    span3.append(inner3);
+    inner3.addEventListener("click", (e) => {
       if (format) {
         utils.sortResults("title", format);
       }
     });
     const span4 = utils.makeSpan();
     span4.className = "span4";
-    span4.textContent = "LOCATION";
-    span4.addEventListener("click", (e) => {
+    const inner4 = utils.makeSpan();
+    inner4.textContent = "LOCATION";
+    span4.append(inner4);
+    inner4.addEventListener("click", (e) => {
       if (format) {
         utils.sortResults("location", format);
       }

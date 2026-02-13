@@ -43,6 +43,7 @@ body {
 
 button {
   font: inherit;
+  cursor: pointer;
 }
 
 select,
