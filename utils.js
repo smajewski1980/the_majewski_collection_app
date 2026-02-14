@@ -89,6 +89,10 @@ const utils = {
   handleLookupBtn: async (e, format, field, term, termEl) => {
     e.preventDefault();
     const vals = { format: format, field: field, term: term };
+    if (!field) {
+      utils.displayNotFound("Please select a field to search.");
+      return;
+    }
 
     // validate id or year are numbers
     if ((field === "id" || field === "year") && !parseInt(term)) {
