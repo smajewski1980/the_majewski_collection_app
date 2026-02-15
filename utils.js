@@ -401,14 +401,29 @@ const utils = {
     // determine which dataset needs to be sorted
     sorted = utils[`current${format}Data`];
 
-    // sort the string data, ids are numeric
-    sorted.sort((a, b) => {
-      if (field !== "id") {
-        return a[field].localeCompare(b[field]);
-      } else {
-        return a[field] - b[field];
-      }
-    });
+    const current = utils.sortDirectionRev;
+
+    if (!current[format][field]) {
+      // sort the string data, ids are numeric
+      sorted.sort((a, b) => {
+        if (field !== "id") {
+          return a[field].localeCompare(b[field]);
+        } else {
+          return a[field] - b[field];
+        }
+      });
+
+      current[format][field] = !current[format][field];
+    } else {
+      sorted.sort((a, b) => {
+        if (field !== "id") {
+          return b[field].localeCompare(a[field]);
+        } else {
+          return b[field] - a[field];
+        }
+      });
+      current[format][field] = !current[format][field];
+    }
     // display the results
     if (format === "Records") {
       utils.displayRecords(sorted);
@@ -427,6 +442,21 @@ const utils = {
   currentRecordsData: null,
   currentCdsMainData: null,
   currentTapesData: null,
+  sortDirectionRev: {
+    Records: {
+      artist: false,
+      diameter: false,
+      id: false,
+      label: false,
+      location: false,
+      record_condition: false,
+      sleeve_condition: false,
+      title: false,
+      year: false,
+    },
+    Tapes: {},
+    CdsMain: {},
+  },
 };
 
 export default utils;
