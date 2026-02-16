@@ -395,26 +395,17 @@ const utils = {
   /**
    * sorts and displays the current records data sorted by the given field
    * @param {String} field
+   * @param {String} format
    */
   sortResults: (field, format) => {
     let sorted;
     // determine which dataset needs to be sorted
     sorted = utils[`current${format}Data`];
+    // an obj having flags for sort direction
+    const isRev = utils.sortDirectionRev;
 
-    const current = utils.sortDirectionRev;
-
-    if (!current[format][field]) {
-      // sort the string data, ids are numeric
-      sorted.sort((a, b) => {
-        if (field !== "id") {
-          return a[field].localeCompare(b[field]);
-        } else {
-          return a[field] - b[field];
-        }
-      });
-
-      current[format][field] = !current[format][field];
-    } else {
+    // sort the data, ids are numeric
+    if (isRev[format][field]) {
       sorted.sort((a, b) => {
         if (field !== "id") {
           return b[field].localeCompare(a[field]);
@@ -422,7 +413,18 @@ const utils = {
           return b[field] - a[field];
         }
       });
-      current[format][field] = !current[format][field];
+      // set flag
+      isRev[format][field] = !isRev[format][field];
+    } else {
+      sorted.sort((a, b) => {
+        if (field !== "id") {
+          return a[field].localeCompare(b[field]);
+        } else {
+          return a[field] - b[field];
+        }
+      });
+      // set flag
+      isRev[format][field] = !isRev[format][field];
     }
     // display the results
     if (format === "Records") {
@@ -454,8 +456,21 @@ const utils = {
       title: false,
       year: false,
     },
-    Tapes: {},
-    CdsMain: {},
+    Tapes: {
+      artist: false,
+      id: false,
+      location: false,
+      needs_repair: false,
+      speed: false,
+      title: false,
+      year: false,
+    },
+    CdsMain: {
+      artist: false,
+      id: false,
+      location: false,
+      title: false,
+    },
   },
 };
 
