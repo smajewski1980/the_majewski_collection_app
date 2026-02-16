@@ -408,6 +408,27 @@ const utils = {
     if (isRev[format][field]) {
       sorted.sort((a, b) => {
         if (field !== "id") {
+          // in order to sort the location strings numerically the way I wanted,
+          // I will not take credit for the extractComponents function and the
+          // below sorting code, while I did study it and made sure I understood it,
+          // I did not come up with it, I got help from A.I.
+          if (field === "location") {
+            const aComponents = utils.extractComponents(a[field]);
+            const bComponents = utils.extractComponents(b[field]);
+
+            // Compare first number
+            if (aComponents.firstNumber !== bComponents.firstNumber) {
+              return bComponents.firstNumber - aComponents.firstNumber;
+            }
+
+            // Compare alphabetical part
+            if (aComponents.alphaPart !== bComponents.alphaPart) {
+              return bComponents.alphaPart.localeCompare(aComponents.alphaPart);
+            }
+
+            // Compare last number
+            return bComponents.lastNumber - aComponents.lastNumber;
+          }
           return b[field].localeCompare(a[field]);
         } else {
           return b[field] - a[field];
@@ -418,6 +439,23 @@ const utils = {
     } else {
       sorted.sort((a, b) => {
         if (field !== "id") {
+          if (field === "location") {
+            const aComponents = utils.extractComponents(a[field]);
+            const bComponents = utils.extractComponents(b[field]);
+
+            // Compare first number
+            if (aComponents.firstNumber !== bComponents.firstNumber) {
+              return aComponents.firstNumber - bComponents.firstNumber;
+            }
+
+            // Compare alphabetical part
+            if (aComponents.alphaPart !== bComponents.alphaPart) {
+              return aComponents.alphaPart.localeCompare(bComponents.alphaPart);
+            }
+
+            // Compare last number
+            return aComponents.lastNumber - bComponents.lastNumber;
+          }
           return a[field].localeCompare(b[field]);
         } else {
           return a[field] - b[field];
@@ -471,6 +509,13 @@ const utils = {
       location: false,
       title: false,
     },
+  },
+  extractComponents: (str) => {
+    const parts = str.match(/(\d+)?\s*([A-Za-z/"\- ]+)?\s*(\d+)?/);
+    const firstNumber = parts[1] ? parseInt(parts[1], 10) : Infinity; // Use Infinity for missing first number
+    const alphaPart = parts[2] ? parts[2].trim() : "";
+    const lastNumber = parts[3] ? parseInt(parts[3], 10) : Infinity; // Use Infinity for missing last number
+    return { firstNumber, alphaPart, lastNumber };
   },
 };
 
