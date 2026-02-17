@@ -138,18 +138,31 @@ const utils = {
       vals,
     );
     // clear the results div
-    utils.resultsElement.innerHTML = "";
+    // utils.resultsElement.innerHTML = "";
+
+    // reset the "page" counter for a fresh search
+    utils.resultPage = 0;
+
     switch (format) {
       case "cds":
-        utils.displayCdsMain(res, termEl);
-        utils.currentCdsMainData = res;
+        utils.displayCds(
+          res.slice(utils.resultStart(), utils.resultEnd()),
+          termEl,
+        );
+        utils.currentCdsData = res;
         break;
       case "records":
-        utils.displayRecords(res, termEl);
+        utils.displayRecords(
+          res.slice(utils.resultStart(), utils.resultEnd()),
+          termEl,
+        );
         utils.currentRecordsData = res;
         break;
       case "tapes":
-        utils.displayTapes(res, termEl);
+        utils.displayTapes(
+          res.slice(utils.resultStart(), utils.resultEnd()),
+          termEl,
+        );
         utils.currentTapesData = res;
         break;
       default:
@@ -162,17 +175,25 @@ const utils = {
    * @param {HTMLInputElement} termEl
    * @returns {void}
    */
-  displayCdsMain: (rows, termEl) => {
+  displayCds: (rows, termEl) => {
     // if no results, show msg
     if (rows.length === 0) {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
-    if (!termEl) {
-      utils.resultsElement.innerHTML = "";
-    }
+    // if (!termEl) {
+    //   utils.resultsElement.innerHTML = "";
+    // }
 
-    utils.resultsElement.append(utils.getHeader("CdsMain"));
+    // ****************
+    utils.clearResults();
+    console.log(utils.resultTotalPages(rows));
+    // ****************
+
+    // get and append the header if its a fresh search
+    if (utils.resultPage === 0) {
+      utils.resultsElement.append(utils.getHeader("CdsMain"));
+    }
     // loop through the results, make and append elements to display the data
     rows.forEach((row) => {
       const p = utils.makeP();
@@ -198,11 +219,19 @@ const utils = {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
-    if (!termEl) {
-      utils.resultsElement.innerHTML = "";
+    // if (!termEl) {
+    //   utils.resultsElement.innerHTML = "";
+    // }
+
+    // ****************
+    utils.clearResults();
+    console.log(utils.resultTotalPages(rows));
+    // ****************
+
+    // get and append the header if its a fresh search
+    if (utils.resultPage === 0) {
+      utils.resultsElement.append(utils.getHeader("Records"));
     }
-    // get and append the header
-    utils.resultsElement.append(utils.getHeader("Records"));
     // loop through data and create elements
     rows.forEach((row) => {
       const details = utils.makeDetails();
@@ -251,11 +280,20 @@ const utils = {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
-    if (!termEl) {
-      utils.resultsElement.innerHTML = "";
+    // if (!termEl) {
+    //   utils.resultsElement.innerHTML = "";
+    // }
+
+    // ****************
+    utils.clearResults();
+
+    console.log(utils.resultTotalPages(rows));
+    // ****************
+
+    // get and append the header if its a fresh search
+    if (utils.resultPage === 0) {
+      utils.resultsElement.append(utils.getHeader("Tapes"));
     }
-    // get and append the header
-    utils.resultsElement.append(utils.getHeader("Tapes"));
     // loop throught the data and create and append the elements
     rows.forEach((row) => {
       const details = utils.makeDetails();
@@ -400,7 +438,7 @@ const utils = {
   sortResults: (field, format) => {
     let sorted;
     // determine which dataset needs to be sorted
-    sorted = utils[`current${format}Data`];
+    sorted = utils[`current${format}Data`]; // <--here i think **** inf scr
     // an obj having flags for sort direction
     const isRev = utils.sortDirectionRev;
 
@@ -470,7 +508,7 @@ const utils = {
     } else if (format === "Tapes") {
       utils.displayTapes(sorted);
     } else if (format === "CdsMain") {
-      utils.displayCdsMain(sorted);
+      utils.displayCds(sorted);
     }
   },
   resultsElement: document.getElementById("query-results"),
@@ -480,7 +518,7 @@ const utils = {
   makeDetails: () => document.createElement("details"),
   makeSummary: () => document.createElement("summary"),
   currentRecordsData: null,
-  currentCdsMainData: null,
+  currentCdsData: null,
   currentTapesData: null,
   sortDirectionRev: {
     Records: {
@@ -516,6 +554,16 @@ const utils = {
     const alphaPart = parts[2] ? parts[2].trim() : "";
     const lastNumber = parts[3] ? parseInt(parts[3], 10) : Infinity; // Use Infinity for missing last number
     return { firstNumber, alphaPart, lastNumber };
+  },
+  resultOffset: 150,
+  resultPage: 0,
+  resultStart: () => utils.resultPage * utils.resultOffset,
+  resultEnd: () => utils.resultStart() + utils.resultOffset,
+  resultTotalPages: (data) => Math.ceil(data.length / utils.resultOffset),
+  clearResults: () => {
+    if (utils.resultPage === 0) {
+      utils.resultsElement.innerHTML = "";
+    }
   },
 };
 

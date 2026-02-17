@@ -24,3 +24,23 @@ field.addEventListener("change", (e) => {
 btnLookup.addEventListener("click", (e) => {
   ut.handleLookupBtn(e, format.value, field.value, term.value, term);
 });
+
+// "infinite scrolling"
+window.addEventListener("scroll", () => {
+  // If we are 500px from the bottom, load more
+  if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 500) {
+    const firstChar = format.value[0].toUpperCase();
+    const restChars = format.value.slice(1);
+    const adjFormatStr = firstChar + restChars;
+    if (ut.resultPage < ut.resultTotalPages(ut[`current${adjFormatStr}Data`])) {
+      console.log("lets load more results");
+      ut.resultPage++;
+      ut[`display${adjFormatStr}`](
+        ut[`current${adjFormatStr}Data`].slice(
+          ut.resultStart(),
+          ut.resultEnd(),
+        ),
+      );
+    }
+  }
+});

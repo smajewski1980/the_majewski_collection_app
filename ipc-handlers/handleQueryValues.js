@@ -31,7 +31,7 @@ async function handleQueryValues(e, data) {
   }
   // for the other fields
   const result = await pool.query(
-    `SELECT * FROM ${format} WHERE ${field} = $1 ORDER BY artist`,
+    `SELECT * FROM ${format} WHERE ${field} = $1 ORDER BY artist, title`,
     [term],
   );
   return result.rows;
