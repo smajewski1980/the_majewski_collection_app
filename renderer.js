@@ -12,6 +12,9 @@ ut.toggleInertEl(btnLookup, true);
 // and has its options loaded depending on which format
 format.addEventListener("change", (e) => {
   ut.handleFormatSelection(e, field);
+  term.value = "";
+  ut.toggleInertEl(term, true);
+  ut.toggleInertEl(btnLookup, true);
 });
 
 // when the field to search is selected, make term input active

@@ -86,7 +86,7 @@ const utils = {
    * @param {String} field
    * @param {String} term
    */
-  handleLookupBtn: async (e, format, field, term, termEl) => {
+  handleLookupBtn: async (e, format, field, term) => {
     e.preventDefault();
     const vals = { format: format, field: field, term: term };
     if (!field) {
@@ -146,21 +146,21 @@ const utils = {
         utils.currentCdsData = res;
         utils.displayCds(
           res.slice(utils.resultStart(), utils.resultEnd()),
-          termEl,
+          term,
         );
         break;
       case "records":
         utils.currentRecordsData = res;
         utils.displayRecords(
           res.slice(utils.resultStart(), utils.resultEnd()),
-          termEl,
+          term,
         );
         break;
       case "tapes":
         utils.currentTapesData = res;
         utils.displayTapes(
           res.slice(utils.resultStart(), utils.resultEnd()),
-          termEl,
+          term,
         );
         break;
       default:
@@ -170,13 +170,13 @@ const utils = {
   /**
    * this gets and displays the cds main query results
    * @param {QueryResultRow} rows
-   * @param {HTMLInputElement} termEl
+   * @param {String} term
    * @returns {void}
    */
-  displayCds: (rows, termEl) => {
+  displayCds: (rows, term) => {
     // if no results, show msg
     if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${termEl.value}`);
+      utils.displayNotFound(`No matching results found for: ${term}`);
       return;
     }
 
@@ -202,13 +202,13 @@ const utils = {
   /**
    * this gets and displays the records query results
    * @param {QueryResultRow} rows
-   * @param {HTMLInputElement} termEl
+   * @param {String} term
    * @returns {void}
    */
-  displayRecords: (rows, termEl = null) => {
+  displayRecords: (rows, term = null) => {
     // if no results, show msg
     if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${termEl.value}`);
+      utils.displayNotFound(`No matching results found for: ${term}`);
       return;
     }
 
@@ -258,13 +258,13 @@ const utils = {
   /**
    * this gets and displays the tapes query results
    * @param {QueryResultRow} rows
-   * @param {HTMLInputElement} termEl
+   * @param {String} term
    * @returns {void}
    */
-  displayTapes: (rows, termEl) => {
+  displayTapes: (rows, term) => {
     // if no results, show msg
     if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${termEl.value}`);
+      utils.displayNotFound(`No matching results found for: ${term}`);
       return;
     }
 
@@ -306,7 +306,7 @@ const utils = {
   },
   /**
    * this takes the current term value and displays an error msg
-   * @param {HTMLInputElement} termEl
+   * @param {String} msg
    */
   displayNotFound: (msg) => {
     const md = utils.messageDiv;
