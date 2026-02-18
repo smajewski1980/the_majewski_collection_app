@@ -137,33 +137,31 @@ const utils = {
       "handleQueryValues",
       vals,
     );
-    // clear the results div
-    // utils.resultsElement.innerHTML = "";
 
     // reset the "page" counter for a fresh search
     utils.resultPage = 0;
 
     switch (format) {
       case "cds":
+        utils.currentCdsData = res;
         utils.displayCds(
           res.slice(utils.resultStart(), utils.resultEnd()),
           termEl,
         );
-        utils.currentCdsData = res;
         break;
       case "records":
+        utils.currentRecordsData = res;
         utils.displayRecords(
           res.slice(utils.resultStart(), utils.resultEnd()),
           termEl,
         );
-        utils.currentRecordsData = res;
         break;
       case "tapes":
+        utils.currentTapesData = res;
         utils.displayTapes(
           res.slice(utils.resultStart(), utils.resultEnd()),
           termEl,
         );
-        utils.currentTapesData = res;
         break;
       default:
         break;
@@ -181,14 +179,8 @@ const utils = {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
-    // if (!termEl) {
-    //   utils.resultsElement.innerHTML = "";
-    // }
 
-    // ****************
     utils.clearResults();
-    console.log(utils.resultTotalPages(rows));
-    // ****************
 
     // get and append the header if its a fresh search
     if (utils.resultPage === 0) {
@@ -219,19 +211,14 @@ const utils = {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
-    // if (!termEl) {
-    //   utils.resultsElement.innerHTML = "";
-    // }
 
-    // ****************
     utils.clearResults();
-    console.log(utils.resultTotalPages(rows));
-    // ****************
 
     // get and append the header if its a fresh search
     if (utils.resultPage === 0) {
       utils.resultsElement.append(utils.getHeader("Records"));
     }
+
     // loop through data and create elements
     rows.forEach((row) => {
       const details = utils.makeDetails();
@@ -280,20 +267,14 @@ const utils = {
       utils.displayNotFound(`No matching results found for: ${termEl.value}`);
       return;
     }
-    // if (!termEl) {
-    //   utils.resultsElement.innerHTML = "";
-    // }
 
-    // ****************
     utils.clearResults();
-
-    console.log(utils.resultTotalPages(rows));
-    // ****************
 
     // get and append the header if its a fresh search
     if (utils.resultPage === 0) {
       utils.resultsElement.append(utils.getHeader("Tapes"));
     }
+
     // loop throught the data and create and append the elements
     rows.forEach((row) => {
       const details = utils.makeDetails();
@@ -446,10 +427,6 @@ const utils = {
     if (isRev[format][field]) {
       sorted.sort((a, b) => {
         if (field !== "id") {
-          // in order to sort the location strings numerically the way I wanted,
-          // I will not take credit for the extractComponents function and the
-          // below sorting code, while I did study it and made sure I understood it,
-          // I did not come up with it, I got help from A.I.
           if (field === "location") {
             const aComponents = utils.extractComponents(a[field]);
             const bComponents = utils.extractComponents(b[field]);

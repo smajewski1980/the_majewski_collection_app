@@ -32,8 +32,11 @@ window.addEventListener("scroll", () => {
     const firstChar = format.value[0].toUpperCase();
     const restChars = format.value.slice(1);
     const adjFormatStr = firstChar + restChars;
-    if (ut.resultPage < ut.resultTotalPages(ut[`current${adjFormatStr}Data`])) {
-      console.log("lets load more results");
+    if (
+      ut.resultPage <
+      ut.resultTotalPages(ut[`current${adjFormatStr}Data`]) - 1
+    ) {
+      console.log("loading more results");
       ut.resultPage++;
       ut[`display${adjFormatStr}`](
         ut[`current${adjFormatStr}Data`].slice(
