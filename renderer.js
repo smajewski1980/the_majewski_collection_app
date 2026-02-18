@@ -25,7 +25,7 @@ field.addEventListener("change", (e) => {
 
 // send the data for the query
 btnLookup.addEventListener("click", (e) => {
-  ut.handleLookupBtn(e, format.value, field.value, term.value, term);
+  ut.handleLookupBtn(e, format.value, field.value, term.value);
 });
 
 // "infinite scrolling"

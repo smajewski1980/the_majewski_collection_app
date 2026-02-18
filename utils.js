@@ -537,6 +537,12 @@ const utils = {
       title: false,
     },
   },
+  /**
+   * this is used to extract the parts of the location names
+   * so they may be ordered numerically not lexicographically
+   * @param {String} str
+   * @returns {{firstNumber: Number, alphaPart: String, lastNumber: Number}}
+   */
   extractComponents: (str) => {
     const parts = str.match(/(\d+)?\s*([A-Za-z/"\- ]+)?\s*(\d+)?/);
     const firstNumber = parts[1] ? parseInt(parts[1], 10) : Infinity; // Use Infinity for missing first number
