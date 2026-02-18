@@ -184,7 +184,7 @@ const utils = {
 
     // get and append the header if its a fresh search
     if (utils.resultPage === 0) {
-      utils.resultsElement.append(utils.getHeader("CdsMain"));
+      utils.resultsElement.append(utils.getHeader("Cds"));
     }
     // loop through the results, make and append elements to display the data
     rows.forEach((row) => {
@@ -419,7 +419,7 @@ const utils = {
   sortResults: (field, format) => {
     let sorted;
     // determine which dataset needs to be sorted
-    sorted = utils[`current${format}Data`]; // <--here i think **** inf scr
+    sorted = utils[`current${format}Data`];
     // an obj having flags for sort direction
     const isRev = utils.sortDirectionRev;
 
@@ -479,13 +479,25 @@ const utils = {
       // set flag
       isRev[format][field] = !isRev[format][field];
     }
+
+    utils.resultPage = 0;
+
     // display the results
     if (format === "Records") {
-      utils.displayRecords(sorted);
+      utils.currentRecordsData = sorted;
+      utils.displayRecords(
+        utils.currentRecordsData.slice(utils.resultStart(), utils.resultEnd()),
+      );
     } else if (format === "Tapes") {
-      utils.displayTapes(sorted);
-    } else if (format === "CdsMain") {
-      utils.displayCds(sorted);
+      utils.currentTapesData = sorted;
+      utils.displayTapes(
+        utils.currentTapesData.slice(utils.resultStart(), utils.resultEnd()),
+      );
+    } else if (format === "Cds") {
+      utils.currentCdsData = sorted;
+      utils.displayCds(
+        utils.currentCdsData.slice(utils.resultStart(), utils.resultEnd()),
+      );
     }
   },
   resultsElement: document.getElementById("query-results"),
@@ -518,7 +530,7 @@ const utils = {
       title: false,
       year: false,
     },
-    CdsMain: {
+    Cds: {
       artist: false,
       id: false,
       location: false,
@@ -532,7 +544,7 @@ const utils = {
     const lastNumber = parts[3] ? parseInt(parts[3], 10) : Infinity; // Use Infinity for missing last number
     return { firstNumber, alphaPart, lastNumber };
   },
-  resultOffset: 150,
+  resultOffset: 200,
   resultPage: 0,
   resultStart: () => utils.resultPage * utils.resultOffset,
   resultEnd: () => utils.resultStart() + utils.resultOffset,
