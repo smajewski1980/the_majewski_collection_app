@@ -3,6 +3,8 @@ const format = document.getElementById("query-format");
 const field = document.getElementById("query-field");
 const term = document.getElementById("query-term");
 const btnLookup = document.getElementById("btn-lookup");
+const btnToTop = document.querySelector(".back-to-top");
+let scrollDist;
 
 ut.toggleInertEl(field, true);
 ut.toggleInertEl(term, true);
@@ -30,8 +32,19 @@ btnLookup.addEventListener("click", (e) => {
 
 // "infinite scrolling"
 window.addEventListener("scroll", () => {
+  scrollDist = window.scrollY;
+
+  // enable back to top btn when scrolled a certain distance
+  if (scrollDist > 300) {
+    btnToTop.style.opacity = "1";
+    btnToTop.style.pointerEvents = "auto";
+  } else {
+    btnToTop.style.opacity = "0";
+    btnToTop.style.pointerEvents = "none";
+  }
+
   // If we are 500px from the bottom, load more
-  if (window.scrollY + window.innerHeight >= document.body.offsetHeight - 500) {
+  if (scrollDist + window.innerHeight >= document.body.offsetHeight - 500) {
     const firstChar = format.value[0].toUpperCase();
     const restChars = format.value.slice(1);
     const adjFormatStr = firstChar + restChars;

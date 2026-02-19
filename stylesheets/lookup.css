@@ -192,6 +192,54 @@
         }
       }
     }
+
+    .back-to-top {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+
+      span {
+        /* background-color: hsl(from var(--accent-purple) h s l / 0.25); */
+        background-color: var(--bg-color);
+        border-radius: 15px;
+        corner-shape: squircle;
+        bottom: 1rem;
+        outline: 1px solid var(--outline-purple);
+        /* outline-offset: 2px; */
+        padding-inline: 1rem;
+        position: fixed;
+        right: 2rem;
+        rotate: -90deg;
+        transition: background-color 0.3s;
+        line-height: 1;
+        font-weight: 700;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0.2rem;
+          border-radius: 15px;
+          corner-shape: squircle;
+          background: linear-gradient(
+            to bottom,
+            rgb(from var(--accent-purple) r g b / 0.35),
+            transparent 12%
+          );
+          z-index: -1;
+          rotate: 90deg;
+        }
+      }
+
+      &:hover span,
+      &:focus-visible span {
+        background-color: hsl(from var(--outline-purple) h s l / 0.3);
+      }
+
+      &:focus-visible span {
+        outline: 2px solid white;
+        outline-offset: 3px;
+      }
+    }
   }
 
   #message {

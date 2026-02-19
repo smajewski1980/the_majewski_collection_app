@@ -18,6 +18,7 @@
 html {
   color-scheme: light dark;
   scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 /* https://www.1001fonts.com/funky-fonts.html?page=3 */
