@@ -199,20 +199,20 @@
       transition: opacity 0.3s;
 
       span {
-        /* background-color: hsl(from var(--accent-purple) h s l / 0.25); */
         background-color: var(--bg-color);
         border-radius: 15px;
         corner-shape: squircle;
         bottom: 1rem;
         outline: 1px solid var(--outline-purple);
-        /* outline-offset: 2px; */
-        padding-inline: 1rem;
+        padding: 0rem 1rem;
         position: fixed;
         right: 2rem;
         rotate: -90deg;
         transition: background-color 0.3s;
         line-height: 1;
         font-weight: 700;
+        font-size: 3rem;
+        color: var(--accent-purple);
 
         &::after {
           content: "";

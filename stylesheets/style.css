@@ -52,7 +52,7 @@ input {
   font-family: monospace;
 }
 
-a,
+a:not(.back-to-top),
 button:not(#btn-help) {
   font-size: 3rem;
   text-decoration: none;

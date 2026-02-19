@@ -53,7 +53,9 @@ window.addEventListener("scroll", () => {
       ut.resultTotalPages(ut[`current${adjFormatStr}Data`]) - 1
     ) {
       console.log("loading more results");
+      console.log("bf inc ", ut.resultPage);
       ut.resultPage++;
+      console.log("after inc ", ut.resultPage);
       ut[`display${adjFormatStr}`](
         ut[`current${adjFormatStr}Data`].slice(
           ut.resultStart(),
