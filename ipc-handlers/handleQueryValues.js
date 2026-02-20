@@ -8,6 +8,24 @@ const pool = require("../dbconnect.js");
  */
 async function handleQueryValues(e, data) {
   let { format, field, term } = data;
+  const compFields = ["title_id", "title", "year", "location"];
+  const singleFields = ["single_id", "artist", "title", "year", "case_type"];
+
+  if (format === "cd-compilations") {
+    if (compFields.includes(field)) {
+      return "this will search the comps";
+    } else {
+      return "this will search the comps tracks";
+    }
+  }
+
+  if (format === "cd-singles") {
+    if (singleFields.includes(field)) {
+      return "this will search the singles";
+    } else {
+      return "this will search the singles tracks";
+    }
+  }
   // for the fields that need a case-insensitive non-exact comparison
   if (
     field === "artist" ||

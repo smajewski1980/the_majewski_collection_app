@@ -61,13 +61,13 @@ const utils = {
         utils.populateSelectOptions(cdsRes, field);
         utils.toggleInertEl(field, false);
         break;
-      case "cd_compilations":
+      case "cd-compilations":
         const cdCompilationsRes =
           await getFormatFields.getCdCompsFields("getCdCompsFields");
         utils.populateSelectOptions(cdCompilationsRes, field);
         utils.toggleInertEl(field, false);
         break;
-      case "cd_singles":
+      case "cd-singles":
         const cdSingRes =
           await getFormatFields.getCdSinglesFields("getCdSinglesFields");
         utils.populateSelectOptions(cdSingRes, field);
@@ -143,7 +143,6 @@ const utils = {
 
     switch (format) {
       case "cds":
-        console.log(res.length);
         utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
         utils.currentCdsData = res;
         utils.displayCds(
@@ -152,7 +151,6 @@ const utils = {
         );
         break;
       case "records":
-        console.log(res.length);
         utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
         utils.currentRecordsData = res;
         utils.displayRecords(
@@ -161,13 +159,18 @@ const utils = {
         );
         break;
       case "tapes":
-        console.log(res.length);
         utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
         utils.currentTapesData = res;
         utils.displayTapes(
           res.slice(utils.resultStart(), utils.resultEnd()),
           term,
         );
+        break;
+      case "cd-compilations":
+        console.log(res);
+        break;
+      case "cd-singles":
+        console.log(res);
         break;
       default:
         break;
