@@ -298,10 +298,14 @@ const utils = {
       // add the data that is only shown when open
       const span1 = utils.makeSpan();
       const span2 = utils.makeSpan();
+      // this class is for alignment
+      span2.className = "span2";
       const span3 = utils.makeSpan();
-      span1.textContent = row.year;
+      // if year is null
+      span1.textContent = row.year ? row.year : "year n/a";
       span2.textContent = `Needs Repair: ${row.needs_repair}`;
-      span3.textContent = row.speed ? row.speed : "n/a";
+      // if speed is null
+      span3.textContent = `Speed: ${row.speed ? row.speed : "n/a"}`;
       p.append(span1, span2, span3);
       details.append(p);
       utils.resultsElement.append(details);
