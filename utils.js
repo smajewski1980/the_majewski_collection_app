@@ -243,18 +243,18 @@ const utils = {
       const span2 = utils.makeSpan();
       const span3 = utils.makeSpan();
       const span4 = utils.makeSpan();
-      const span5 = utils.makeSpan();
-      span1.textContent = row.year;
+      span1.textContent = row.diameter;
       // if the label name doesnt end with the word records, add it. 78s exempt
       span2.textContent =
         !row.label.toLowerCase().includes("records") &&
         !row.location.includes("78s")
           ? row.label + " Records"
           : row.label;
-      span3.textContent = row.diameter;
-      span4.textContent = `Record Condition: ${row.record_condition}`;
-      span5.textContent = `Sleeve Condition: ${row.sleeve_condition}`;
-      p.append(span1, span2, span3, span4, span5);
+      // this class keeps the alignment consistent with the summary text
+      span2.className = "span2";
+      span3.textContent = `Rec / Sleeve Condition: ${"\u00A0\u00A0"}${row.record_condition} / ${row.sleeve_condition}`;
+      span4.textContent = row.year;
+      p.append(span1, span2, span3, span4);
       details.append(p);
       utils.resultsElement.append(details);
     });
