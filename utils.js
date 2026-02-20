@@ -143,6 +143,8 @@ const utils = {
 
     switch (format) {
       case "cds":
+        console.log(res.length);
+        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
         utils.currentCdsData = res;
         utils.displayCds(
           res.slice(utils.resultStart(), utils.resultEnd()),
@@ -150,6 +152,8 @@ const utils = {
         );
         break;
       case "records":
+        console.log(res.length);
+        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
         utils.currentRecordsData = res;
         utils.displayRecords(
           res.slice(utils.resultStart(), utils.resultEnd()),
@@ -157,6 +161,8 @@ const utils = {
         );
         break;
       case "tapes":
+        console.log(res.length);
+        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
         utils.currentTapesData = res;
         utils.displayTapes(
           res.slice(utils.resultStart(), utils.resultEnd()),
@@ -502,6 +508,7 @@ const utils = {
   },
   resultsElement: document.getElementById("query-results"),
   messageDiv: document.getElementById("message"),
+  resQtyEl: document.getElementById("result-qty"),
   makeSpan: () => document.createElement("span"),
   makeP: () => document.createElement("p"),
   makeDetails: () => document.createElement("details"),

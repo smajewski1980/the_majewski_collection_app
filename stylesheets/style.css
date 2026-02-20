@@ -48,7 +48,8 @@ button {
 }
 
 select,
-input {
+input,
+#result-qty {
   font-family: monospace;
 }
 
