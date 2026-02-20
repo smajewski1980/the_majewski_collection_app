@@ -4,6 +4,9 @@ const field = document.getElementById("query-field");
 const term = document.getElementById("query-term");
 const btnLookup = document.getElementById("btn-lookup");
 const btnToTop = document.querySelector(".back-to-top");
+const btnHelp = document.getElementById("btn-help");
+const btnHelpClose = document.getElementById("btn-close");
+const dialog = document.getElementById("help-dialog");
 let scrollDist;
 
 ut.toggleInertEl(field, true);
@@ -71,5 +74,25 @@ window.addEventListener("scroll", () => {
         ),
       );
     }
+  }
+});
+
+btnHelp.addEventListener("click", (e) => {
+  document.startViewTransition(() => {
+    dialog.showModal();
+  });
+});
+
+btnHelpClose.addEventListener("click", (e) => {
+  document.startViewTransition(() => {
+    dialog.close();
+  });
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === dialog) {
+    document.startViewTransition(() => {
+      dialog.close();
+    });
   }
 });
