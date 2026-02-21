@@ -28,12 +28,9 @@
         alt="the majewski collection"
       />
       <h1>Lookup</h1>
-      <!-- commandfor="help-dialog"
-      command="show-modal" -->
       <button id="btn-help"></button>
-      <!-- closedby="any" -->
       <dialog id="help-dialog">
-        <div>
+        <div id="dialog-inner">
           <h2>Helpful tips</h2>
           <p>
             Click on a header field to sort by that field, click again to sort
@@ -44,8 +41,6 @@
           </p>
           <p>here will go more things</p>
           <p>here will go even. more. things.</p>
-          <!-- commandfor="help-dialog"
-        command="close" -->
           <button id="btn-close">x</button>
         </div>
       </dialog>
@@ -53,7 +48,6 @@
     </header>
     <main>
       <div class="query-options">
-        <!-- <h1>LOOKUP</h1> -->
         <div class="query-group">
           <label for="query-format">FORMAT</label>
           <select

@@ -77,6 +77,7 @@ window.addEventListener("scroll", () => {
   }
 });
 
+// these listeners are to make the help dialog fade in and out
 btnHelp.addEventListener("click", (e) => {
   document.startViewTransition(() => {
     dialog.showModal();

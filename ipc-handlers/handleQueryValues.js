@@ -13,7 +13,37 @@ async function handleQueryValues(e, data) {
 
   if (format === "cd-compilations") {
     if (compFields.includes(field)) {
-      return "this will search the comps";
+      // get all results ordered by title_id
+      if (field === "title_id" && !term) {
+        const result = await pool.query(
+          `SELECT * FROM cd_compilations ORDER BY title_id`,
+        );
+        return result.rows;
+      }
+      // get an item by title_id
+      if (field === "title_id") {
+        const result = await pool.query(
+          "SELECT * FROM cd_compilations WHERE title_id = $1",
+          [term],
+        );
+        return result.rows;
+      }
+      // get items from a year
+      if (field === "year") {
+        const result = await pool.query(
+          "SELECT * FROM cd_compilations WHERE year = $1",
+          [term],
+        );
+        return result.rows;
+      }
+
+      // for title or location
+      const result = await pool.query(
+        `SELECT * FROM cd_compilations WHERE LOWER(${field}) like LOWER($1)`,
+        [`%${term}%`],
+      );
+      return result.rows;
+      // return "this will search the comps";
     } else {
       return "this will search the comps tracks";
     }
