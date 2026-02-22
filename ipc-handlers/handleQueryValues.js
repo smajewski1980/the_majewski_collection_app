@@ -13,17 +13,10 @@ async function handleQueryValues(e, data) {
 
   if (format === "cd-compilations") {
     if (compFields.includes(field)) {
-      // get all results ordered by title_id
-      if (field === "title_id" && !term) {
-        const result = await pool.query(
-          `SELECT * FROM cd_compilations ORDER BY title_id`,
-        );
-        return result.rows;
-      }
       // get an item by title_id
       if (field === "title_id") {
         const result = await pool.query(
-          "SELECT * FROM cd_compilations WHERE title_id = $1",
+          "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cc.title_id = $1",
           [term],
         );
         return result.rows;
@@ -31,7 +24,7 @@ async function handleQueryValues(e, data) {
       // get items from a year
       if (field === "year") {
         const result = await pool.query(
-          "SELECT * FROM cd_compilations WHERE year = $1",
+          "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE year = $1",
           [term],
         );
         return result.rows;
@@ -39,12 +32,24 @@ async function handleQueryValues(e, data) {
 
       // for title or location
       const result = await pool.query(
-        `SELECT * FROM cd_compilations WHERE LOWER(${field}) like LOWER($1)`,
+        `SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE LOWER(${field}) like LOWER($1)`,
         [`%${term}%`],
       );
       return result.rows;
       // return "this will search the comps";
     } else {
+      if (field === "artist") {
+        const result = await pool.query(
+          "SELECT cc.title_id FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE LOWER(cct.artist) like LOWER($1)",
+          [`%${term}%`],
+        );
+        const ids = new Set(result.rows.map((t) => t.title_id));
+        const result2 = await pool.query(
+          "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cc.title_id = ANY($1)",
+          [[...ids]],
+        );
+        return result2.rows;
+      }
       return "this will search the comps tracks";
     }
   }

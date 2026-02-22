@@ -167,7 +167,29 @@ const utils = {
         );
         break;
       case "cd-compilations":
-        console.log(res);
+        const titles = {};
+        res.forEach((title) => {
+          if (!titles[title.title_id]) {
+            titles[title.title_id] = {
+              title: title.title,
+              year: title.year,
+              location: title.location,
+              tracks: {
+                [title.track_id]: {
+                  artist: title.artist,
+                  trackName: title.track_name,
+                },
+              },
+            };
+          } else {
+            titles[title.title_id].tracks[title.track_id] = {
+              artist: title.artist,
+              trackName: title.track_name,
+            };
+          }
+        });
+        console.log("num titles: ", Object.keys(titles).length);
+        console.log(titles);
         break;
       case "cd-singles":
         console.log(res);
