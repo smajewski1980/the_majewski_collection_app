@@ -65,6 +65,30 @@ async function handleQueryValues(e, data) {
 
   if (format === "cd-singles") {
     if (singleFields.includes(field)) {
+      // get a single by single_id
+      if (field === "single_id") {
+        const result = await pool.query(
+          "SELECT * FROM cd_singles WHERE single_id = $1",
+          [term],
+        );
+        return result.rows;
+      }
+      // get single by artist
+      if (field === "artist" || field === "title") {
+        const result = await pool.query(
+          `SELECT * FROM cd_singles WHERE LOWER(${field}) LIKE LOWER($1)`,
+          [`%${term}%`],
+        );
+        return result.rows;
+      }
+      // get singles from a year
+      if (field === "year") {
+        const result = await pool.query(
+          "SELECT * FROM cd_singles WHERE year = $1",
+          [term],
+        );
+        return result.rows;
+      }
       return "this will search the singles";
     } else {
       return "this will search the singles tracks";
