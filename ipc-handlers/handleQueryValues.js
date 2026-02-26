@@ -9,7 +9,6 @@ const pool = require("../dbconnect.js");
 async function handleQueryValues(e, data) {
   let { format, field, term } = data;
   const compFields = ["title_id", "title", "year", "location"];
-  const singleFields = ["single_id", "artist", "title", "year", "case_type"];
 
   if (format === "cd-compilations") {
     if (compFields.includes(field)) {
@@ -63,20 +62,28 @@ async function handleQueryValues(e, data) {
     }
   }
 
+  const singleFields = ["single_id", "artist", "title", "year", "case_type"];
+
   if (format === "cd-singles") {
     if (singleFields.includes(field)) {
       // get a single by single_id
-      if (field === "single_id") {
+      if (field === "single_id" && term) {
         const result = await pool.query(
-          "SELECT * FROM cd_singles WHERE single_id = $1",
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cs.single_id = $1",
           [term],
         );
         return result.rows;
-      }
-      // get single by artist
-      if (field === "artist" || field === "title") {
+      } else if (field === "single_id" && !term) {
+        // if the term is empty return all items ordered by single_id
         const result = await pool.query(
-          `SELECT * FROM cd_singles WHERE LOWER(${field}) LIKE LOWER($1)`,
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id ORDER BY cs.single_id",
+        );
+        return result.rows;
+      }
+      // get single by artist, title, or case_type, non case-sensitive
+      if (field === "artist" || field === "title" || field === "case_type") {
+        const result = await pool.query(
+          `SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE LOWER(${field}) LIKE LOWER($1)`,
           [`%${term}%`],
         );
         return result.rows;
@@ -84,14 +91,45 @@ async function handleQueryValues(e, data) {
       // get singles from a year
       if (field === "year") {
         const result = await pool.query(
-          "SELECT * FROM cd_singles WHERE year = $1",
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE year = $1",
           [term],
         );
         return result.rows;
       }
-      return "this will search the singles";
     } else {
-      return "this will search the singles tracks";
+      // get a single by a given track_id
+      if (field === "track_id" && term) {
+        const result = await pool.query(
+          // get the id of the single for the given track
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cst.track_id = $1",
+          [term],
+        );
+        const singleId = result.rows[0].single_id;
+
+        // get the single data for the given track's single id
+        const result2 = await pool.query(
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cs.single_id = $1",
+          [singleId],
+        );
+
+        return result2.rows;
+      } else if (field === "track_id" && !term) {
+        // if no term return all items ordered by track id
+        const result = await pool.query(
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id ORDER BY cst.track_id",
+        );
+
+        return result.rows;
+      }
+      // case insensitive
+      if (field == "track_name") {
+        const result = await pool.query(
+          `SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE LOWER(track_name) LIKE LOWER($1)`,
+          [`%${term}%`],
+        );
+
+        return result.rows;
+      }
     }
   }
   // for the fields that need a case-insensitive non-exact comparison
