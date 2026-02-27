@@ -169,6 +169,7 @@ const utils = {
       case "cd-compilations":
         const titles = {};
         res.forEach((title) => {
+          // if its the first time, save title info
           if (!titles[title.title_id]) {
             titles[title.title_id] = {
               title: title.title,
@@ -182,17 +183,43 @@ const utils = {
               },
             };
           } else {
+            // otherwise just keep adding tracks as we iterate
             titles[title.title_id].tracks[title.track_id] = {
               artist: title.artist,
               trackName: title.track_name,
             };
           }
+          utils.resQtyEl.innerText = `${Object.keys(titles).length} result${Object.keys(titles).length > 1 ? "s" : ""}`;
+          utils.currentCdCompsData = res;
         });
         console.log("num titles: ", Object.keys(titles).length);
         console.log(titles);
         break;
       case "cd-singles":
-        console.log(res);
+        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
+        const singles = {};
+        res.forEach((sing) => {
+          // on the first iteration, set up a single including the first track
+          if (!singles[sing.single_id]) {
+            singles[sing.single_id] = {
+              artist: sing.artist,
+              title: sing.title,
+              year: sing.year,
+              case_type: sing.case_type,
+              tracks: {
+                [sing.track_id]: sing.track_name,
+              },
+            };
+          } else {
+            // add the rest of the tracks
+            singles[sing.single_id].tracks[sing.track_id] = sing.track_name;
+          }
+          utils.resQtyEl.innerText = `${Object.keys(singles).length} result${Object.keys(singles).length > 1 ? "s" : ""}`;
+          utils.currentCdSinglesData = res;
+        });
+
+        console.log("num titles: ", Object.keys(singles).length);
+        console.log(singles);
         break;
       default:
         break;
@@ -545,6 +572,8 @@ const utils = {
   currentRecordsData: null,
   currentCdsData: null,
   currentTapesData: null,
+  currentCdCompsData: null,
+  currentCdSinglesData: null,
   sortDirectionRev: {
     Records: {
       artist: false,
