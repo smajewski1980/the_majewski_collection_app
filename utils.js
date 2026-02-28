@@ -167,32 +167,38 @@ const utils = {
         );
         break;
       case "cd-compilations":
-        const titles = {};
+        const titles = [];
+        // assemble a title obj if this title not in titles
         res.forEach((title) => {
-          // if its the first time, save title info
-          if (!titles[title.title_id]) {
-            titles[title.title_id] = {
-              title: title.title,
-              year: title.year,
-              location: title.location,
-              tracks: {
-                [title.track_id]: {
-                  artist: title.artist,
-                  trackName: title.track_name,
+          if (!titles.some((t) => title.title_id in t)) {
+            titles.push({
+              [title.title_id]: {
+                title: title.title,
+                year: title.year,
+                location: title.location,
+                tracks: {
+                  [title.track_id]: {
+                    artist: title.artist,
+                    trackName: title.track_name,
+                  },
                 },
               },
-            };
+            });
           } else {
-            // otherwise just keep adding tracks as we iterate
-            titles[title.title_id].tracks[title.track_id] = {
+            // keep adding the tracks to a title if title is in titles
+            titles[titles.length - 1][title.title_id].tracks[title.track_id] = {
               artist: title.artist,
-              trackName: title.track_name,
+              title: title.track_name,
             };
           }
-          utils.resQtyEl.innerText = `${Object.keys(titles).length} result${Object.keys(titles).length > 1 ? "s" : ""}`;
-          utils.currentCdCompsData = res;
         });
-        console.log("num titles: ", Object.keys(titles).length);
+        utils.resQtyEl.innerText = `${titles.length} result${titles.length > 1 ? "s" : ""}`;
+        utils.currentCdCompsData = res;
+        utils.displayCdComps(
+          titles.slice(utils.resultStart(), utils.resultEnd()),
+          term,
+        );
+        console.log("num titles: ", titles.length);
         console.log(titles);
         break;
       case "cd-singles":
@@ -214,10 +220,13 @@ const utils = {
             // add the rest of the tracks
             singles[sing.single_id].tracks[sing.track_id] = sing.track_name;
           }
-          utils.resQtyEl.innerText = `${Object.keys(singles).length} result${Object.keys(singles).length > 1 ? "s" : ""}`;
-          utils.currentCdSinglesData = res;
         });
-
+        utils.resQtyEl.innerText = `${Object.keys(singles).length} result${Object.keys(singles).length > 1 ? "s" : ""}`;
+        utils.currentCdSinglesData = res;
+        utils.displayCdSingles(
+          res.slice(utils.resultStart(), utils.resultEnd()),
+          term,
+        );
         console.log("num titles: ", Object.keys(singles).length);
         console.log(singles);
         break;
@@ -365,6 +374,14 @@ const utils = {
 
     // adjust the second column widths for centering
     utils.setArtistColWidths();
+  },
+  displayCdComps: (rows, term) => {
+    console.log(rows);
+    console.log(term);
+  },
+  displayCdSingles: (rows, term) => {
+    console.log(rows);
+    console.log(term);
   },
   /**
    * this takes the current term value and displays an error msg

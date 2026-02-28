@@ -13,17 +13,22 @@ async function handleQueryValues(e, data) {
   if (format === "cd-compilations") {
     if (compFields.includes(field)) {
       // get an item by title_id
-      if (field === "title_id") {
+      if (field === "title_id" && term) {
         const result = await pool.query(
           "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cc.title_id = $1",
           [term],
+        );
+        return result.rows;
+      } else if (field === "title_id" && !term) {
+        const result = await pool.query(
+          "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id ORDER BY cc.title_id",
         );
         return result.rows;
       }
       // get items from a year
       if (field === "year") {
         const result = await pool.query(
-          "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE year = $1",
+          "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE year = $1 ORDER BY cc.title_id",
           [term],
         );
         return result.rows;
@@ -31,7 +36,7 @@ async function handleQueryValues(e, data) {
 
       // for title or location
       const result = await pool.query(
-        `SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE LOWER(${field}) like LOWER($1)`,
+        `SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE LOWER(${field}) like LOWER($1) ORDER BY cc.title_id`,
         [`%${term}%`],
       );
       return result.rows;
@@ -43,11 +48,11 @@ async function handleQueryValues(e, data) {
       );
       const ids = new Set(result.rows.map((t) => t.title_id));
       const result2 = await pool.query(
-        "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cc.title_id = ANY($1)",
+        "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cc.title_id = ANY($1) ORDER BY cc.title_id",
         [[...ids]],
       );
       return result2.rows;
-    } else {
+    } else if (field === "track_id" && term) {
       // search by track id, get the full title info and return
       const result = await pool.query(
         "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cct.track_id = $1",
@@ -57,6 +62,17 @@ async function handleQueryValues(e, data) {
       const result2 = await pool.query(
         "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cc.title_id = $1",
         [id],
+      );
+      return result2.rows;
+    } else {
+      // return all items if search filed is track id and !term
+      const result = await pool.query(
+        "SELECT cc.title_id FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id ORDER BY cct.track_id",
+      );
+      const ids = new Set(result.rows.map((t) => t.title_id));
+      const result2 = await pool.query(
+        "SELECT * FROM cd_compilations cc JOIN cd_compilations_tracks cct ON cc.title_id = cct.title_id WHERE cc.title_id = ANY($1) ORDER BY cc.title_id",
+        [[...ids]],
       );
       return result2.rows;
     }
