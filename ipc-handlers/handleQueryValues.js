@@ -85,7 +85,7 @@ async function handleQueryValues(e, data) {
       // get a single by single_id
       if (field === "single_id" && term) {
         const result = await pool.query(
-          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cs.single_id = $1",
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cs.single_id = $1 ORDER BY cs.single_id",
           [term],
         );
         return result.rows;
@@ -99,7 +99,7 @@ async function handleQueryValues(e, data) {
       // get single by artist, title, or case_type, non case-sensitive
       if (field === "artist" || field === "title" || field === "case_type") {
         const result = await pool.query(
-          `SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE LOWER(${field}) LIKE LOWER($1)`,
+          `SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE LOWER(${field}) LIKE LOWER($1) ORDER BY cs.single_id`,
           [`%${term}%`],
         );
         return result.rows;
@@ -107,7 +107,7 @@ async function handleQueryValues(e, data) {
       // get singles from a year
       if (field === "year") {
         const result = await pool.query(
-          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE year = $1",
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE year = $1 ORDER BY cs.single_id",
           [term],
         );
         return result.rows;
@@ -117,14 +117,14 @@ async function handleQueryValues(e, data) {
       if (field === "track_id" && term) {
         const result = await pool.query(
           // get the id of the single for the given track
-          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cst.track_id = $1",
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cst.track_id = $1 ORDER BY cs.single_id",
           [term],
         );
         const singleId = result.rows[0].single_id;
 
         // get the single data for the given track's single id
         const result2 = await pool.query(
-          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cs.single_id = $1",
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cs.single_id = $1  ORDER BY cst.track_id",
           [singleId],
         );
 
@@ -132,7 +132,7 @@ async function handleQueryValues(e, data) {
       } else if (field === "track_id" && !term) {
         // if no term return all items ordered by track id
         const result = await pool.query(
-          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id ORDER BY cst.track_id",
+          "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id ORDER BY cs.single_id",
         );
 
         return result.rows;
@@ -140,7 +140,7 @@ async function handleQueryValues(e, data) {
       // case insensitive
       if (field == "track_name") {
         const result = await pool.query(
-          `SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE LOWER(track_name) LIKE LOWER($1)`,
+          `SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE LOWER(track_name) LIKE LOWER($1) ORDER BY cs.single_id`,
           [`%${term}%`],
         );
 
