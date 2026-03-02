@@ -95,7 +95,14 @@ const utils = {
     }
 
     // validate id or year are numbers
-    if ((field === "id" || field === "year") && !parseInt(term)) {
+    if (
+      (field === "id" ||
+        field === "year" ||
+        field === "title_id" ||
+        field === "track_id" ||
+        field === "single_id") &&
+      !parseInt(term)
+    ) {
       utils.displayNotFound(
         "Please enter a valid number to search by that field.",
       );
@@ -173,6 +180,7 @@ const utils = {
           if (!titles.some((t) => title.title_id in t)) {
             titles.push({
               [title.title_id]: {
+                titleId: title.title_id,
                 title: title.title,
                 year: title.year,
                 location: title.location,
@@ -188,7 +196,7 @@ const utils = {
             // keep adding the tracks to a title if title is in titles
             titles[titles.length - 1][title.title_id].tracks[title.track_id] = {
               artist: title.artist,
-              title: title.track_name,
+              trackName: title.track_name,
             };
           }
         });
@@ -379,10 +387,70 @@ const utils = {
     utils.setArtistColWidths();
   },
   displayCdComps: (rows, term) => {
+    // if no results, show msg
+    if (rows.length === 0) {
+      utils.displayNotFound(`No matching results found for: ${term}`);
+      return;
+    }
+
+    utils.clearResults();
+
+    // get and append the header if its a fresh search
+    if (utils.resultPage === 0) {
+      utils.resultsElement.append(utils.getHeader("CdComps"));
+    }
+
+    rows.forEach((row, idx) => {
+      const details = utils.makeDetails();
+      const summary = utils.makeSummary();
+      // add the data to be always visible
+      summary.append(
+        utils.createLoadedSpan(row[Object.keys(row)[0]].titleId, 0),
+        utils.createLoadedSpan(row[Object.keys(row)[0]].title, 1),
+        utils.createLoadedSpan(row[Object.keys(row)[0]].year, 2),
+        utils.createLoadedSpan(row[Object.keys(row)[0]].location, 3),
+      );
+      details.append(summary);
+
+      const tracks = row[Object.keys(row)[0]].tracks;
+      let trackCounter = 1;
+      for (let tr in tracks) {
+        const artist = tracks[tr].artist;
+        const track = tracks[tr].trackName;
+        // add the data that is only shown when open
+        const p = utils.makeP();
+        p.textContent = `${trackCounter} ${artist} - ${track}`;
+        p.className = "comp-tracks";
+        details.append(p);
+        trackCounter++;
+      }
+
+      utils.resultsElement.append(details);
+    });
+
+    // adjust the second column widths for centering
+    utils.setArtistColWidths();
     console.log(rows);
     console.log(term);
   },
   displayCdSingles: (rows, term) => {
+    // if no results, show msg
+    if (rows.length === 0) {
+      utils.displayNotFound(`No matching results found for: ${term}`);
+      return;
+    }
+
+    utils.clearResults();
+
+    // get and append the header if its a fresh search
+    if (utils.resultPage === 0) {
+      utils.resultsElement.append(utils.getHeader("CdSingles"));
+    }
+
+    rows.forEach((row) => {
+      console.log(row);
+    });
+
     console.log(rows);
     console.log(term);
   },
@@ -414,7 +482,13 @@ const utils = {
     const span1 = utils.makeSpan();
     span1.className = "span1";
     const inner1 = utils.makeSpan();
-    inner1.textContent = "ID";
+    if (format === "CdComps") {
+      inner1.textContent = "TITLE ID";
+    } else if (format === "CdSingles") {
+      inner1.textContent = "SINGLE ID";
+    } else {
+      inner1.textContent = "ID";
+    }
     span1.append(inner1);
     inner1.addEventListener("click", (e) => {
       if (format) {
@@ -426,7 +500,11 @@ const utils = {
     const span2 = utils.makeSpan();
     span2.className = "span2";
     const inner2 = utils.makeSpan();
-    inner2.textContent = "ARTIST";
+    if (format === "CdComps") {
+      inner2.textContent = "TITLE";
+    } else {
+      inner2.textContent = "ARTIST";
+    }
     span2.append(inner2);
     inner2.addEventListener("click", (e) => {
       if (format) {
@@ -436,7 +514,11 @@ const utils = {
     const span3 = utils.makeSpan();
     span3.className = "span3";
     const inner3 = utils.makeSpan();
-    inner3.textContent = "TITLE";
+    if (format === "CdComps") {
+      inner3.textContent = "YEAR";
+    } else {
+      inner3.textContent = "TITLE";
+    }
     span3.append(inner3);
     inner3.addEventListener("click", (e) => {
       if (format) {

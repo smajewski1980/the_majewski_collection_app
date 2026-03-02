@@ -177,11 +177,13 @@
         p {
           font-family: var(--reg-font);
           color: var(--accent-purple);
-          display: grid;
           /* grid-template-columns: repeat(5, 1fr); */
           grid-template-columns: 10% auto 1fr 15%;
           text-align: center;
           padding-block: 0.5rem;
+        }
+        p:not(.comp-tracks) {
+          display: grid;
         }
       }
 
