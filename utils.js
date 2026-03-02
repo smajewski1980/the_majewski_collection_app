@@ -400,32 +400,24 @@ const utils = {
       utils.resultsElement.append(utils.getHeader("CdComps"));
     }
 
-    rows.forEach((row, idx) => {
-      const details = utils.makeDetails();
-      const summary = utils.makeSummary();
+    rows.forEach((row) => {
+      const p = utils.makeP();
       // add the data to be always visible
-      summary.append(
+      p.append(
         utils.createLoadedSpan(row[Object.keys(row)[0]].titleId, 0),
         utils.createLoadedSpan(row[Object.keys(row)[0]].title, 1),
         utils.createLoadedSpan(row[Object.keys(row)[0]].year, 2),
         utils.createLoadedSpan(row[Object.keys(row)[0]].location, 3),
       );
-      details.append(summary);
 
-      const tracks = row[Object.keys(row)[0]].tracks;
-      let trackCounter = 1;
-      for (let tr in tracks) {
-        const artist = tracks[tr].artist;
-        const track = tracks[tr].trackName;
-        // add the data that is only shown when open
-        const p = utils.makeP();
-        p.textContent = `${trackCounter} ${artist} - ${track}`;
-        p.className = "comp-tracks";
-        details.append(p);
-        trackCounter++;
-      }
+      p.className = `item-idx-${row[Object.keys(row)[0]].titleId}`;
 
-      utils.resultsElement.append(details);
+      p.addEventListener("click", (e) => {
+        utils.populatePopover(row[Object.keys(row)[0]].titleId, "comps");
+        utils.resultPopover.showPopover();
+      });
+
+      utils.resultsElement.append(p);
     });
 
     // adjust the second column widths for centering
@@ -705,6 +697,30 @@ const utils = {
     },
   },
   /**
+   * takes in an id and populates the popover with the
+   * appropriate tracks for that id
+   * @param {Number} id
+   * @param {String} fmt
+   */
+  populatePopover: (id, fmt) => {
+    utils.resultPopover.innerHTML = "";
+    if (fmt === "comps") {
+      const tracks = utils.currentCdCompsData.filter(
+        (tr) => tr.title_id === id,
+      );
+      let trackCounter = 1;
+      for (let tr in tracks) {
+        const artist = tracks[tr].artist;
+        const track = tracks[tr].track_name;
+        const p = utils.makeP();
+        p.textContent = `${trackCounter} ${artist} - ${track}`;
+        p.className = "comp-tracks";
+        utils.resultPopover.append(p);
+        trackCounter++;
+      }
+    }
+  },
+  /**
    * this is used to extract the parts of the location names
    * so they may be ordered numerically not lexicographically
    * @param {String} str
@@ -721,12 +737,14 @@ const utils = {
   resultPage: 0,
   resultStart: () => utils.resultPage * utils.resultOffset,
   resultEnd: () => utils.resultStart() + utils.resultOffset,
-  resultTotalPages: (data) => Math.ceil(data.length / utils.resultOffset),
+  resultTotalPages: (data) =>
+    data ? Math.ceil(data.length / utils.resultOffset) : 0,
   clearResults: () => {
     if (utils.resultPage === 0) {
       utils.resultsElement.innerHTML = "";
     }
   },
+  resultPopover: document.getElementById("tracks-popover"),
 };
 
 export default utils;

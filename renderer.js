@@ -97,3 +97,7 @@ window.addEventListener("click", (e) => {
     });
   }
 });
+
+ut.resultPopover.addEventListener("click", (e) => {
+  ut.resultPopover.hidePopover();
+});
