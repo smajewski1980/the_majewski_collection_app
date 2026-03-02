@@ -169,6 +169,13 @@
         }
       }
 
+      p.cd-comps {
+        grid-template-columns: 10% auto 10% 15%;
+      }
+      p.cd-singles {
+        grid-template-columns: 10% auto 1fr 10% 15%;
+      }
+
       details {
         &[open] {
           border-block: 1px solid hsl(from var(--accent-purple) h s l / 0.5);

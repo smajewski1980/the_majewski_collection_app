@@ -207,7 +207,6 @@ const utils = {
           term,
         );
         console.log("num titles: ", titles.length);
-        console.log(titles);
         break;
       case "cd-singles":
         utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
@@ -217,6 +216,7 @@ const utils = {
           if (!singles.some((s) => sing.single_id in s)) {
             singles.push({
               [sing.single_id]: {
+                singleId: sing.single_id,
                 artist: sing.artist,
                 title: sing.title,
                 year: sing.year,
@@ -239,7 +239,6 @@ const utils = {
           term,
         );
         console.log("num titles: ", singles.length);
-        console.log(singles);
         break;
       default:
         break;
@@ -410,8 +409,9 @@ const utils = {
         utils.createLoadedSpan(row[Object.keys(row)[0]].location, 3),
       );
 
-      p.className = `item-idx-${row[Object.keys(row)[0]].titleId}`;
+      p.className = `cd-comps item-idx-${row[Object.keys(row)[0]].titleId}`;
 
+      // add the listener to the row that will load and open the tracks popover
       p.addEventListener("click", (e) => {
         utils.populatePopover(row[Object.keys(row)[0]].titleId, "comps");
         utils.resultPopover.showPopover();
@@ -420,10 +420,7 @@ const utils = {
       utils.resultsElement.append(p);
     });
 
-    // adjust the second column widths for centering
-    utils.setArtistColWidths();
-    console.log(rows);
-    console.log(term);
+    document.querySelector(".result-header").classList.add("cd-comps");
   },
   displayCdSingles: (rows, term) => {
     // if no results, show msg
@@ -440,11 +437,30 @@ const utils = {
     }
 
     rows.forEach((row) => {
-      console.log(row);
-    });
+      const p = utils.makeP();
 
-    console.log(rows);
-    console.log(term);
+      // add the data to be always visible
+      p.append(
+        utils.createLoadedSpan(row[Object.keys(row)[0]].singleId, 0),
+        utils.createLoadedSpan(row[Object.keys(row)[0]].artist, 1),
+        utils.createLoadedSpan(row[Object.keys(row)[0]].title, 2),
+        utils.createLoadedSpan(row[Object.keys(row)[0]].year, 3),
+        utils.createLoadedSpan(row[Object.keys(row)[0]].case_type, 4),
+      );
+
+      p.className = `cd-singles item-idx-${row[Object.keys(row)[0]].singleId}`;
+
+      // add the listener to the row that will load and open the tracks popover
+      p.addEventListener("click", (e) => {
+        utils.populatePopover(row[Object.keys(row)[0]].singleId, "singles");
+        utils.resultPopover.showPopover();
+      });
+
+      utils.resultsElement.append(p);
+
+      // adjust the second column widths for centering
+      utils.setArtistColWidths();
+    });
   },
   /**
    * this takes the current term value and displays an error msg
@@ -520,7 +536,7 @@ const utils = {
     const span4 = utils.makeSpan();
     span4.className = "span4";
     const inner4 = utils.makeSpan();
-    inner4.textContent = "LOCATION";
+    inner4.textContent = format === "CdSingles" ? "YEAR" : "LOCATION";
     span4.append(inner4);
     inner4.addEventListener("click", (e) => {
       if (format) {
@@ -529,6 +545,17 @@ const utils = {
     });
 
     p.append(span1, span2, span3, span4);
+
+    if (format === "CdSingles") {
+      const span5 = utils.makeSpan();
+      span5.className = "span5";
+      const inner5 = utils.makeSpan();
+      inner5.textContent = "CASE TYPE";
+      span5.append(inner5);
+      // add listener later
+      p.append(span5);
+      p.classList.add("cd-singles");
+    }
 
     return p;
   },
@@ -718,6 +745,18 @@ const utils = {
         utils.resultPopover.append(p);
         trackCounter++;
       }
+    } else {
+      const tracks = utils.currentCdSinglesData.filter(
+        (tr) => tr.single_id === id,
+      );
+      const trackNames = tracks.map((tr) => tr.track_name);
+      let trackCounter = 1;
+      trackNames.forEach((tr) => {
+        const p = utils.makeP();
+        p.textContent = `${trackCounter} - ${tr}`;
+        utils.resultPopover.append(p);
+        trackCounter++;
+      });
     }
   },
   /**
