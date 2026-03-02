@@ -171,9 +171,11 @@
 
       p.cd-comps {
         grid-template-columns: 10% auto 10% 15%;
+        cursor: pointer;
       }
       p.cd-singles {
         grid-template-columns: 10% auto 1fr 10% 15%;
+        cursor: pointer;
       }
 
       details {
@@ -295,5 +297,33 @@
       "Helvetica Neue",
       sans-serif;
     margin: auto;
+    border: none;
+    color: var(--accent-purple);
+    padding: 3rem;
+    outline: 2px solid var(--accent-purple);
+    position: relative;
+    border-radius: 15px;
+    corner-shape: squircle;
+    min-width: 350px;
+    max-width: 700px;
+    position: fixed;
+
+    &::after {
+      content: "X";
+      position: absolute;
+      /* display: block; */
+      width: 1.5rem;
+      height: 1.5rem;
+      top: 1rem;
+      right: 1rem;
+      outline: 1px solid var(--accent-purple);
+      outline-offset: 3px;
+      cursor: pointer;
+      border-radius: 50%;
+      display: grid;
+      place-content: center;
+      line-height: 1;
+      padding-inline-end: 0.05rem;
+    }
   }
 }

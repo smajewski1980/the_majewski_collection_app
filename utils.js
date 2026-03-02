@@ -730,11 +730,19 @@ const utils = {
    * @param {String} fmt
    */
   populatePopover: (id, fmt) => {
+    // empty existing content
     utils.resultPopover.innerHTML = "";
+    // label for what these tracks are for
+    const popHeading = document.createElement("h3");
+    utils.resultPopover.append(popHeading);
     if (fmt === "comps") {
+      // filter out the needed tracks for this title id
       const tracks = utils.currentCdCompsData.filter(
         (tr) => tr.title_id === id,
       );
+      // populate the heading text
+      popHeading.innerText = `${tracks[0].title}:`;
+      // loop through the filtered tracks and append
       let trackCounter = 1;
       for (let tr in tracks) {
         const artist = tracks[tr].artist;
@@ -746,15 +754,33 @@ const utils = {
         trackCounter++;
       }
     } else {
+      // if singles
+      // this will be an array of track titles
       const tracks = utils.currentCdSinglesData.filter(
         (tr) => tr.single_id === id,
       );
+      // get the artist and title to load the popover heading
+      let artist;
+      let title;
+      let counter = 0;
+      // loop through the currSinglesData until we get the info we need
+      while (!artist) {
+        const currSingle = utils.currentCdSinglesData[counter];
+        if (currSingle.single_id === id) {
+          artist = currSingle.artist;
+          title = currSingle.title;
+        }
+        counter++;
+      }
+
       const trackNames = tracks.map((tr) => tr.track_name);
       let trackCounter = 1;
+      // loop through the filtered tracks and append
       trackNames.forEach((tr) => {
         const p = utils.makeP();
         p.textContent = `${trackCounter} - ${tr}`;
         utils.resultPopover.append(p);
+        popHeading.innerText = `${artist} - ${title}:`;
         trackCounter++;
       });
     }
