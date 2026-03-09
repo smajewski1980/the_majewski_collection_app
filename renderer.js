@@ -56,17 +56,22 @@ window.addEventListener("scroll", () => {
 
   // If we are 500px from the bottom, load more
   if (scrollDist + window.innerHeight >= document.body.offsetHeight - 500) {
-    const firstChar = format.value[0].toUpperCase();
-    const restChars = format.value.slice(1);
-    const adjFormatStr = firstChar + restChars;
+    let adjFormatStr;
+    if (format.value !== "cd-compilations" && format.value !== "cd-singles") {
+      const firstChar = format.value[0].toUpperCase();
+      const restChars = format.value.slice(1);
+      adjFormatStr = firstChar + restChars;
+    } else if (format.value === "cd-compilations") {
+      adjFormatStr = "CdComps";
+    } else if (format.value === "cd-singles") {
+      adjFormatStr = "CdSingles";
+    }
     if (
       ut.resultPage <
       ut.resultTotalPages(ut[`current${adjFormatStr}Data`]) - 1
     ) {
       console.log("loading more results");
-      console.log("bf inc ", ut.resultPage);
-      ut.resultPage++;
-      console.log("after inc ", ut.resultPage);
+      ut.resultPage++; //left of here getting this to work for comps and singles
       ut[`display${adjFormatStr}`](
         ut[`current${adjFormatStr}Data`].slice(
           ut.resultStart(),
