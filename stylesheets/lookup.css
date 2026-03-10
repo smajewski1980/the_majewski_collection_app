@@ -9,14 +9,28 @@
 
     img {
       max-width: 200px;
+      anchor-name: --btn-lookup;
     }
+
     h1,
     h2 {
       font-size: 3.5rem;
       color: var(--accent-purple);
     }
+
     h1 {
       margin-inline: 2rem auto;
+    }
+
+    #result-qty {
+      position: absolute;
+      position-anchor: --btn-lookup;
+      top: anchor(bottom);
+      left: anchor(center);
+      margin-block-start: 0.5rem;
+      transform: translateX(-50%);
+      font-size: 1.25rem;
+      text-wrap: nowrap;
     }
 
     dialog[open] {
@@ -134,21 +148,6 @@
           accent-color: var(--accent-purple);
           font-weight: 700;
         }
-      }
-
-      #btn-lookup {
-        anchor-name: --btn-lookup;
-      }
-
-      #result-qty {
-        position: absolute;
-        position-anchor: --btn-lookup;
-        bottom: anchor(top);
-        left: anchor(center);
-        margin-block-end: 1rem;
-        transform: translateX(-50%);
-        font-size: 1.25rem;
-        text-wrap: nowrap;
       }
     }
 

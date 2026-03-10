@@ -732,9 +732,10 @@ const utils = {
   populatePopover: (id, fmt) => {
     // empty existing content
     utils.resultPopover.innerHTML = "";
-    // label for what these tracks are for
+    // label for which title these tracks are for
     const popHeading = document.createElement("h3");
     utils.resultPopover.append(popHeading);
+
     if (fmt === "comps") {
       // filter out the needed title for this title id
       let title = utils.currentCdCompsData.filter((t) => {
@@ -757,7 +758,9 @@ const utils = {
         trackCounter++;
       }
     } else {
-      // if singles
+      // if we add records and tapes to have popover, this will
+      // be else if singles
+
       // this will be an array of track titles
       const tracks = utils.currentCdSinglesData.filter(
         (tr) => tr.single_id === id,
