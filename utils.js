@@ -410,11 +410,18 @@ const utils = {
       );
 
       p.className = `cd-comps item-idx-${row[Object.keys(row)[0]].titleId}`;
+      p.tabIndex = "0";
 
-      // add the listener to the row that will load and open the tracks popover
+      // add the listeners to the row that will load and open the tracks popover
       p.addEventListener("click", (e) => {
         utils.populatePopover(row[Object.keys(row)[0]].titleId, "comps");
         utils.resultPopover.showPopover();
+      });
+      p.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          utils.populatePopover(row[Object.keys(row)[0]].titleId, "comps");
+          utils.resultPopover.showPopover();
+        }
       });
 
       utils.resultsElement.append(p);
@@ -449,11 +456,18 @@ const utils = {
       );
 
       p.className = `cd-singles item-idx-${row[Object.keys(row)[0]].singleId}`;
+      p.tabIndex = "0";
 
-      // add the listener to the row that will load and open the tracks popover
+      // add the listeners to the row that will load and open the tracks popover
       p.addEventListener("click", (e) => {
         utils.populatePopover(row[Object.keys(row)[0]].singleId, "singles");
         utils.resultPopover.showPopover();
+      });
+      p.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          utils.populatePopover(row[Object.keys(row)[0]].singleId, "singles");
+          utils.resultPopover.showPopover();
+        }
       });
 
       utils.resultsElement.append(p);
