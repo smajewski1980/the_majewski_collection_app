@@ -201,7 +201,7 @@ const utils = {
           }
         });
         utils.resQtyEl.innerText = `${titles.length} result${titles.length > 1 ? "s" : ""}`;
-        utils.currentCdCompsData = res;
+        utils.currentCdCompsData = titles;
         utils.displayCdComps(
           titles.slice(utils.resultStart(), utils.resultEnd()),
           term,
@@ -736,17 +736,20 @@ const utils = {
     const popHeading = document.createElement("h3");
     utils.resultPopover.append(popHeading);
     if (fmt === "comps") {
-      // filter out the needed tracks for this title id
-      const tracks = utils.currentCdCompsData.filter(
-        (tr) => tr.title_id === id,
-      );
+      // filter out the needed title for this title id
+      let title = utils.currentCdCompsData.filter((t) => {
+        return parseInt(Object.keys(t)[0]) === id;
+      });
+
       // populate the heading text
-      popHeading.innerText = `${tracks[0].title}:`;
-      // loop through the filtered tracks and append
+      popHeading.innerText = `${title[0][id].title}:`;
+
+      // loop through the tracks and append to popover
+      const tracks = title[0][id].tracks;
       let trackCounter = 1;
       for (let tr in tracks) {
         const artist = tracks[tr].artist;
-        const track = tracks[tr].track_name;
+        const track = tracks[tr].trackName;
         const p = utils.makeP();
         p.textContent = `${trackCounter} ${artist} - ${track}`;
         p.className = "comp-tracks";
