@@ -88,7 +88,6 @@ async function handleQueryValues(e, data) {
           "SELECT * FROM cd_singles cs JOIN cd_singles_tracks cst ON cs.single_id = cst.single_id WHERE cs.single_id = $1 ORDER BY cs.single_id",
           [term],
         );
-        console.log(result.rows);
         return result.rows;
       } else if (field === "single_id" && !term) {
         // if the term is empty return all items ordered by single_id
