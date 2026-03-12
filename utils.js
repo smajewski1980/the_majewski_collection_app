@@ -515,7 +515,16 @@ const utils = {
     inner1.addEventListener("click", (e) => {
       if (format) {
         // format will need capital letter
-        utils.sortResults("id", format);
+        switch (format) {
+          case "CdComps":
+            utils.sortResults("title_id", format);
+            break;
+          case "CdSingles":
+            utils.sortResults("single_id", format);
+            break;
+          default:
+            utils.sortResults("id", format);
+        }
         // utils[`sort${format}`]("id");
       }
     });
@@ -623,7 +632,7 @@ const utils = {
     // sort the data, ids are numeric
     if (isRev[format][field]) {
       sorted.sort((a, b) => {
-        if (field !== "id") {
+        if (field !== "id" && field !== "title_id" && field !== "single_id") {
           if (field === "location") {
             const aComponents = utils.extractComponents(a[field]);
             const bComponents = utils.extractComponents(b[field]);
@@ -643,6 +652,14 @@ const utils = {
           }
           return b[field].localeCompare(a[field]);
         } else {
+          if (format === "CdComps") {
+            return Object.values(b)[0].titleId - Object.values(a)[0].titleId;
+          }
+
+          if (format === "CdSingles") {
+            return Object.values(b)[0].singleId - Object.values(a)[0].singleId;
+          }
+          console.log("should be sorting id desc");
           return b[field] - a[field];
         }
       });
@@ -650,7 +667,7 @@ const utils = {
       isRev[format][field] = !isRev[format][field];
     } else {
       sorted.sort((a, b) => {
-        if (field !== "id") {
+        if (field !== "id" && field !== "title_id" && field !== "single_id") {
           if (field === "location") {
             const aComponents = utils.extractComponents(a[field]);
             const bComponents = utils.extractComponents(b[field]);
@@ -670,6 +687,16 @@ const utils = {
           }
           return a[field].localeCompare(b[field]);
         } else {
+          if (format === "CdComps") {
+            return Object.values(a)[0].titleId - Object.values(b)[0].titleId;
+          }
+
+          if (format === "CdSingles") {
+            return Object.values(a)[0].singleId - Object.values(b)[0].singleId;
+          }
+
+          console.log("should be sorting id asc");
+
           return a[field] - b[field];
         }
       });
@@ -694,6 +721,19 @@ const utils = {
       utils.currentCdsData = sorted;
       utils.displayCds(
         utils.currentCdsData.slice(utils.resultStart(), utils.resultEnd()),
+      );
+    } else if (format === "CdComps") {
+      utils.currentCdCompsData = sorted;
+      utils.displayCdComps(
+        utils.currentCdCompsData.slice(utils.resultStart(), utils.resultEnd()),
+      );
+    } else if (format === "CdSingles") {
+      utils.currentCdSinglesData = sorted;
+      utils.displayCdSingles(
+        utils.currentCdSinglesData.slice(
+          utils.resultStart(),
+          utils.resultEnd(),
+        ),
       );
     }
   },
@@ -735,6 +775,19 @@ const utils = {
       id: false,
       location: false,
       title: false,
+    },
+    CdComps: {
+      title_id: false,
+      title: false,
+      year: false,
+      location: false,
+    },
+    CdSingles: {
+      single_id: false,
+      artist: false,
+      title: false,
+      year: false,
+      case_type: false,
     },
   },
   /**
