@@ -575,7 +575,11 @@ const utils = {
       const inner5 = utils.makeSpan();
       inner5.textContent = "CASE TYPE";
       span5.append(inner5);
-      // add listener later
+      inner5.addEventListener("click", (e) => {
+        if (format) {
+          utils.sortResults("case_type", format);
+        }
+      });
       p.append(span5);
       p.classList.add("cd-singles");
     }
@@ -633,6 +637,17 @@ const utils = {
     if (isRev[format][field]) {
       sorted.sort((a, b) => {
         if (field !== "id" && field !== "title_id" && field !== "single_id") {
+          if (field === "location" && format === "CdComps") {
+            return Object.values(b)[0].location.localeCompare(
+              Object.values(a)[0].location,
+            );
+          }
+          if (field === "case_type" && format === "CdSingles") {
+            return Object.values(b)[0].case_type.localeCompare(
+              Object.values(a)[0].case_type,
+            );
+          }
+
           if (field === "location") {
             const aComponents = utils.extractComponents(a[field]);
             const bComponents = utils.extractComponents(b[field]);
@@ -659,7 +674,6 @@ const utils = {
           if (format === "CdSingles") {
             return Object.values(b)[0].singleId - Object.values(a)[0].singleId;
           }
-          console.log("should be sorting id desc");
           return b[field] - a[field];
         }
       });
@@ -668,6 +682,18 @@ const utils = {
     } else {
       sorted.sort((a, b) => {
         if (field !== "id" && field !== "title_id" && field !== "single_id") {
+          if (field === "location" && format === "CdComps") {
+            return Object.values(a)[0].location.localeCompare(
+              Object.values(b)[0].location,
+            );
+          }
+
+          if (field === "case_type" && format === "CdSingles") {
+            return Object.values(a)[0].case_type.localeCompare(
+              Object.values(b)[0].case_type,
+            );
+          }
+
           if (field === "location") {
             const aComponents = utils.extractComponents(a[field]);
             const bComponents = utils.extractComponents(b[field]);
@@ -694,8 +720,6 @@ const utils = {
           if (format === "CdSingles") {
             return Object.values(a)[0].singleId - Object.values(b)[0].singleId;
           }
-
-          console.log("should be sorting id asc");
 
           return a[field] - b[field];
         }
