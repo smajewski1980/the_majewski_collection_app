@@ -538,7 +538,9 @@ const utils = {
     }
     span2.append(inner2);
     inner2.addEventListener("click", (e) => {
-      if (format) {
+      if (format === "CdComps") {
+        utils.sortResults("title", format);
+      } else if (format) {
         utils.sortResults("artist", format);
       }
     });
@@ -552,7 +554,9 @@ const utils = {
     }
     span3.append(inner3);
     inner3.addEventListener("click", (e) => {
-      if (format) {
+      if (format === "CdComps") {
+        utils.sortResults("year", format);
+      } else if (format) {
         utils.sortResults("title", format);
       }
     });
@@ -642,6 +646,14 @@ const utils = {
               Object.values(a)[0].location,
             );
           }
+          if (field === "title" && format === "CdComps") {
+            return Object.values(b)[0].title.localeCompare(
+              Object.values(a)[0].title,
+            );
+          }
+          if (field === "year" && format === "CdComps") {
+            return Object.values(b)[0].year - Object.values(a)[0].year;
+          }
           if (field === "case_type" && format === "CdSingles") {
             return Object.values(b)[0].case_type.localeCompare(
               Object.values(a)[0].case_type,
@@ -687,7 +699,14 @@ const utils = {
               Object.values(b)[0].location,
             );
           }
-
+          if (field === "title" && format === "CdComps") {
+            return Object.values(a)[0].title.localeCompare(
+              Object.values(b)[0].title,
+            );
+          }
+          if (field === "year" && format === "CdComps") {
+            return Object.values(a)[0].year - Object.values(b)[0].year;
+          }
           if (field === "case_type" && format === "CdSingles") {
             return Object.values(a)[0].case_type.localeCompare(
               Object.values(b)[0].case_type,
