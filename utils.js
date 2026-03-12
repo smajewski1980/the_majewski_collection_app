@@ -566,7 +566,9 @@ const utils = {
     inner4.textContent = format === "CdSingles" ? "YEAR" : "LOCATION";
     span4.append(inner4);
     inner4.addEventListener("click", (e) => {
-      if (format) {
+      if (format === "CdSingles") {
+        utils.sortResults("year", format);
+      } else if (format) {
         utils.sortResults("location", format);
       }
     });
@@ -659,6 +661,19 @@ const utils = {
               Object.values(a)[0].case_type,
             );
           }
+          if (field === "artist" && format === "CdSingles") {
+            return Object.values(b)[0].artist.localeCompare(
+              Object.values(a)[0].artist,
+            );
+          }
+          if (field === "title" && format === "CdSingles") {
+            return Object.values(b)[0].title.localeCompare(
+              Object.values(a)[0].title,
+            );
+          }
+          if (field === "year" && format === "CdSingles") {
+            return Object.values(b)[0].year - Object.values(a)[0].year;
+          }
 
           if (field === "location") {
             const aComponents = utils.extractComponents(a[field]);
@@ -711,6 +726,19 @@ const utils = {
             return Object.values(a)[0].case_type.localeCompare(
               Object.values(b)[0].case_type,
             );
+          }
+          if (field === "artist" && format === "CdSingles") {
+            return Object.values(a)[0].artist.localeCompare(
+              Object.values(b)[0].artist,
+            );
+          }
+          if (field === "title" && format === "CdSingles") {
+            return Object.values(a)[0].title.localeCompare(
+              Object.values(b)[0].title,
+            );
+          }
+          if (field === "year" && format === "CdSingles") {
+            return Object.values(a)[0].year - Object.values(b)[0].year;
           }
 
           if (field === "location") {
