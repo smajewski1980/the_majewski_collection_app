@@ -25,6 +25,7 @@ const createWindow = () => {
   }
 };
 
+app.commandLine.appendSwitch("enable-experimental-web-platform-features");
 app.whenReady().then(() => {
   ipcMain.handle("getRecordsFields", handleGetRecordsFields);
   ipcMain.handle("getTapesFields", handleGetTapesFields);

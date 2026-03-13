@@ -31,6 +31,7 @@
       transform: translateX(-50%);
       font-size: 1.25rem;
       text-wrap: nowrap;
+      color: var(--accent-purple);
     }
 
     dialog[open] {
@@ -147,11 +148,14 @@
           color: var(--accent-purple);
           accent-color: var(--accent-purple);
           font-weight: 700;
+          caret-color: hsl(from var(--accent-purple), h s l / 0.5);
+          caret-shape: block;
         }
       }
     }
 
     #query-results {
+      /* when done refactoring records get rid of what we can here */
       p:not(details p),
       summary {
         font-family: var(--reg-font);
@@ -177,6 +181,7 @@
         cursor: pointer;
       }
 
+      /* remove this when done refactoring records */
       details {
         &[open] {
           border-block: 1px solid hsl(from var(--accent-purple) h s l / 0.5);
@@ -282,7 +287,7 @@
     font-weight: 700;
   }
 
-  #tracks-popover {
+  #info-popover {
     font-family:
       system-ui,
       -apple-system,

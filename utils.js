@@ -298,36 +298,30 @@ const utils = {
 
     // loop through data and create elements
     rows.forEach((row) => {
-      const details = utils.makeDetails();
-      const summary = utils.makeSummary();
       const p = utils.makeP();
       // add the data to be always visible
-      summary.append(
+      p.append(
         utils.createLoadedSpan(row.id, 0),
         utils.createLoadedSpan(row.artist, 1),
         utils.createLoadedSpan(row.title, 2),
         utils.createLoadedSpan(row.location, 3),
       );
-      details.append(summary);
-      // add the data that is only shown when open
-      const span1 = utils.makeSpan();
-      const span2 = utils.makeSpan();
-      const span3 = utils.makeSpan();
-      const span4 = utils.makeSpan();
-      span1.textContent = row.diameter;
-      // if the label name doesnt end with the word records, add it. 78s exempt
-      span2.textContent =
-        !row.label.toLowerCase().includes("records") &&
-        !row.location.includes("78s")
-          ? row.label + " Records"
-          : row.label;
-      // this class keeps the alignment consistent with the summary text
-      span2.className = "span2";
-      span3.textContent = `Rec / Sleeve Condition: ${"\u00A0\u00A0"}${row.record_condition} / ${row.sleeve_condition}`;
-      span4.textContent = row.year;
-      p.append(span1, span2, span3, span4);
-      details.append(p);
-      utils.resultsElement.append(details);
+
+      p.className = `item-idx-${row.id}`;
+      p.tabIndex = "0";
+
+      // add the listeners to the row that will load and open the tracks popover
+      p.addEventListener("click", (e) => {
+        utils.populatePopover(row.id, "records");
+        utils.resultPopover.showPopover();
+      });
+      p.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          utils.populatePopover(row.id, "records");
+          utils.resultPopover.showPopover();
+        }
+      });
+      utils.resultsElement.append(p);
     });
     // adjust the second column widths for centering
     utils.setArtistColWidths();
@@ -895,10 +889,7 @@ const utils = {
         utils.resultPopover.append(p);
         trackCounter++;
       }
-    } else {
-      // if we add records and tapes to have popover, this will
-      // be else if singles
-
+    } else if (fmt === "singles") {
       // get the data for the single of the given id
       const single = utils.currentCdSinglesData.filter((s) => {
         return parseInt(Object.keys(s)[0]) === id;
@@ -918,6 +909,35 @@ const utils = {
         utils.resultPopover.append(p);
         trackCounter++;
       });
+    } else if (fmt === "records") {
+      const currentRecord = utils.currentRecordsData.filter((r) => {
+        return r.id === id;
+      });
+
+      // set the text for the popover heading
+      popHeading.innerText = `${currentRecord[0].artist}:`;
+
+      // label info will be formatted different for 78s
+      let formattedLabel = "";
+      // if the label name doesnt end with the word records, add it. 78s exempt
+      !currentRecord[0].label.toLowerCase().includes("records") &&
+      !currentRecord[0].location.includes("78s")
+        ? (formattedLabel = currentRecord[0].label + " Records")
+        : (formattedLabel = currentRecord[0].label);
+
+      const pT = utils.makeP();
+      pT.innerText = currentRecord[0].title;
+      pT.style.marginBlockEnd = "1rem";
+      const p = utils.makeP();
+      p.innerText = `${currentRecord[0].year} - ${formattedLabel}`;
+      const p2 = utils.makeP();
+      const p3 = utils.makeP();
+      p2.innerText = `Sleeve Condition: ${currentRecord[0].sleeve_condition}`;
+      p3.innerText = `Record Condition: ${currentRecord[0].record_condition}`;
+      utils.resultPopover.append(pT);
+      utils.resultPopover.append(p);
+      utils.resultPopover.append(p2);
+      utils.resultPopover.append(p3);
     }
   },
   /**
@@ -944,7 +964,7 @@ const utils = {
       utils.resultsElement.innerHTML = "";
     }
   },
-  resultPopover: document.getElementById("tracks-popover"),
+  resultPopover: document.getElementById("info-popover"),
 };
 
 export default utils;
