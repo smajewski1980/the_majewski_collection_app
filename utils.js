@@ -346,34 +346,35 @@ const utils = {
       utils.resultsElement.append(utils.getHeader("Tapes"));
     }
 
-    // loop throught the data and create and append the elements
+    // loop through the data and create and append the elements
     rows.forEach((row) => {
-      const details = utils.makeDetails();
-      const summary = utils.makeSummary();
+      // const details = utils.makeDetails();
+      // const summary = utils.makeSummary();
       const p = utils.makeP();
 
       // add the always visible fields
-      summary.append(
+      p.append(
         utils.createLoadedSpan(row.id, 0),
         utils.createLoadedSpan(row.artist, 1),
         utils.createLoadedSpan(row.title, 2),
         utils.createLoadedSpan(row.location, 3),
       );
-      details.append(summary);
-      // add the data that is only shown when open
-      const span1 = utils.makeSpan();
-      const span2 = utils.makeSpan();
-      // this class is for alignment
-      span2.className = "span2";
-      const span3 = utils.makeSpan();
-      // if year is null
-      span1.textContent = row.year ? row.year : "year n/a";
-      span2.textContent = `Needs Repair: ${row.needs_repair}`;
-      // if speed is null
-      span3.textContent = `Speed: ${row.speed ? row.speed : "n/a"}`;
-      p.append(span1, span2, span3);
-      details.append(p);
-      utils.resultsElement.append(details);
+      p.className = `item-idx-${row.id}`;
+      p.tabIndex = "0";
+
+      // add the listeners to the row that will load and open the tracks popover
+      p.addEventListener("click", (e) => {
+        utils.populatePopover(row.id, "tapes");
+        utils.resultPopover.showPopover();
+      });
+      p.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          utils.populatePopover(row.id, "tapes");
+          utils.resultPopover.showPopover();
+        }
+      });
+
+      utils.resultsElement.append(p);
     });
 
     // adjust the second column widths for centering
@@ -938,6 +939,27 @@ const utils = {
       utils.resultPopover.append(p);
       utils.resultPopover.append(p2);
       utils.resultPopover.append(p3);
+    } else {
+      const currentTape = utils.currentTapesData.filter((t) => {
+        return t.id === id;
+      })[0];
+
+      // set the text for the popover heading
+      popHeading.innerText = `${currentTape.artist}:`;
+
+      const pTitle = utils.makeP();
+      pTitle.innerText = currentTape.title;
+      pTitle.style.marginBlockEnd = "1rem";
+      const pYear = utils.makeP();
+      pYear.innerText = `Year: ${currentTape.year}`;
+      const pRepair = utils.makeP();
+      pRepair.innerText = `Needs repair: ${currentTape.needs_repair}`;
+      const pSpeed = utils.makeP();
+      pSpeed.innerText = `Speed: ${currentTape.speed}`;
+
+      utils.resultPopover.append(pTitle, pYear, pRepair, pSpeed);
+
+      console.log(currentTape);
     }
   },
   /**

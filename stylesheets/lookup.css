@@ -163,7 +163,7 @@
         display: grid;
         grid-template-columns: 10% auto 1fr 15%;
         color: var(--accent-purple);
-
+        cursor: pointer;
         span {
           text-align: center;
           overflow: hidden;
