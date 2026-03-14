@@ -348,8 +348,6 @@ const utils = {
 
     // loop through the data and create and append the elements
     rows.forEach((row) => {
-      // const details = utils.makeDetails();
-      // const summary = utils.makeSummary();
       const p = utils.makeP();
 
       // add the always visible fields
@@ -858,7 +856,7 @@ const utils = {
   },
   /**
    * takes in an id and populates the popover with the
-   * appropriate tracks for that id
+   * appropriate info for that id
    * @param {Number} id
    * @param {String} fmt
    */
@@ -873,13 +871,13 @@ const utils = {
       // filter out the needed title for this title id
       let title = utils.currentCdCompsData.filter((t) => {
         return parseInt(Object.keys(t)[0]) === id;
-      });
+      })[0];
 
       // populate the heading text
-      popHeading.innerText = `${title[0][id].title}:`;
+      popHeading.innerText = `${title[id].title}:`;
 
       // loop through the tracks and append to popover
-      const tracks = title[0][id].tracks;
+      const tracks = title[id].tracks;
       let trackCounter = 1;
       for (let tr in tracks) {
         const artist = tracks[tr].artist;
@@ -894,13 +892,15 @@ const utils = {
       // get the data for the single of the given id
       const single = utils.currentCdSinglesData.filter((s) => {
         return parseInt(Object.keys(s)[0]) === id;
-      });
-      let artist = single[0][id].artist;
-      let title = single[0][id].title;
+      })[0];
+
+      let artist = single[id].artist;
+      let title = single[id].title;
+
       // set the text for the popover heading
       popHeading.innerText = `${artist} - ${title}:`;
 
-      const trackNames = Object.values(single[0][id].tracks);
+      const trackNames = Object.values(single[id].tracks);
 
       // loop through the track names and append
       let trackCounter = 1;
@@ -913,32 +913,37 @@ const utils = {
     } else if (fmt === "records") {
       const currentRecord = utils.currentRecordsData.filter((r) => {
         return r.id === id;
-      });
+      })[0];
 
       // set the text for the popover heading
-      popHeading.innerText = `${currentRecord[0].artist}:`;
+      popHeading.innerText = `${currentRecord.artist}:`;
 
-      // label info will be formatted different for 78s
+      // record label info will be formatted different for 78s
       let formattedLabel = "";
       // if the label name doesnt end with the word records, add it. 78s exempt
-      !currentRecord[0].label.toLowerCase().includes("records") &&
-      !currentRecord[0].location.includes("78s")
-        ? (formattedLabel = currentRecord[0].label + " Records")
-        : (formattedLabel = currentRecord[0].label);
+      !currentRecord.label.toLowerCase().includes("records") &&
+      !currentRecord.location.includes("78s")
+        ? (formattedLabel = currentRecord.label + " Records")
+        : (formattedLabel = currentRecord.label);
 
-      const pT = utils.makeP();
-      pT.innerText = currentRecord[0].title;
-      pT.style.marginBlockEnd = "1rem";
-      const p = utils.makeP();
-      p.innerText = `${currentRecord[0].year} - ${formattedLabel}`;
-      const p2 = utils.makeP();
-      const p3 = utils.makeP();
-      p2.innerText = `Sleeve Condition: ${currentRecord[0].sleeve_condition}`;
-      p3.innerText = `Record Condition: ${currentRecord[0].record_condition}`;
-      utils.resultPopover.append(pT);
-      utils.resultPopover.append(p);
-      utils.resultPopover.append(p2);
-      utils.resultPopover.append(p3);
+      // create elements and set text
+      const pTitle = utils.makeP();
+      pTitle.innerText = currentRecord.title;
+      pTitle.style.marginBlockEnd = "1rem";
+      const pYearAndLabel = utils.makeP();
+      pYearAndLabel.innerText = `${currentRecord.year} - ${formattedLabel}`;
+      const pSleeveCond = utils.makeP();
+      const pRecordCond = utils.makeP();
+      pSleeveCond.innerText = `Sleeve Condition: ${currentRecord.sleeve_condition}`;
+      pRecordCond.innerText = `Record Condition: ${currentRecord.record_condition}`;
+
+      // append elements
+      utils.resultPopover.append(
+        pTitle,
+        pYearAndLabel,
+        pSleeveCond,
+        pRecordCond,
+      );
     } else {
       const currentTape = utils.currentTapesData.filter((t) => {
         return t.id === id;
@@ -947,6 +952,7 @@ const utils = {
       // set the text for the popover heading
       popHeading.innerText = `${currentTape.artist}:`;
 
+      // create elements and set text
       const pTitle = utils.makeP();
       pTitle.innerText = currentTape.title;
       pTitle.style.marginBlockEnd = "1rem";
@@ -956,10 +962,8 @@ const utils = {
       pRepair.innerText = `Needs repair: ${currentTape.needs_repair}`;
       const pSpeed = utils.makeP();
       pSpeed.innerText = `Speed: ${currentTape.speed}`;
-
+      // append elements
       utils.resultPopover.append(pTitle, pYear, pRepair, pSpeed);
-
-      console.log(currentTape);
     }
   },
   /**

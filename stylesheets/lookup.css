@@ -155,15 +155,14 @@
     }
 
     #query-results {
-      /* when done refactoring records get rid of what we can here */
-      p:not(details p),
-      summary {
+      p {
         font-family: var(--reg-font);
         font-size: 1.25rem;
         display: grid;
         grid-template-columns: 10% auto 1fr 15%;
         color: var(--accent-purple);
         cursor: pointer;
+
         span {
           text-align: center;
           overflow: hidden;
@@ -181,32 +180,12 @@
         cursor: pointer;
       }
 
-      /* remove this when done refactoring records */
-      details {
-        &[open] {
-          border-block: 1px solid hsl(from var(--accent-purple) h s l / 0.5);
-          padding-block-start: 0.25rem;
-        }
-        p {
-          font-family: var(--reg-font);
-          color: var(--accent-purple);
-          /* grid-template-columns: repeat(5, 1fr); */
-          grid-template-columns: 10% auto 1fr 15%;
-          text-align: center;
-          padding-block: 0.5rem;
-        }
-        p:not(.comp-tracks) {
-          display: grid;
-        }
-      }
-
       .result-header {
         margin-block: 1rem;
         padding-block: 0.5rem;
         outline: 1px solid var(--accent-purple);
         border-radius: 50px;
         corner-shape: squircle;
-        /* do we leave this sticky?... */
         position: sticky;
         top: 1rem;
         background-color: var(--bg-color);
