@@ -58,7 +58,7 @@ input,
 }
 
 body:not(#add-body) {
-  a:not(.back-to-top),
+  a:not(.back-to-top, .home-link),
   button:not(#btn-help) {
     font-size: 3rem;
     text-decoration: none;

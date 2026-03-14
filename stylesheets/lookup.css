@@ -1,11 +1,12 @@
 #lookup-body {
-  padding: 2rem;
+  padding: 2rem 1rem;
 
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-block-end: 2.5rem;
+    padding-inline: 3.5rem;
 
     img {
       max-width: 200px;
@@ -20,6 +21,7 @@
 
     h1 {
       margin-inline: 2rem auto;
+      transform: translateY(-0.5rem);
     }
 
     #result-qty {
@@ -102,29 +104,22 @@
     #btn-help {
       border: none;
       background-image: url("../assets/help.svg");
-      background-size: 2rem;
+      background-size: 2.5rem;
       background-color: transparent;
-      width: 2rem;
-      height: 2rem;
+      width: 2.5rem;
+      height: 2.5rem;
       position: absolute;
-      position-anchor: --btn-add-edit;
-      right: calc(anchor(left) + 2rem);
-      bottom: anchor(center);
-      transform: translateY(50%);
-    }
-
-    a {
-      font-size: 2rem;
-      font-weight: 700;
-      anchor-name: --btn-add-edit;
+      right: 5.5rem;
+      top: 3.5rem;
     }
   }
 
   main {
     .query-options {
       display: flex;
-      justify-content: space-evenly;
+      justify-content: space-between;
       flex-wrap: wrap;
+      padding-inline: 5rem;
 
       .query-group {
         color: var(--accent-purple);
@@ -144,12 +139,16 @@
         input[type="text"],
         button {
           background-color: var(--bg-color);
-          font-size: 2rem;
+          font-size: 1.5rem;
           color: var(--accent-purple);
           accent-color: var(--accent-purple);
           font-weight: 700;
           caret-color: hsl(from var(--accent-purple), h s l / 0.5);
           caret-shape: block;
+        }
+
+        #btn-lookup {
+          font-size: 1.5rem;
         }
       }
     }
