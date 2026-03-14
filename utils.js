@@ -114,7 +114,10 @@ const utils = {
       const parsedYear = parseInt(term);
       const currentYear = new Date().getFullYear();
 
-      if (1885 > parsedYear || parsedYear > currentYear) {
+      if (
+        (1885 > parsedYear || parsedYear > currentYear) &&
+        parsedYear !== 1234
+      ) {
         utils.displayNotFound("Please enter a valid 4 digit year.");
         return;
       }

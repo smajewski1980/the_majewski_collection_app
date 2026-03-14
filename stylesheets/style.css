@@ -19,6 +19,10 @@ html {
   color-scheme: light dark;
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
+  &::selection {
+    color: var(--outline-purple);
+    background: var(--accent-purple);
+  }
 }
 
 /* https://www.1001fonts.com/funky-fonts.html?page=3 */
