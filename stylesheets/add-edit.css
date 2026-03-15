@@ -22,7 +22,7 @@
 /* https://www.1001fonts.com/funky-fonts.html?page=3 */
 @font-face {
   font-family: big-party;
-  src: url("./fonts/bigpartyc2blue.medium.ttf");
+  src: url("../fonts/bigpartyc2blue.medium.ttf");
 }
 
 ::selection {

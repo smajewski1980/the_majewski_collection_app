@@ -35,7 +35,7 @@ img {
   display: block;
 }
 
-body {
+body:not(#add-body) {
   background-color: var(--bg-color);
   min-height: 100dvh;
   font-family: big-party;
