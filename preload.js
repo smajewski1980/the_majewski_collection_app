@@ -11,3 +11,7 @@ contextBridge.exposeInMainWorld("getFormatFields", {
 contextBridge.exposeInMainWorld("handleQueryValues", {
   handleQueryValues: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("getCurrentLocations", {
+  getCurrentLocations: (channel, data) => ipcRenderer.invoke(channel, data),
+});
