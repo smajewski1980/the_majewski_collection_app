@@ -1,5 +1,5 @@
 import {
-  //   removeActiveFormClass,
+  removeActiveFormClass,
   //   yearFormatIsGood,
   //   noEmptyFields,
   //   toasty,
@@ -12,9 +12,9 @@ import {
   //   addToSessionList,
   //   focusFirstField,
   handleThemeChange,
-  //   removeActiveClass,
-  //   showForm,
-  //   initialShowForm,
+  removeActiveClass,
+  showForm,
+  initialShowForm,
   //   isLocValValid,
 } from "./add-utils.js";
 // import { getLocations } from "./getCurrentLocations.js";
@@ -43,6 +43,7 @@ function handleNavBtnClick(e) {
 
   if (!initialLoad) {
     document.startViewTransition(() => {
+      console.log("are we getting here");
       removeActiveFormClass(forms);
       removeActiveClass(navButtons);
       // the first arg is the id of the form to show, second arg is the nav btn
@@ -541,9 +542,9 @@ function handleNavBtnClick(e) {
 // }
 
 // add the listeners to the nav btns
-// navButtons.forEach((btn) => {
-//   btn.addEventListener("click", handleNavBtnClick);
-// });
+navButtons.forEach((btn) => {
+  btn.addEventListener("click", handleNavBtnClick);
+});
 
 // if the increment checkbox is checked and then the location is changed
 // const selects = document.querySelectorAll("select");

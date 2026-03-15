@@ -1,11 +1,11 @@
 // import Toastify from "./node_modules/toastify-js/src/toastify-es.js";
 
 // reset all forms to not active
-// export function removeActiveFormClass(forms) {
-//   forms.forEach((form) => {
-//     form.classList.remove("active-form");
-//   });
-// }
+export function removeActiveFormClass(forms) {
+  forms.forEach((form) => {
+    form.classList.remove("active-form");
+  });
+}
 
 // frontend validation for the year field, did this way to use toastify instead of user-agent message
 // export function yearFormatIsGood(year) {
@@ -151,23 +151,23 @@ export function handleThemeChange() {
   );
 }
 
-// export function removeActiveClass(btns) {
-//   btns.forEach((btn) => {
-//     btn.classList.remove("active-nav-btn");
-//   });
-// }
+export function removeActiveClass(btns) {
+  btns.forEach((btn) => {
+    btn.classList.remove("active-nav-btn");
+  });
+}
 
-// export function showForm(formStr, navBtn) {
-//   navBtn.classList.add("active-nav-btn");
-//   const activeForm = document.getElementById(formStr);
-//   activeForm.classList.add("active-form");
-//   activeForm.querySelector("input").focus();
-// }
+export function showForm(formStr, navBtn) {
+  navBtn.classList.add("active-nav-btn");
+  const activeForm = document.getElementById(formStr);
+  activeForm.classList.add("active-form");
+  activeForm.querySelector("input").focus();
+}
 
-// export function initialShowForm(mainEl, incrementWrapper) {
-//   incrementWrapper.style.display = "block";
-//   mainEl.style.opacity = 1;
-// }
+export function initialShowForm(mainEl, incrementWrapper) {
+  incrementWrapper.style.display = "block";
+  mainEl.style.opacity = 1;
+}
 
 // export function isLocValValid(inputEl, validArr) {
 //   if (validArr.includes(inputEl.value)) {
