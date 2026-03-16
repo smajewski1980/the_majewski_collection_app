@@ -14,54 +14,30 @@ export function removeActiveFormClass(forms) {
 // }
 
 // check the data objects for empty vals
-// export function noEmptyFields(data, tracksTrigger) {
-//   if (tracksTrigger && !data.tracks) {
-//     return false;
-//   }
+export function noEmptyFields(data, tracksTrigger) {
+  if (tracksTrigger && !data.tracks) {
+    return false;
+  }
 
-//   if ("year" in data && Number.isNaN(data.year)) {
-//     toasty("Year must be a number.", "red");
-//     return;
-//   }
+  if ("year" in data && Number.isNaN(data.year)) {
+    toasty("Year must be a number.", "red");
+    return;
+  }
 
-//   for (const key in data) {
-//     if (!data[key]) {
-//       return false;
-//     }
-//   }
+  for (const key in data) {
+    if (!data[key]) {
+      return false;
+    }
+  }
 
-//   return true;
-// }
+  return true;
+}
 
 // our toast config function
-// export function toasty(msg, color) {
-//   let bg;
-
-//   if (color === "red") {
-//     bg = "rgba(172, 38, 38, 1)";
-//   }
-//   if (color === "green") {
-//     bg = "rgba(9, 119, 9, 1)";
-//   }
-//   if (!bg) {
-//     bg = color;
-//   }
-
-//   Toastify({
-//     text: msg,
-//     duration: 5000,
-//     gravity: "top",
-//     position: "center",
-//     style: {
-//       background: bg,
-//       fontSize: "1.5rem",
-//       width: "fit-content",
-//       maxWidth: "640px",
-//       textAlign: "center",
-//       borderRadius: "10px",
-//     },
-//   }).showToast();
-// }
+export function toasty(msg, color) {
+  // later adapt this to our msg element
+  console.log(msg);
+}
 
 // trim singles track titles
 // export function trimTracks(arr) {
@@ -120,26 +96,26 @@ export function removeActiveFormClass(forms) {
 //   }
 // }
 
-// export function trimDataFields(data) {
-//   for (const key in data) {
-//     if (typeof data[key] === "string") {
-//       data[key] = data[key].trim();
-//     }
-//   }
-//   return data;
-// }
+export function trimDataFields(data) {
+  for (const key in data) {
+    if (typeof data[key] === "string") {
+      data[key] = data[key].trim();
+    }
+  }
+  return data;
+}
 
-// export function addToSessionList(list, str, className) {
-//   const li = document.createElement("li");
-//   li.textContent = str;
-//   li.classList.add(className);
-//   list.prepend(li);
-// }
+export function addToSessionList(list, str, className) {
+  const li = document.createElement("li");
+  li.textContent = str;
+  li.classList.add(className);
+  list.prepend(li);
+}
 
-// export function focusFirstField(form) {
-//   const firstField = form.querySelector("input");
-//   firstField.focus();
-// }
+export function focusFirstField(form) {
+  const firstField = form.querySelector("input");
+  firstField.focus();
+}
 
 export function handleThemeChange() {
   const currTheme = document.documentElement.getAttribute("data-theme");
@@ -169,11 +145,11 @@ export function initialShowForm(mainEl, incrementWrapper) {
   mainEl.style.opacity = 1;
 }
 
-// export function isLocValValid(inputEl, validArr) {
-//   if (validArr.includes(inputEl.value)) {
-//     return true;
-//   } else {
-//     toasty("Location field does not contain a valid value.", "red");
-//     return false;
-//   }
-// }
+export function isLocValValid(inputEl, validArr) {
+  if (validArr.includes(inputEl.value)) {
+    return true;
+  } else {
+    toasty("Location field does not contain a valid value.", "red");
+    return false;
+  }
+}

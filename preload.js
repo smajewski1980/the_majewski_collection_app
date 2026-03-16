@@ -15,3 +15,7 @@ contextBridge.exposeInMainWorld("handleQueryValues", {
 contextBridge.exposeInMainWorld("getCurrentLocations", {
   getCurrentLocations: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("inserts", {
+  insertCdsMain: (channel, data) => ipcRenderer.invoke(channel, data),
+});

@@ -1,21 +1,21 @@
 import {
   removeActiveFormClass,
   //   yearFormatIsGood,
-  //   noEmptyFields,
-  //   toasty,
+  noEmptyFields,
+  toasty,
   //   trimTracks,
   //   handleIncrementReset,
   //   incrementCheckbox,
   //   handleCheckbox,
   //   incrementLocationSwitch,
-  //   trimDataFields,
-  //   addToSessionList,
-  //   focusFirstField,
+  trimDataFields,
+  addToSessionList,
+  focusFirstField,
   handleThemeChange,
   removeActiveClass,
   showForm,
   initialShowForm,
-  //   isLocValValid,
+  isLocValValid,
 } from "./add-utils.js";
 import { getLocations } from "./get-current-locations.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
@@ -274,86 +274,94 @@ function handleNavBtnClick(e) {
 //   }
 // }
 
-// async function handleCdsMainForm(e) {
-//   e.preventDefault();
-//   const formData = new FormData(cdsMainForm);
+async function handleCdsMainForm(e) {
+  e.preventDefault();
+  const formData = new FormData(cdsMainForm);
 
-// get the option elements
-// const cdsMainOptionElems = Array.from(
-//   document.querySelectorAll("#cds-main-datalist option"),
-// );
+  // get the option elements
+  const cdsMainOptionElems = Array.from(
+    document.querySelectorAll("#cds-main-datalist option"),
+  );
 
-// map the options' text to a valid array
-// const validCdsMainLocs = cdsMainOptionElems.map((el) => el.value);
+  // map the options' text to a valid array
+  const validCdsMainLocs = cdsMainOptionElems.map((el) => el.value);
 
-// the input element itself to access the current value
-// const cdsMainInput = document.getElementById("cds-main-location");
+  // the input element itself to access the current value
+  const cdsMainInput = document.getElementById("cds-main-location");
 
-// const data = {
-//   artist: formData.get("artist"),
-//   title: formData.get("title"),
-//   location: formData.get("location"),
-// };
+  const data = {
+    artist: formData.get("artist"),
+    title: formData.get("title"),
+    location: formData.get("location"),
+  };
 
-// if (!noEmptyFields(data, false)) {
-//   toasty("All fields must be filled out.", "red");
-//   return;
-// }
+  if (!noEmptyFields(data, false)) {
+    toasty("All fields must be filled out.", "red");
+    return;
+  }
 
-// const options = {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify(trimDataFields(data)),
-// };
+  // const options = {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(trimDataFields(data)),
+  // };
 
-// if (isLocValValid(cdsMainInput, validCdsMainLocs)) {
-//   try {
-//     const res = await fetch("/cds-main", options);
+  const trimmedJsonData = JSON.stringify(trimDataFields(data));
 
-//     if (res.status === 400) {
-//       const errs = await res.json();
-//       errs.forEach((er) => {
-//         toasty(`Value: ${er.value} ; Message: ${er.msg}`, "red");
-//         console.log(`Value: ${er.value} ; Message: ${er.msg}`);
-//       });
-//       return;
-//     }
+  console.log(trimmedJsonData);
+  if (isLocValValid(cdsMainInput, validCdsMainLocs)) {
+    try {
+      const res = await inserts.insertCdsMain("insertCdsMain", trimmedJsonData);
+      console.log("inside the try block", JSON.parse(res));
+      // after setting up ipc handler change here <-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+      // const res = await fetch("/cds-main", options);
 
-//     if (res.status === 201) {
-//       const resData = await res.json();
-//       toasty(
-//         `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
-//         "green",
-//       );
+      // if (res.status === 400) {
+      //   const errs = await res.json();
+      //   errs.forEach((er) => {
+      //     toasty(`Value: ${er.value} ; Message: ${er.msg}`, "red");
+      //     console.log(`Value: ${er.value} ; Message: ${er.msg}`);
+      //   });
+      //   return;
+      // }
 
-//       cdsMainForm.reset();
-//       focusFirstField(cdsMainForm);
-//       console.log("new item id: ", resData);
+      // if (res.status === 201) {
+      //   const resData = await res.json();
+      //   toasty(
+      //     `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
+      //     "green",
+      //   );
 
-//       if (incrementLocationSwitch()) {
-//         await getLocations();
-//         handleIncrementReset();
-//       }
+      // after setting up ipc handler change here <-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
-//       if (!showSessionList) {
-//         showSessionList = true;
-//         sessionListWrapper.style.display = "block";
-//       }
+      cdsMainForm.reset();
+      focusFirstField(cdsMainForm);
+      // console.log("new item id: ", resData);
 
-//       window.scrollTo(0, 0);
+      // if (incrementLocationSwitch()) {
+      //   await getLocations();
+      //   handleIncrementReset();
+      // }
 
-// add item data to the session list
-//         const sessionListStr = `id: ${resData} ${data.artist} - ${data.title} was added to cds main.`;
-//         addToSessionList(sessionList, sessionListStr, "cds-main-color");
-//       }
-//     } catch (error) {
-//       toasty(error, "red");
-//       console.log(error);
-//     }
-//   }
-// }
+      if (!showSessionList) {
+        showSessionList = true;
+        sessionListWrapper.style.display = "block";
+      }
+
+      window.scrollTo(0, 0);
+
+      // add item data to the session list
+      const sessionListStr = `id: ${"will add the id later: "} ${data.artist} - ${data.title} was added to cds main.`;
+      addToSessionList(sessionList, sessionListStr, "cds-main-color");
+      // }
+    } catch (error) {
+      toasty(error, "red");
+      console.log(error);
+    }
+  }
+}
 
 // async function handleRecordsForm(e) {
 //   e.preventDefault();
@@ -552,7 +560,7 @@ navButtons.forEach((btn) => {
 // });
 
 // submit listeners on the forms
-// cdsMainForm.addEventListener("submit", handleCdsMainForm);
+cdsMainForm.addEventListener("submit", handleCdsMainForm);
 // cdCompsForm.addEventListener("submit", handleCdCompsForm);
 // cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 // recordsForm.addEventListener("submit", handleRecordsForm);
