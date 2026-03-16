@@ -301,8 +301,10 @@ function processLocations(data) {
 // this is where we hit the contextBridge, the below is still express
 export async function getLocations() {
   try {
-    const res = await fetch("/locations");
-    const data = await res.json();
+    const res = await getCurrentLocations.getCurrentLocations(
+      "getCurrentLocations",
+    );
+    const data = JSON.parse(await res);
     processLocations(data);
   } catch (error) {
     console.log(error);
@@ -310,4 +312,4 @@ export async function getLocations() {
 }
 
 // after switched over uncomment
-// getLocations();
+getLocations();

@@ -17,7 +17,7 @@ import {
   initialShowForm,
   //   isLocValValid,
 } from "./add-utils.js";
-// import { getLocations } from "./getCurrentLocations.js";
+import { getLocations } from "./get-current-locations.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
 const cdsMainForm = document.getElementById("cd-main-form");
@@ -43,7 +43,6 @@ function handleNavBtnClick(e) {
 
   if (!initialLoad) {
     document.startViewTransition(() => {
-      console.log("are we getting here");
       removeActiveFormClass(forms);
       removeActiveClass(navButtons);
       // the first arg is the id of the form to show, second arg is the nav btn

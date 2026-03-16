@@ -6,6 +6,7 @@ const handleGetCdsFields = require("./ipc-handlers/handleGetCdsFields");
 const handleGetCdSinglesFields = require("./ipc-handlers/handleGetCdSinglesFields");
 const handleGetCdCompsFields = require("./ipc-handlers/handleGetCdCompsFields");
 const handleQueryValues = require("./ipc-handlers/handleQueryValues");
+const handleGetCurrentLocations = require("./ipc-handlers/handleGetCurrentLocations");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -24,7 +25,8 @@ const createWindow = () => {
     win.webContents.openDevTools();
   }
 };
-
+// i switched on the experimental features flag so i could
+// use the old school block cursor in my text inputs
 app.commandLine.appendSwitch("enable-experimental-web-platform-features");
 app.whenReady().then(() => {
   ipcMain.handle("getRecordsFields", handleGetRecordsFields);
@@ -33,6 +35,7 @@ app.whenReady().then(() => {
   ipcMain.handle("getCdSinglesFields", handleGetCdSinglesFields);
   ipcMain.handle("getCdCompsFields", handleGetCdCompsFields);
   ipcMain.handle("handleQueryValues", handleQueryValues);
+  ipcMain.handle("getCurrentLocations", handleGetCurrentLocations);
 
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
