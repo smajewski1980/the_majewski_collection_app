@@ -16,10 +16,10 @@ export function removeActiveFormClass(forms) {
 }
 
 // frontend validation for the year field, did this way to use toastify instead of user-agent message
-// export function yearFormatIsGood(year) {
-//   const regex = /^[0-9]{4}$/;
-//   return regex.test(year);
-// }
+export function yearFormatIsGood(year) {
+  const regex = /^[0-9]{4}$/;
+  return regex.test(year);
+}
 
 /**
  * check the given data object for empty vals

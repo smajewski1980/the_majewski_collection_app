@@ -1,6 +1,6 @@
 import {
   removeActiveFormClass,
-  //   yearFormatIsGood,
+  yearFormatIsGood,
   noEmptyFields,
   toasty,
   //   trimTracks,
@@ -438,95 +438,77 @@ async function handleCdsMainForm(e) {
 //   }
 // }
 
-// async function handleTapesForm(e) {
-//   e.preventDefault();
-//   const formData = new FormData(tapesForm);
+async function handleTapesForm(e) {
+  e.preventDefault();
+  const formData = new FormData(tapesForm);
 
-// get the option elements
-// const tapesOptionElems = Array.from(
-//   document.querySelectorAll("#tapes-datalist option"),
-// );
+  // get the option elements
+  const tapesOptionElems = Array.from(
+    document.querySelectorAll("#tapes-datalist option"),
+  );
 
-// map the options' text to a valid array
-// const validTapesLocs = tapesOptionElems.map((el) => el.value);
+  // map the options' text to a valid array
+  const validTapesLocs = tapesOptionElems.map((el) => el.value);
 
-// the input element itself to access the current value
-// const tapesInput = document.getElementById("tapes-location");
+  // the input element itself to access the current value
+  // const tapesInput = document.getElementById("tapes-location");
 
-// const data = {
-//   artist: formData.get("artist"),
-//   title: formData.get("title"),
-//   location: formData.get("location"),
-//   year: Number(formData.get("year")),
-//   needsRepair: formData.get("needsRepair"),
-//   speed: formData.get("tapeSpeed"),
-// };
+  const data = {
+    artist: formData.get("artist"),
+    title: formData.get("title"),
+    location: formData.get("location"),
+    year: Number(formData.get("year")),
+    needsRepair: formData.get("needsRepair"),
+    speed: formData.get("tapeSpeed"),
+  };
 
-// if (!noEmptyFields(data, false)) {
-//   toasty("All fields must be filled out.", "red");
-//   console.log("All fields must be filled out.");
-//   return;
-// }
+  if (!noEmptyFields(data, false)) {
+    toasty("All fields must be filled out.", "red");
+    console.log("All fields must be filled out.");
+    return;
+  }
 
-// if (!yearFormatIsGood(data.year)) {
-//   toasty("Year must be 4 digits", "red");
-//   return;
-// }
+  if (!yearFormatIsGood(data.year)) {
+    toasty("Year must be 4 digits", "red");
+    return;
+  }
 
-// const options = {
-//   method: "POST",
-//   headers: {
-//     "content-type": "application/json",
-//   },
-//   body: JSON.stringify(trimDataFields(data)),
-// };
+  if (
+    noEmptyFields(data, false) &&
+    isLocValValid(data.location, validTapesLocs)
+  ) {
+    try {
+      const res = await inserts.insertTapes("insertTapes", data);
 
-// if (noEmptyFields(data, false) && isLocValValid(tapesInput, validTapesLocs)) {
-//   try {
-//     const res = await fetch("/tapes", options);
+      tapesForm.reset();
+      focusFirstField(tapesForm);
 
-//     if (res.status === 400) {
-//       const errs = await res.json();
-//       errs.forEach((er) => {
-//         toasty(`Value: ${er.value} ; Message: ${er.msg}`, "red");
-//         console.log(`Value: ${er.value} ; Message: ${er.msg}`);
-//       });
-//       return;
-//     }
+      // may reimplement this or something similar later
+      //       toasty(
+      //         `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
+      //         "green",
+      //       );
 
-//     if (res.status === 201) {
-//       const resData = await res.json();
+      // if (incrementLocationSwitch()) {
+      //   await getLocations();
+      //   handleIncrementReset();
+      // }
 
-//       tapesForm.reset();
-//       focusFirstField(tapesForm);
-//       toasty(
-//         `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
-//         "green",
-//       );
+      if (!showSessionList) {
+        showSessionList = true;
+        sessionListWrapper.style.display = "block";
+      }
 
-//       if (incrementLocationSwitch()) {
-//         await getLocations();
-//         handleIncrementReset();
-//       }
+      window.scrollTo(0, 0);
 
-//       console.log("new item id: ", resData);
-
-//       if (!showSessionList) {
-//         showSessionList = true;
-//         sessionListWrapper.style.display = "block";
-//       }
-
-//       window.scrollTo(0, 0);
-
-// add item data to the session list
-//         const sessionListStr = `id: ${resData} ${data.artist} - ${data.title} was added to tapes.`;
-//         addToSessionList(sessionList, sessionListStr, "tape-color");
-//       }
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   }
-// }
+      // add item data to the session list
+      const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to tapes.`;
+      addToSessionList(sessionList, sessionListStr, "tape-color");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 // add the listeners to the nav btns
 navButtons.forEach((btn) => {
@@ -544,7 +526,7 @@ cdsMainForm.addEventListener("submit", handleCdsMainForm);
 // cdCompsForm.addEventListener("submit", handleCdCompsForm);
 // cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 // recordsForm.addEventListener("submit", handleRecordsForm);
-// tapesForm.addEventListener("submit", handleTapesForm);
+tapesForm.addEventListener("submit", handleTapesForm);
 // incrementCheckbox.addEventListener("change", () => {
 //   handleCheckbox(forms);
 // });

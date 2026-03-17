@@ -8,6 +8,7 @@ const handleGetCdCompsFields = require("./ipc-handlers/handleGetCdCompsFields");
 const handleQueryValues = require("./ipc-handlers/handleQueryValues");
 const handleGetCurrentLocations = require("./ipc-handlers/handleGetCurrentLocations");
 const handleInsertCdsMain = require("./ipc-handlers/handleInsertCdsMain");
+const handleInsertTapes = require("./ipc-handlers/handleInsertTapes");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -38,6 +39,7 @@ app.whenReady().then(() => {
   ipcMain.handle("handleQueryValues", handleQueryValues);
   ipcMain.handle("getCurrentLocations", handleGetCurrentLocations);
   ipcMain.handle("insertCdsMain", handleInsertCdsMain);
+  ipcMain.handle("insertTapes", handleInsertTapes);
 
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();

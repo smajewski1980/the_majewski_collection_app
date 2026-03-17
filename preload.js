@@ -18,4 +18,5 @@ contextBridge.exposeInMainWorld("getCurrentLocations", {
 
 contextBridge.exposeInMainWorld("inserts", {
   insertCdsMain: (channel, data) => ipcRenderer.invoke(channel, data),
+  insertTapes: (channel, data) => ipcRenderer.invoke(channel, data),
 });
