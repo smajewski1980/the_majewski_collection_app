@@ -300,45 +300,15 @@ async function handleCdsMainForm(e) {
     return;
   }
 
-  // const options = {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(trimDataFields(data)),
-  // };
-
-  const trimmedJsonData = JSON.stringify(trimDataFields(data));
+  const trimmedJsonData = trimDataFields(data);
 
   console.log(trimmedJsonData);
   if (isLocValValid(cdsMainInput, validCdsMainLocs)) {
     try {
       const res = await inserts.insertCdsMain("insertCdsMain", trimmedJsonData);
-      console.log("inside the try block", JSON.parse(res));
-      // after setting up ipc handler change here <-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-      // const res = await fetch("/cds-main", options);
-
-      // if (res.status === 400) {
-      //   const errs = await res.json();
-      //   errs.forEach((er) => {
-      //     toasty(`Value: ${er.value} ; Message: ${er.msg}`, "red");
-      //     console.log(`Value: ${er.value} ; Message: ${er.msg}`);
-      //   });
-      //   return;
-      // }
-
-      // if (res.status === 201) {
-      //   const resData = await res.json();
-      //   toasty(
-      //     `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
-      //     "green",
-      //   );
-
-      // after setting up ipc handler change here <-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
       cdsMainForm.reset();
       focusFirstField(cdsMainForm);
-      // console.log("new item id: ", resData);
 
       // if (incrementLocationSwitch()) {
       //   await getLocations();
@@ -353,12 +323,11 @@ async function handleCdsMainForm(e) {
       window.scrollTo(0, 0);
 
       // add item data to the session list
-      const sessionListStr = `id: ${"will add the id later: "} ${data.artist} - ${data.title} was added to cds main.`;
+      const sessionListStr = `id: ${JSON.parse(res)[0].id} ${data.artist} - ${data.title} was added to cds main.`;
       addToSessionList(sessionList, sessionListStr, "cds-main-color");
       // }
     } catch (error) {
       toasty(error, "red");
-      console.log(error);
     }
   }
 }
