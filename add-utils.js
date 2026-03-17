@@ -1,6 +1,14 @@
 // import Toastify from "./node_modules/toastify-js/src/toastify-es.js";
 
-// reset all forms to not active
+/**
+ * takes an array of forms and removes the active class from each
+ * @typedef {Array} forms
+ * @property {HTMLFormElement} cdCompsForm
+ * @property {HTMLFormElement} cdSinglesForm
+ * @property {HTMLFormElement} cdsMainForm
+ * @property {HTMLFormElement} btnRerecordsFormcords
+ * @property {HTMLFormElement} tapesForm
+ */
 export function removeActiveFormClass(forms) {
   forms.forEach((form) => {
     form.classList.remove("active-form");
@@ -13,7 +21,15 @@ export function removeActiveFormClass(forms) {
 //   return regex.test(year);
 // }
 
-// check the data objects for empty vals
+/**
+ * check the given data object for empty vals
+ * @typedef {object} data
+ * @property {string} artist
+ * @property {string} title
+ * @property {string} location
+ * @param {Boolean} tracksTrigger
+ * @returns
+ */
 export function noEmptyFields(data, tracksTrigger) {
   if (tracksTrigger && !data.tracks) {
     return false;
@@ -96,6 +112,14 @@ export function toasty(msg, color) {
 //   }
 // }
 
+/**
+ * takes data object and trims the vals
+ * @typedef {object} data
+ * @property {string} artist
+ * @property {string} title
+ * @property {string} location
+ * @returns {void}
+ */
 export function trimDataFields(data) {
   for (const key in data) {
     if (typeof data[key] === "string") {
@@ -105,6 +129,13 @@ export function trimDataFields(data) {
   return data;
 }
 
+/**
+ * makes a li with a given string and prepends to
+ * given list, also adds class to li to add styles
+ * @param {HTMLUListElement} list
+ * @param {String} str
+ * @param {String} className
+ */
 export function addToSessionList(list, str, className) {
   const li = document.createElement("li");
   li.textContent = str;
@@ -112,11 +143,18 @@ export function addToSessionList(list, str, className) {
   list.prepend(li);
 }
 
+/**
+ * take a form element and places focus on the first input
+ * @param {HTMLFormElement} form
+ */
 export function focusFirstField(form) {
   const firstField = form.querySelector("input");
   firstField.focus();
 }
 
+/**
+ * handles the page theme switch
+ */
 export function handleThemeChange() {
   const currTheme = document.documentElement.getAttribute("data-theme");
   document.documentElement.style.colorScheme =
@@ -127,12 +165,27 @@ export function handleThemeChange() {
   );
 }
 
+/**
+ * remove active class from form select btns
+ * @typedef {Array} btn
+ * @property {HTMLButtonElement} btnComps
+ * @property {HTMLButtonElement} btnSingles
+ * @property {HTMLButtonElement} btnMain
+ * @property {HTMLButtonElement} btnRecords
+ * @property {HTMLButtonElement} btnTapes
+ */
 export function removeActiveClass(btns) {
   btns.forEach((btn) => {
     btn.classList.remove("active-nav-btn");
   });
 }
 
+/**
+ * apply the proper classes to display the selected
+ * form and style the active button
+ * @param {String} formStr
+ * @param {HTMLButtonElement} navBtn
+ */
 export function showForm(formStr, navBtn) {
   navBtn.classList.add("active-nav-btn");
   const activeForm = document.getElementById(formStr);
@@ -140,6 +193,13 @@ export function showForm(formStr, navBtn) {
   activeForm.querySelector("input").focus();
 }
 
+/**
+ * On a fresh page load, when the first form is
+ * selected, show appropriate elements
+ * @param {HTMLElement} mainEl
+ * @param {HTMLElement} incrementWrapper
+ * @returns {void}
+ */
 export function initialShowForm(mainEl, incrementWrapper) {
   incrementWrapper.style.display = "block";
   mainEl.style.opacity = 1;

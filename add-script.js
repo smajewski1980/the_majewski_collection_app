@@ -37,7 +37,11 @@ let showSessionList = false;
 let initialLoad = true;
 const mainEl = document.querySelector("main");
 
-// when a nav button is clicked, show the appropriate form
+/**
+ * when a nav button is clicked, show the appropriate form
+ * @param {Event} e
+ * @returns {void}
+ */
 function handleNavBtnClick(e) {
   if (e.target.classList.contains("active-nav-btn")) return;
 
@@ -550,6 +554,9 @@ const themeSlider = document.getElementById("theme-slider");
 const slide = document.getElementById("slide");
 let theme = document.documentElement.getAttribute("data-theme");
 
+/**
+ * toggle themes
+ */
 function handleThemeToggle() {
   if (theme === "dark") {
     theme = "light";
