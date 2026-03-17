@@ -1,7 +1,20 @@
 const pool = require("../dbconnect.js");
 
-async function handleInsertTapes(e, data) {
-  const { artist, title, location, year, needsRepair, speed } = data;
+/**
+ * this takes the tape data from
+ * the form and does a db insert
+ * @param {Event} e
+ * @typedef {object} tapeData
+ * @property {string} artist
+ * @property {string} title
+ * @property {string} location
+ * @property {number} year
+ * @property {string} needsRepair
+ * @property {string} speed
+ * @returns {number}
+ */
+async function handleInsertTapes(e, tapeData) {
+  const { artist, title, location, year, needsRepair, speed } = tapeData;
 
   try {
     const result = await pool.query(

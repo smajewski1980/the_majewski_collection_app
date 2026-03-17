@@ -438,6 +438,12 @@ async function handleCdsMainForm(e) {
 //   }
 // }
 
+/**
+ * this handles the submit of the
+ * tapes insert form
+ * @param {Event} e
+ * @returns {void}
+ */
 async function handleTapesForm(e) {
   e.preventDefault();
   const formData = new FormData(tapesForm);
@@ -449,9 +455,6 @@ async function handleTapesForm(e) {
 
   // map the options' text to a valid array
   const validTapesLocs = tapesOptionElems.map((el) => el.value);
-
-  // the input element itself to access the current value
-  // const tapesInput = document.getElementById("tapes-location");
 
   const data = {
     artist: formData.get("artist"),
@@ -480,26 +483,23 @@ async function handleTapesForm(e) {
     try {
       const res = await inserts.insertTapes("insertTapes", data);
 
+      // if the form submits successfully, clear the form,
+      // focus the first field, scroll window to top
       tapesForm.reset();
       focusFirstField(tapesForm);
-
-      // may reimplement this or something similar later
-      //       toasty(
-      //         `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
-      //         "green",
-      //       );
+      window.scrollTo(0, 0);
 
       // if (incrementLocationSwitch()) {
       //   await getLocations();
       //   handleIncrementReset();
       // }
 
+      // if this is the first entry for this session,
+      // display the current session list
       if (!showSessionList) {
         showSessionList = true;
         sessionListWrapper.style.display = "block";
       }
-
-      window.scrollTo(0, 0);
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to tapes.`;
@@ -538,6 +538,7 @@ let theme = document.documentElement.getAttribute("data-theme");
 
 /**
  * toggle themes
+ * @returns {void}
  */
 function handleThemeToggle() {
   if (theme === "dark") {

@@ -1,5 +1,3 @@
-// import Toastify from "./node_modules/toastify-js/src/toastify-es.js";
-
 /**
  * takes an array of forms and removes the active class from each
  * @typedef {Array} forms
@@ -8,6 +6,7 @@
  * @property {HTMLFormElement} cdsMainForm
  * @property {HTMLFormElement} btnRerecordsFormcords
  * @property {HTMLFormElement} tapesForm
+ * @returns {void}
  */
 export function removeActiveFormClass(forms) {
   forms.forEach((form) => {
@@ -15,7 +14,11 @@ export function removeActiveFormClass(forms) {
   });
 }
 
-// frontend validation for the year field, did this way to use toastify instead of user-agent message
+/**
+ * check to make sure the year value is a valid number
+ * @param {Number} year
+ * @returns {Boolean}
+ */
 export function yearFormatIsGood(year) {
   const regex = /^[0-9]{4}$/;
   return regex.test(year);
@@ -28,7 +31,7 @@ export function yearFormatIsGood(year) {
  * @property {string} title
  * @property {string} location
  * @param {Boolean} tracksTrigger
- * @returns
+ * @returns {Boolean}
  */
 export function noEmptyFields(data, tracksTrigger) {
   if (tracksTrigger && !data.tracks) {
@@ -118,7 +121,7 @@ export function toasty(msg, color) {
  * @property {string} artist
  * @property {string} title
  * @property {string} location
- * @returns {void}
+ * @returns {data} the trimmed data object
  */
 export function trimDataFields(data) {
   for (const key in data) {
@@ -135,6 +138,7 @@ export function trimDataFields(data) {
  * @param {HTMLUListElement} list
  * @param {String} str
  * @param {String} className
+ * @returns {void}
  */
 export function addToSessionList(list, str, className) {
   const li = document.createElement("li");
@@ -146,6 +150,7 @@ export function addToSessionList(list, str, className) {
 /**
  * take a form element and places focus on the first input
  * @param {HTMLFormElement} form
+ * @returns {void}
  */
 export function focusFirstField(form) {
   const firstField = form.querySelector("input");
@@ -154,6 +159,7 @@ export function focusFirstField(form) {
 
 /**
  * handles the page theme switch
+ * @returns {void}
  */
 export function handleThemeChange() {
   const currTheme = document.documentElement.getAttribute("data-theme");
@@ -173,6 +179,7 @@ export function handleThemeChange() {
  * @property {HTMLButtonElement} btnMain
  * @property {HTMLButtonElement} btnRecords
  * @property {HTMLButtonElement} btnTapes
+ * @returns {void}
  */
 export function removeActiveClass(btns) {
   btns.forEach((btn) => {
@@ -185,6 +192,7 @@ export function removeActiveClass(btns) {
  * form and style the active button
  * @param {String} formStr
  * @param {HTMLButtonElement} navBtn
+ * @returns {void}
  */
 export function showForm(formStr, navBtn) {
   navBtn.classList.add("active-nav-btn");
@@ -209,7 +217,7 @@ export function initialShowForm(mainEl, incrementWrapper) {
  * Check if the forms provided location is valid
  * @param {String} locVal
  * @param {Array} validArr
- * @returns
+ * @returns {Boolean}
  */
 export function isLocValValid(locVal, validArr) {
   if (validArr.includes(locVal)) {
