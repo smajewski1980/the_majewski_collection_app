@@ -36,7 +36,7 @@ export function noEmptyFields(data, tracksTrigger) {
 // our toast config function
 export function toasty(msg, color) {
   // later adapt this to our msg element
-  console.log(msg);
+  console.log("old toasty", msg);
 }
 
 // trim singles track titles
@@ -145,8 +145,14 @@ export function initialShowForm(mainEl, incrementWrapper) {
   mainEl.style.opacity = 1;
 }
 
-export function isLocValValid(inputEl, validArr) {
-  if (validArr.includes(inputEl.value)) {
+/**
+ * Check if the forms provided location is valid
+ * @param {String} locVal
+ * @param {Array} validArr
+ * @returns
+ */
+export function isLocValValid(locVal, validArr) {
+  if (validArr.includes(locVal)) {
     return true;
   } else {
     toasty("Location field does not contain a valid value.", "red");

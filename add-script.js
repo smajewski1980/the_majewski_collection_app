@@ -274,6 +274,12 @@ function handleNavBtnClick(e) {
 //   }
 // }
 
+/**
+ * this handles the submit of the
+ * cds main insert form
+ * @param {Event} e
+ * @returns {void}
+ */
 async function handleCdsMainForm(e) {
   e.preventDefault();
   const formData = new FormData(cdsMainForm);
@@ -286,9 +292,6 @@ async function handleCdsMainForm(e) {
   // map the options' text to a valid array
   const validCdsMainLocs = cdsMainOptionElems.map((el) => el.value);
 
-  // the input element itself to access the current value
-  const cdsMainInput = document.getElementById("cds-main-location");
-
   const data = {
     artist: formData.get("artist"),
     title: formData.get("title"),
@@ -300,30 +303,34 @@ async function handleCdsMainForm(e) {
     return;
   }
 
-  const trimmedJsonData = trimDataFields(data);
-
-  console.log(trimmedJsonData);
-  if (isLocValValid(cdsMainInput, validCdsMainLocs)) {
+  if (isLocValValid(data.location, validCdsMainLocs)) {
     try {
-      const res = await inserts.insertCdsMain("insertCdsMain", trimmedJsonData);
+      const res = await inserts.insertCdsMain(
+        "insertCdsMain",
+        trimDataFields(data),
+      );
 
+      // if the form submits successfully, clear the form,
+      // focus the first field, scroll window to top
       cdsMainForm.reset();
       focusFirstField(cdsMainForm);
+      window.scrollTo(0, 0);
 
+      // will revisit this later
       // if (incrementLocationSwitch()) {
       //   await getLocations();
       //   handleIncrementReset();
       // }
 
+      // if this is the first entry for this session,
+      // display the current session list
       if (!showSessionList) {
         showSessionList = true;
         sessionListWrapper.style.display = "block";
       }
 
-      window.scrollTo(0, 0);
-
       // add item data to the session list
-      const sessionListStr = `id: ${JSON.parse(res)[0].id} ${data.artist} - ${data.title} was added to cds main.`;
+      const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cds main.`;
       addToSessionList(sessionList, sessionListStr, "cds-main-color");
       // }
     } catch (error) {
