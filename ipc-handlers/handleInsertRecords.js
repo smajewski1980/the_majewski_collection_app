@@ -1,6 +1,21 @@
 const pool = require("../dbconnect.js");
 
-async function handleInsertRecords(e, data) {
+/**
+ * this takes the record data from
+ * the form and does a db insert
+ * @param {Event} e
+ * @typedef {object} recordData
+ * @property {string} artist
+ * @property {string} title
+ * @property {string} location
+ * @property {number} year
+ * @property {string} diameter
+ * @property {string} sleeve_condition
+ * @property {string} record_condition
+ * @property {string} label
+ * @returns {number}
+ */
+async function handleInsertRecords(e, recordData) {
   const {
     artist,
     title,
@@ -10,7 +25,7 @@ async function handleInsertRecords(e, data) {
     sleeve_condition,
     record_condition,
     label,
-  } = data;
+  } = recordData;
 
   try {
     const result = await pool.query(

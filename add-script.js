@@ -343,6 +343,12 @@ async function handleCdsMainForm(e) {
   }
 }
 
+/**
+ * this handles the submit of the
+ * records insert form
+ * @param {Event} e
+ * @returns {void}
+ */
 async function handleRecordsForm(e) {
   e.preventDefault();
   const formData = new FormData(recordsForm);
@@ -354,9 +360,6 @@ async function handleRecordsForm(e) {
 
   // map the options' text to a valid array
   const validRecordsLocs = recordsOptionElems.map((el) => el.value);
-
-  // the input element itself to access the current value
-  // const recordsInput = document.getElementById("records-location");
 
   const data = {
     artist: formData.get("artist"),
@@ -385,26 +388,24 @@ async function handleRecordsForm(e) {
     isLocValValid(data.location, validRecordsLocs)
   ) {
     try {
-      // const res = await fetch("/records", options);
       const res = await inserts.insertRecords(
         "insertRecords",
         trimDataFields(data),
       );
 
+      // if the form submits successfully, clear the form,
+      // focus the first field, scroll window to top
       recordsForm.reset();
       focusFirstField(recordsForm);
       window.scrollTo(0, 0);
-
-      // toasty(
-      //   `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
-      //   "green",
-      // );
 
       // if (incrementLocationSwitch()) {
       //   await getLocations();
       //   handleIncrementReset();
       // }
 
+      // if this is the first entry for this session,
+      // display the current session list
       if (!showSessionList) {
         showSessionList = true;
         sessionListWrapper.style.display = "block";
@@ -447,17 +448,16 @@ async function handleTapesForm(e) {
     speed: formData.get("tapeSpeed"),
   };
 
+  // input validation
   if (!noEmptyFields(data, false)) {
     toasty("All fields must be filled out.", "red");
     console.log("All fields must be filled out.");
     return;
   }
-
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits", "red");
     return;
   }
-
   if (
     noEmptyFields(data, false) &&
     isLocValValid(data.location, validTapesLocs)
