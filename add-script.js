@@ -343,100 +343,82 @@ async function handleCdsMainForm(e) {
   }
 }
 
-// async function handleRecordsForm(e) {
-//   e.preventDefault();
-//   const formData = new FormData(recordsForm);
+async function handleRecordsForm(e) {
+  e.preventDefault();
+  const formData = new FormData(recordsForm);
 
-// get the option elements
-// const recordsOptionElems = Array.from(
-//   document.querySelectorAll("#records-datalist option"),
-// );
+  // get the option elements
+  const recordsOptionElems = Array.from(
+    document.querySelectorAll("#records-datalist option"),
+  );
 
-// map the options' text to a valid array
-// const validRecordsLocs = recordsOptionElems.map((el) => el.value);
+  // map the options' text to a valid array
+  const validRecordsLocs = recordsOptionElems.map((el) => el.value);
 
-// the input element itself to access the current value
-// const recordsInput = document.getElementById("records-location");
+  // the input element itself to access the current value
+  // const recordsInput = document.getElementById("records-location");
 
-// const data = {
-//   artist: formData.get("artist"),
-//   title: formData.get("title"),
-//   location: formData.get("location"),
-//   year: Number(formData.get("year")),
-//   diameter: formData.get("diameter"),
-//   sleeve_condition: formData.get("sleeveCondition"),
-//   record_condition: formData.get("recordCondition"),
-//   label: formData.get("label"),
-// };
+  const data = {
+    artist: formData.get("artist"),
+    title: formData.get("title"),
+    location: formData.get("location"),
+    year: Number(formData.get("year")),
+    diameter: formData.get("diameter"),
+    sleeve_condition: formData.get("sleeveCondition"),
+    record_condition: formData.get("recordCondition"),
+    label: formData.get("label"),
+  };
 
-// if (!noEmptyFields(data, false)) {
-//   toasty("All fields must be filled out.", "red");
-//   console.log("All fields must be filled out.");
-//   return;
-// }
+  if (!noEmptyFields(data, false)) {
+    toasty("All fields must be filled out.", "red");
+    console.log("All fields must be filled out.");
+    return;
+  }
 
-// if (!yearFormatIsGood(data.year)) {
-//   toasty("Year must be 4 digits", "red");
-//   return;
-// }
+  if (!yearFormatIsGood(data.year)) {
+    toasty("Year must be 4 digits", "red");
+    return;
+  }
 
-// const options = {
-//   method: "POST",
-//   headers: {
-//     "content-type": "application/json",
-//   },
-//   body: JSON.stringify(trimDataFields(data)),
-// };
+  if (
+    noEmptyFields(data, false) &&
+    isLocValValid(data.location, validRecordsLocs)
+  ) {
+    try {
+      // const res = await fetch("/records", options);
+      const res = await inserts.insertRecords(
+        "insertRecords",
+        trimDataFields(data),
+      );
 
-// if (
-//   noEmptyFields(data, false) &&
-//   isLocValValid(recordsInput, validRecordsLocs)
-// ) {
-//   try {
-//     const res = await fetch("/records", options);
+      recordsForm.reset();
+      focusFirstField(recordsForm);
+      window.scrollTo(0, 0);
 
-//     if (res.status === 400) {
-//       const errs = await res.json();
-//       errs.forEach((er) => {
-//         toasty(`Value: ${er.value} ; Message: ${er.msg}`, "red");
-//         console.log(`Value: ${er.value} ; Message: ${er.msg}`);
-//       });
-//       return;
-//     }
+      // toasty(
+      //   `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
+      //   "green",
+      // );
 
-//     if (res.status === 201) {
-//       const resData = await res.json();
-//       recordsForm.reset();
-//       focusFirstField(recordsForm);
-//       toasty(
-//         `${data.artist} - ${data.title} has been added to the database with id: ${resData}`,
-//         "green",
-//       );
+      // if (incrementLocationSwitch()) {
+      //   await getLocations();
+      //   handleIncrementReset();
+      // }
 
-//       console.log("new item id: ", resData);
+      if (!showSessionList) {
+        showSessionList = true;
+        sessionListWrapper.style.display = "block";
+      }
 
-//       if (incrementLocationSwitch()) {
-//         await getLocations();
-//         handleIncrementReset();
-//       }
-
-//       if (!showSessionList) {
-//         showSessionList = true;
-//         sessionListWrapper.style.display = "block";
-//       }
-
-//       window.scrollTo(0, 0);
-
-// add item data to the session list
-//         const sessionListStr = `id: ${resData} ${data.artist} - ${data.title} was added to records.`;
-//         addToSessionList(sessionList, sessionListStr, "record-color");
-//       }
-//     } catch (error) {
-//       toasty(error, "red");
-//       console.log(error);
-//     }
-//   }
-// }
+      // add item data to the session list
+      const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to records.`;
+      addToSessionList(sessionList, sessionListStr, "record-color");
+      // }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 /**
  * this handles the submit of the
@@ -525,7 +507,7 @@ navButtons.forEach((btn) => {
 cdsMainForm.addEventListener("submit", handleCdsMainForm);
 // cdCompsForm.addEventListener("submit", handleCdCompsForm);
 // cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
-// recordsForm.addEventListener("submit", handleRecordsForm);
+recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
 // incrementCheckbox.addEventListener("change", () => {
 //   handleCheckbox(forms);
