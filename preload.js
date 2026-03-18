@@ -20,4 +20,6 @@ contextBridge.exposeInMainWorld("inserts", {
   insertCdsMain: (channel, data) => ipcRenderer.invoke(channel, data),
   insertTapes: (channel, data) => ipcRenderer.invoke(channel, data),
   insertRecords: (channel, data) => ipcRenderer.invoke(channel, data),
+  insertCdComps: (channel, data) => ipcRenderer.invoke(channel, data),
+  insertCdSingles: (channel, data) => ipcRenderer.invoke(channel, data),
 });

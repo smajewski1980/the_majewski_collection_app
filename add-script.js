@@ -60,130 +60,101 @@ function handleNavBtnClick(e) {
   }
 }
 
-// async function handleCdCompsForm(e) {
-//   e.preventDefault();
-//   const formData = new FormData(cdCompsForm);
+async function handleCdCompsForm(e) {
+  e.preventDefault();
+  const formData = new FormData(cdCompsForm);
 
-// get the option elems
-// const cdCompOptionElems = Array.from(
-//   document.querySelectorAll("#cd-comps-datalist option"),
-// );
-// map the options' text to a valid array
-// const validCdCompsLocs = cdCompOptionElems.map((el) => el.value);
-// the input element itself to access the current value
-// const cdCompsInput = document.getElementById("cd-comps-location");
+  // get the option elems
+  const cdCompOptionElems = Array.from(
+    document.querySelectorAll("#cd-comps-datalist option"),
+  );
+  // map the options' text to a valid array
+  const validCdCompsLocs = cdCompOptionElems.map((el) => el.value);
 
-// ----- convert track data from a long string to nested arrays
-// the whole string
-// const tracksFull = formData.get("tracks").trim().split("\n");
-// initialize to undefined to later test easier for empty tracks field
-// let tracksToSend = undefined;
+  // ----- convert track data from a long string to nested arrays
+  // the whole string
+  const tracksFull = formData.get("tracks").trim().split("\n");
+  // initialize to undefined to later test easier for empty tracks field
+  let tracksToSend = undefined;
 
-// loop through and break down each track to array of artist and title
-// tracksFull.forEach((tr) => {
-// i use the pipe to split on
-// const track = tr.split("|");
-// if (!track[0] || !track[1]) {
-//   toasty("Check your track data. Must be <artist>|<title>.", "red");
-//   toasty(
-//     `${
-//       track[0] === ""
-//         ? "All tracks must have an artist"
-//         : "All tracks must have a track name"
-//     }`,
-//     "red",
-//   );
-//   return;
-// }
-// if (track.length === 2) {
-// if still undefined, create an empty array
-// if (!tracksToSend) {
-//   tracksToSend = [];
-// }
-// cleanup and push
-//     track[0] = track[0].trim();
-//     track[1] = track[1].trim();
-//     tracksToSend.push(track);
-//   } else {
-//     toasty("Check your track data. Must be <artist>|<title>.", "red");
-//     return;
-//   }
-// });
+  // loop through and break down each track to array of artist and title
+  tracksFull.forEach((tr) => {
+    // i use the pipe to split on
+    const track = tr.split("|");
+    if (!track[0] || !track[1]) {
+      toasty("Check your track data. Must be <artist>|<title>.", "red");
+      toasty(
+        `${
+          track[0] === ""
+            ? "All tracks must have an artist"
+            : "All tracks must have a track name"
+        }`,
+        "red",
+      );
+      return;
+    }
+    if (track.length === 2) {
+      // if still undefined, create an empty array
+      if (!tracksToSend) {
+        tracksToSend = [];
+      }
+      // cleanup and push
+      track[0] = track[0].trim();
+      track[1] = track[1].trim();
+      tracksToSend.push(track);
+    } else {
+      toasty("Check your track data. Must be <artist>|<title>.", "red");
+      return;
+    }
+  });
 
-// const data = {
-//   title: formData.get("title"),
-//   year: Number(formData.get("year")),
-//   location: formData.get("location"),
-//   tracks: tracksToSend,
-// };
+  const data = {
+    title: formData.get("title"),
+    year: Number(formData.get("year")),
+    location: formData.get("location"),
+    tracks: tracksToSend,
+  };
 
-// const options = {
-//   method: "POST",
-//   headers: {
-//     "content-type": "application/json",
-//   },
-//   body: JSON.stringify(trimDataFields(data)),
-// };
+  if (!noEmptyFields(data, true)) {
+    toasty("All fields must be filled out.", "red");
+    return;
+  }
 
-// if (!noEmptyFields(data, true)) {
-//   toasty("All fields must be filled out.", "red");
-//   return;
-// }
+  if (!yearFormatIsGood(data.year)) {
+    toasty("Year must be 4 digits.", "red");
+    return;
+  }
 
-// if (!yearFormatIsGood(data.year)) {
-//   toasty("Year must be 4 digits.", "red");
-//   return;
-// }
+  if (
+    noEmptyFields(data, true) &&
+    isLocValValid(data.location, validCdCompsLocs)
+  ) {
+    try {
+      const res = await inserts.insertCdComps("insertCdComps", data);
 
-// if (
-//   noEmptyFields(data, true) &&
-//   isLocValValid(cdCompsInput, validCdCompsLocs)
-// ) {
-//   try {
-//     const res = await fetch("/cd-comps", options);
+      cdCompsForm.reset();
 
-//     if (res.status === 400) {
-//       const errs = await res.json();
-//       errs.forEach((er) => {
-//         toasty(`Value: ${er.value} ; Message: ${er.msg}`, "red");
-//         console.log(`Value: ${er.value} ; Message: ${er.msg}`);
-//       });
-//       return;
-//     }
+      // if (incrementLocationSwitch()) {
+      //   await getLocations();
+      //   handleIncrementReset();
+      // }
 
-//     if (res.status === 201) {
-//       const resData = await res.json();
-//       const id = resData.titleId;
+      if (!showSessionList) {
+        showSessionList = true;
+        sessionListWrapper.style.display = "block";
+      }
 
-//       cdCompsForm.reset();
-//       toasty(
-//         `${data.title} has been added to the database with id ${id}.`,
-//         "green",
-//       );
-
-//       if (incrementLocationSwitch()) {
-//         await getLocations();
-//         handleIncrementReset();
-//       }
-
-//       if (!showSessionList) {
-//         showSessionList = true;
-//         sessionListWrapper.style.display = "block";
-//       }
-
-// add item data to the session list
-//         const sessionListStr = `id: ${id} ${data.title} was added to cd comps`;
-//         addToSessionList(sessionList, sessionListStr, "cd-comp-color");
-//         focusFirstField(cdCompsForm);
-//         console.log("new item id: ", id);
-//         window.scrollTo(0, 0);
-//       }
-//     } catch (error) {
-//       toasty(error, "red");
-//       console.log(error);
-//     }
-//   }
-// }
+      // add item data to the session list
+      const sessionListStr = `id: ${res} ${data.title} was added to cd comps`;
+      addToSessionList(sessionList, sessionListStr, "cd-comp-color");
+      focusFirstField(cdCompsForm);
+      console.log("new item id: ", res);
+      window.scrollTo(0, 0);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 // async function handleCdSinglesForm(e) {
 //   e.preventDefault();
@@ -505,7 +476,7 @@ navButtons.forEach((btn) => {
 
 // submit listeners on the forms
 cdsMainForm.addEventListener("submit", handleCdsMainForm);
-// cdCompsForm.addEventListener("submit", handleCdCompsForm);
+cdCompsForm.addEventListener("submit", handleCdCompsForm);
 // cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
