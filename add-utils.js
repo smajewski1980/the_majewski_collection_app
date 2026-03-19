@@ -55,7 +55,20 @@ export function noEmptyFields(data, tracksTrigger) {
 // our toast config function
 export function toasty(msg, color) {
   // later adapt this to our msg element
-  console.log("old toasty", msg);
+  const msgEl = document.querySelector(".add-page-message");
+  // add animation class
+  msgEl.innerText = msg;
+  msgEl.classList.add("add-msg-animation");
+  setTimeout(() => {
+    // remove animation class
+    msgEl.classList.add("add-msg-animation-undo");
+    msgEl.classList.remove("add-msg-animation");
+    setTimeout(() => {
+      msgEl.innerText = "";
+      msgEl.classList.remove("add-msg-animation-undo");
+    }, 500);
+  }, 3000);
+  console.log("old toasty", msg, color);
 }
 
 /**
