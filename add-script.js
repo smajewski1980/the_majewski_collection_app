@@ -60,6 +60,11 @@ function handleNavBtnClick(e) {
   }
 }
 
+/**
+ * handle the submit of the cd comps form
+ * @param {Event} e
+ * @returns {void}
+ */
 async function handleCdCompsForm(e) {
   e.preventDefault();
   const formData = new FormData(cdCompsForm);
@@ -156,6 +161,11 @@ async function handleCdCompsForm(e) {
   }
 }
 
+/**
+ * handle the submit of the cd singles form
+ * @param {Event} e
+ * @returns {void}
+ */
 async function handleCdSinglesForm(e) {
   e.preventDefault();
   // get the form data

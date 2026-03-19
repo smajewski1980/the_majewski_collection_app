@@ -1,12 +1,24 @@
 const pool = require("../dbconnect.js");
 
+/**
+ * this takes the cd single data from
+ * the form and does a db insert
+ * @param {Event} e
+ * @typedef {object} singlesData
+ * @property {string} artist
+ * @property {string} title
+ * @property {number} year
+ * @property {string} caseType
+ * @property {string[]} tracks
+ * @returns {number}
+ */
 async function handleCdSingles(e, singlesData) {
   const { artist, title, year, caseType, tracks } = singlesData;
 
   try {
     // begin transaction
     await pool.query("BEGIN");
-    // insert single and get id for track insert
+    // insert single and get single id for track insert
     const result = await pool.query(
       "INSERT INTO cd_singles(artist, title, year, case_type) VALUES($1, $2, $3, $4) RETURNING single_id",
       [artist, title, year, caseType],

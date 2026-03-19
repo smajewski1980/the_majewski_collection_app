@@ -58,7 +58,11 @@ export function toasty(msg, color) {
   console.log("old toasty", msg);
 }
 
-// trim singles track titles
+/**
+ * trim singles track titles
+ * @param {string[]} arr
+ * @returns {string[]}
+ */
 export function trimTracks(arr) {
   const trimmed = [];
   arr.forEach((tr) => trimmed.push(tr.trim()));
