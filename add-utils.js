@@ -59,11 +59,11 @@ export function toasty(msg, color) {
 }
 
 // trim singles track titles
-// export function trimTracks(arr) {
-//   const trimmed = [];
-//   arr.forEach((tr) => trimmed.push(tr.trim()));
-//   return trimmed;
-// }
+export function trimTracks(arr) {
+  const trimmed = [];
+  arr.forEach((tr) => trimmed.push(tr.trim()));
+  return trimmed;
+}
 
 // export function handleIncrementLocation(form) {
 //   // now we take this form and change the select options value and text content

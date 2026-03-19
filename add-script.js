@@ -3,7 +3,7 @@ import {
   yearFormatIsGood,
   noEmptyFields,
   toasty,
-  //   trimTracks,
+  trimTracks,
   //   handleIncrementReset,
   //   incrementCheckbox,
   //   handleCheckbox,
@@ -156,98 +156,72 @@ async function handleCdCompsForm(e) {
   }
 }
 
-// async function handleCdSinglesForm(e) {
-//   e.preventDefault();
-// get the form data
-// const formData = new FormData(cdSinglesForm);
-// break down the tracks string to an array, each track gets trimmed later
-// const trackList = formData.get("tracks").trim().split("\n");
-// get the option elems
-// const cdSinglesOptionElems = Array.from(
-//   document.querySelectorAll("#cd-singles-datalist option"),
-// );
-// map the options' text to a valid array
-// const validCdSingleLocs = cdSinglesOptionElems.map((el) => el.value);
-// the input element itself to access the current value
-// const cdSinglesInput = document.getElementById("cd-singles-case-type");
+async function handleCdSinglesForm(e) {
+  e.preventDefault();
+  // get the form data
+  const formData = new FormData(cdSinglesForm);
+  // break down the tracks string to an array, each track gets trimmed later
+  const trackList = formData.get("tracks").trim().split("\n");
+  // get the option elems
+  const cdSinglesOptionElems = Array.from(
+    document.querySelectorAll("#cd-singles-datalist option"),
+  );
+  // map the options' text to a valid array
+  const validCdSingleLocs = cdSinglesOptionElems.map((el) => el.value);
+  // the input element itself to access the current value
+  const cdSinglesInput = document.getElementById("cd-singles-case-type");
 
-// const data = {
-//   artist: formData.get("artist"),
-//   title: formData.get("title"),
-//   year: Number(formData.get("year")),
-//   caseType: formData.get("caseType"),
-//   tracks: trimTracks(trackList),
-// };
+  const data = {
+    artist: formData.get("artist"),
+    title: formData.get("title"),
+    year: Number(formData.get("year")),
+    caseType: formData.get("caseType"),
+    tracks: trimTracks(trackList),
+  };
 
-// if (!noEmptyFields(data, true)) {
-//   toasty("All fields must be filled out.", "red");
-//   return;
-// }
+  if (!noEmptyFields(data, true)) {
+    toasty("All fields must be filled out.", "red");
+    return;
+  }
 
-// if (!yearFormatIsGood(data.year)) {
-//   toasty("Year must be 4 digits", "red");
-//   return;
-// }
+  if (!yearFormatIsGood(data.year)) {
+    toasty("Year must be 4 digits", "red");
+    return;
+  }
 
-// if only the tracks are empty
-// if (!trackList[0] && noEmptyFields(data, true)) {
-//   toasty("Please add some tracks.", "red");
-//   return;
-// }
+  // if only the tracks are empty
+  if (!trackList[0] && noEmptyFields(data, true)) {
+    toasty("Please add some tracks.", "red");
+    return;
+  }
 
-// const options = {
-//   method: "POST",
-//   headers: {
-//     "content-type": "application/json",
-//   },
-//   body: JSON.stringify(trimDataFields(data)),
-// };
+  if (
+    noEmptyFields(data, true) &&
+    isLocValValid(data.caseType, validCdSingleLocs)
+  ) {
+    try {
+      const res = await inserts.insertCdSingles("insertCdSingles", data);
 
-// if (
-//   noEmptyFields(data, true) &&
-//   isLocValValid(cdSinglesInput, validCdSingleLocs)
-// ) {
-//   try {
-//     const res = await fetch("/cd-singles", options);
+      cdSinglesForm.reset();
+      focusFirstField(cdSinglesForm);
 
-//     if (res.status === 400) {
-//       const errs = await res.json();
-//       errs.forEach((er) => {
-//         toasty(`Value: ${er.value} ; Message: ${er.msg}`, "red");
-//         console.log(`Value: ${er.value} ; Message: ${er.msg}`);
-//       });
-//       return;
-//     }
+      console.log("new item id: ", res);
 
-//     if (res.status === 201) {
-//       const id = await res.json();
-//       cdSinglesForm.reset();
-//       focusFirstField(cdSinglesForm);
-//       toasty(
-//         `${data.artist} - ${data.title} was added to the database with id: ${id}`,
-//         "green",
-//       );
+      if (!showSessionList) {
+        showSessionList = true;
+        sessionListWrapper.style.display = "block";
+      }
 
-//       console.log("new item id: ", id);
+      window.scrollTo(0, 0);
 
-//       if (!showSessionList) {
-//         showSessionList = true;
-//         sessionListWrapper.style.display = "block";
-//       }
-
-//       window.scrollTo(0, 0);
-
-// add item data to the session list
-// const sessionListStr = `id: ${id} ${data.artist} - ${data.title} was added to cd singles.`;
-// addToSessionList(sessionList, sessionListStr, "cd-single-color");
-// these locations are fixed and will not be incremented
-//       }
-//     } catch (error) {
-//       toasty(error, "red");
-//       console.log(error);
-//     }
-//   }
-// }
+      // add item data to the session list
+      const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cd singles.`;
+      addToSessionList(sessionList, sessionListStr, "cd-single-color");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
 
 /**
  * this handles the submit of the
@@ -477,7 +451,7 @@ navButtons.forEach((btn) => {
 // submit listeners on the forms
 cdsMainForm.addEventListener("submit", handleCdsMainForm);
 cdCompsForm.addEventListener("submit", handleCdCompsForm);
-// cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
+cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
 // incrementCheckbox.addEventListener("change", () => {
