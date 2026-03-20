@@ -4,9 +4,9 @@ import {
   noEmptyFields,
   toasty,
   trimTracks,
-  //   handleIncrementReset,
-  //   incrementCheckbox,
-  //   handleCheckbox,
+  handleIncrementReset,
+  incrementCheckbox,
+  handleCheckbox,
   //   incrementLocationSwitch,
   trimDataFields,
   addToSessionList,
@@ -16,6 +16,7 @@ import {
   showForm,
   initialShowForm,
   isLocValValid,
+  incrementFlag,
 } from "./add-utils.js";
 import { getLocations } from "./get-current-locations.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
@@ -49,6 +50,7 @@ function handleNavBtnClick(e) {
     document.startViewTransition(() => {
       removeActiveFormClass(forms);
       removeActiveClass(navButtons);
+      handleIncrementReset();
       // the first arg is the id of the form to show, second arg is the nav btn
       showForm(e.target.dataset.form, e.target);
     });
@@ -138,11 +140,12 @@ async function handleCdCompsForm(e) {
       const res = await inserts.insertCdComps("insertCdComps", data);
 
       cdCompsForm.reset();
+      handleIncrementReset();
+
       toasty("item successfully added", "green");
 
       // if (incrementLocationSwitch()) {
       //   await getLocations();
-      //   handleIncrementReset();
       // }
 
       if (!showSessionList) {
@@ -214,6 +217,7 @@ async function handleCdSinglesForm(e) {
       const res = await inserts.insertCdSingles("insertCdSingles", data);
 
       cdSinglesForm.reset();
+      handleIncrementReset();
       focusFirstField(cdSinglesForm);
       toasty("item successfully added", "green");
 
@@ -274,6 +278,7 @@ async function handleCdsMainForm(e) {
       // if the form submits successfully, clear the form,
       // focus the first field, scroll window to top
       cdsMainForm.reset();
+      handleIncrementReset();
       focusFirstField(cdsMainForm);
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
@@ -281,7 +286,6 @@ async function handleCdsMainForm(e) {
       // will revisit this later
       // if (incrementLocationSwitch()) {
       //   await getLocations();
-      //   handleIncrementReset();
       // }
 
       // if this is the first entry for this session,
@@ -354,13 +358,13 @@ async function handleRecordsForm(e) {
       // if the form submits successfully, clear the form,
       // focus the first field, scroll window to top
       recordsForm.reset();
+      handleIncrementReset();
       focusFirstField(recordsForm);
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
       // if (incrementLocationSwitch()) {
       //   await getLocations();
-      //   handleIncrementReset();
       // }
 
       // if this is the first entry for this session,
@@ -427,13 +431,13 @@ async function handleTapesForm(e) {
       // if the form submits successfully, clear the form,
       // focus the first field, scroll window to top
       tapesForm.reset();
+      handleIncrementReset();
       focusFirstField(tapesForm);
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
       // if (incrementLocationSwitch()) {
       //   await getLocations();
-      //   handleIncrementReset();
       // }
 
       // if this is the first entry for this session,
@@ -469,9 +473,12 @@ cdCompsForm.addEventListener("submit", handleCdCompsForm);
 cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
-// incrementCheckbox.addEventListener("change", () => {
-//   handleCheckbox(forms);
-// });
+
+incrementCheckbox.addEventListener("change", () => {
+  if (!incrementFlag) {
+    handleCheckbox(forms);
+  }
+});
 
 // slider
 const themeSlider = document.getElementById("theme-slider");

@@ -98,55 +98,78 @@ export function trimTracks(arr) {
   return trimmed;
 }
 
-// export function handleIncrementLocation(form) {
-//   // now we take this form and change the select options value and text content
-//   const selectedOption = Array.from(form.querySelectorAll("option")).filter(
-//     (opt) => opt.selected,
-//   )[0];
-//   // take option value and split
-//   const splitOptionVal = selectedOption.value.split(" ");
+export function handleIncrementLocation(selectedOption, selectedInput) {
+  //   // now we take this form and change the select options value and text content
+  const newText = "changed text";
+  console.log("selected: ", selectedOption);
+  selectedOption.innerText = newText;
+  selectedOption.value = newText;
+  selectedInput.value = newText;
+  //   // take option value and split
+  //   const splitOptionVal = selectedOption.value.split(" ");
 
-//   // take the -1 index and parse as num
-//   let numVal = parseInt(splitOptionVal.at(-1));
-//   // if one of the options without an ending number is selected, return
-//   if (Number.isNaN(numVal)) return;
-//   // increment num and add back to string
-//   const incrementedNumString = (numVal += 1).toString();
-//   splitOptionVal[splitOptionVal.length - 1] = incrementedNumString;
-//   const reassembledString = splitOptionVal.join(" ");
+  //   // take the -1 index and parse as num
+  //   let numVal = parseInt(splitOptionVal.at(-1));
+  //   // if one of the options without an ending number is selected, return
+  //   if (Number.isNaN(numVal)) return;
+  //   // increment num and add back to string
+  //   const incrementedNumString = (numVal += 1).toString();
+  //   splitOptionVal[splitOptionVal.length - 1] = incrementedNumString;
+  //   const reassembledString = splitOptionVal.join(" ");
 
-//   // set the new vals
+  //   // set the new vals
 
-//   selectedOption.value = reassembledString;
-//   selectedOption.textContent = reassembledString;
-// }
+  //   selectedOption.value = reassembledString;
+  //   selectedOption.textContent = reassembledString;
+}
 
-// export const incrementCheckbox = document.getElementById("increment-location");
+export const incrementCheckbox = document.getElementById("increment-location");
+export let incrementFlag = false;
 
-// export function handleIncrementReset() {
-//   incrementCheckbox.checked = false;
-// }
+export function handleIncrementReset() {
+  incrementCheckbox.checked = false;
+  incrementCheckbox.parentElement.inert = false;
+  incrementCheckbox.parentElement.style.opacity = "1";
+  incrementFlag = false;
+}
 
 // export const incrementLocationSwitch = () => incrementCheckbox.checked;
-
 // when the incr box is checked, get the active form
-// export function handleCheckbox(arr) {
-//   const activeForm = arr.filter((form) =>
-//     form.classList.contains("active-form"),
-//   );
-//   if (incrementLocationSwitch()) {
-//     if (
-//       window.confirm(
-//         "Once incremented, to undo, for now just refresh the page.",
-//       )
-//     ) {
-//       handleIncrementLocation(activeForm[0]);
-//     } else {
-//       handleIncrementReset();
-//       return;
-//     }
-//   }
-// }
+export async function handleCheckbox(arr) {
+  const activeForm = arr.filter((form) =>
+    form.classList.contains("active-form"),
+  );
+
+  // const selectedOption = Array.from(
+  //   activeForm[0].querySelectorAll("option"),
+  // ).filter((opt) => opt.selected)[0];
+
+  const selectedInput = activeForm[0].querySelector("input[name='location']");
+  const datalist = selectedInput.nextElementSibling;
+
+  if (!selectedInput.value) {
+    toasty("Select a location to increment first.", null);
+    incrementCheckbox.checked = false;
+    incrementFlag = false;
+    return;
+  }
+
+  // not sure why this seems to lock up the interface .......
+  if (window.confirm("Are you sure?")) {
+    // const optionEls = Array.from(datalist.querySelectorAll("option"));
+    // const currOption = optionEls.filter(
+    //   (el) => el.textContent === selectedInput.value,
+    // );
+    // handleIncrementLocation(currOption[0], selectedInput);
+    // incrementCheckbox.parentElement.inert = true;
+    // incrementCheckbox.parentElement.style.opacity = "0.3";
+    // incrementFlag = true;
+    return;
+  } else {
+    // handleIncrementReset();
+    return;
+  }
+}
 
 /**
  * takes data object and trims the vals
