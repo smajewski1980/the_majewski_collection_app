@@ -138,6 +138,7 @@ async function handleCdCompsForm(e) {
       const res = await inserts.insertCdComps("insertCdComps", data);
 
       cdCompsForm.reset();
+      toasty("item successfully added", "green");
 
       // if (incrementLocationSwitch()) {
       //   await getLocations();
@@ -214,6 +215,7 @@ async function handleCdSinglesForm(e) {
 
       cdSinglesForm.reset();
       focusFirstField(cdSinglesForm);
+      toasty("item successfully added", "green");
 
       console.log("new item id: ", res);
 
@@ -273,6 +275,7 @@ async function handleCdsMainForm(e) {
       // focus the first field, scroll window to top
       cdsMainForm.reset();
       focusFirstField(cdsMainForm);
+      toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
       // will revisit this later
@@ -352,6 +355,7 @@ async function handleRecordsForm(e) {
       // focus the first field, scroll window to top
       recordsForm.reset();
       focusFirstField(recordsForm);
+      toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
       // if (incrementLocationSwitch()) {
@@ -424,6 +428,7 @@ async function handleTapesForm(e) {
       // focus the first field, scroll window to top
       tapesForm.reset();
       focusFirstField(tapesForm);
+      toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
       // if (incrementLocationSwitch()) {

@@ -52,23 +52,39 @@ export function noEmptyFields(data, tracksTrigger) {
   return true;
 }
 
-// our toast config function
+let isToastShowing = false;
+/**
+ * custom toast message function
+ * @param {String} msg
+ * @param {String} color
+ * @returns {void}
+ */
 export function toasty(msg, color) {
-  // later adapt this to our msg element
   const msgEl = document.querySelector(".add-page-message");
-  // add animation class
-  msgEl.innerText = msg;
-  msgEl.classList.add("add-msg-animation");
-  setTimeout(() => {
-    // remove animation class
-    msgEl.classList.add("add-msg-animation-undo");
-    msgEl.classList.remove("add-msg-animation");
+
+  if (color === "green") {
+    msgEl.style.setProperty("--msg-clr", "chartreuse");
+  }
+  // if it's already showing, just append current msg to text
+  if (isToastShowing) {
+    msgEl.innerText += `\n\n${msg}`;
+  } else {
+    isToastShowing = true;
+    msgEl.innerText = msg;
+    msgEl.classList.add("add-msg-animation");
     setTimeout(() => {
-      msgEl.innerText = "";
-      msgEl.classList.remove("add-msg-animation-undo");
-    }, 500);
-  }, 3000);
-  console.log("old toasty", msg, color);
+      msgEl.classList.add("add-msg-animation-undo");
+      msgEl.classList.remove("add-msg-animation");
+      setTimeout(() => {
+        msgEl.innerText = "";
+        msgEl.classList.remove("add-msg-animation-undo");
+        isToastShowing = false;
+        if (color === "green") {
+          msgEl.style.setProperty("--msg-clr", "var(--error-color)");
+        }
+      }, 500);
+    }, 5000);
+  }
 }
 
 /**

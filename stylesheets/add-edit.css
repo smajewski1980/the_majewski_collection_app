@@ -91,12 +91,16 @@
   }
 
   .add-page-message {
-    --msg-clr: red;
-    position: absolute;
+    --msg-clr: var(--error-color);
+    position: fixed;
     font-size: 1.5rem;
     top: 2rem;
     left: -35rem;
     max-width: 30ch;
+    border-inline-start: 5px solid var(--msg-clr);
+    border-radius: 25px;
+    corner-shape: scoop;
+    padding-inline-start: 2rem;
     color: var(--msg-clr);
   }
 
@@ -585,12 +589,12 @@
 
 @keyframes toast-in {
   to {
-    left: 2rem;
+    left: 1rem;
   }
 }
 @keyframes toast-out {
   from {
-    left: 2rem;
+    left: 1rem;
   }
   to {
     left: -35rem;
