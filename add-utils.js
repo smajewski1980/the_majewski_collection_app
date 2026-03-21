@@ -100,49 +100,50 @@ export function trimTracks(arr) {
 
 export function handleIncrementLocation(selectedOption, selectedInput) {
   //   // now we take this form and change the select options value and text content
-  const newText = "changed text";
-  console.log("selected: ", selectedOption);
-  selectedOption.innerText = newText;
-  selectedOption.value = newText;
-  selectedInput.value = newText;
+
   //   // take option value and split
-  //   const splitOptionVal = selectedOption.value.split(" ");
+  const splitOptionVal = selectedOption.value.split(" ");
+  console.log("split val", splitOptionVal);
 
   //   // take the -1 index and parse as num
-  //   let numVal = parseInt(splitOptionVal.at(-1));
+  let numVal = parseInt(splitOptionVal.at(-1));
   //   // if one of the options without an ending number is selected, return
-  //   if (Number.isNaN(numVal)) return;
+  if (Number.isNaN(numVal) || selectedInput.value === '33s 10"') {
+    handleIncrementReset();
+    toasty("That location can not be incremented.", null);
+    return;
+  }
+
   //   // increment num and add back to string
-  //   const incrementedNumString = (numVal += 1).toString();
-  //   splitOptionVal[splitOptionVal.length - 1] = incrementedNumString;
-  //   const reassembledString = splitOptionVal.join(" ");
+  const incrementedNumString = (numVal += 1).toString();
+  splitOptionVal[splitOptionVal.length - 1] = incrementedNumString;
+  const reassembledString = splitOptionVal.join(" ");
 
   //   // set the new vals
 
-  //   selectedOption.value = reassembledString;
-  //   selectedOption.textContent = reassembledString;
+  selectedOption.innerText = reassembledString;
+  selectedOption.value = reassembledString;
+  selectedInput.value = reassembledString;
 }
 
 export const incrementCheckbox = document.getElementById("increment-location");
 export let incrementFlag = false;
 
+// still have a bug if you accidentally try to increment a location that shouldn't be
+// the checkbox stays inactive till the form resets
 export function handleIncrementReset() {
   incrementCheckbox.checked = false;
-  incrementCheckbox.parentElement.inert = false;
-  incrementCheckbox.parentElement.style.opacity = "1";
   incrementFlag = false;
+  btnConfirm.style.display = "none";
 }
 
+const btnConfirm = document.querySelector(".btn-confirm-increment");
 // export const incrementLocationSwitch = () => incrementCheckbox.checked;
 // when the incr box is checked, get the active form
 export async function handleCheckbox(arr) {
   const activeForm = arr.filter((form) =>
     form.classList.contains("active-form"),
   );
-
-  // const selectedOption = Array.from(
-  //   activeForm[0].querySelectorAll("option"),
-  // ).filter((opt) => opt.selected)[0];
 
   const selectedInput = activeForm[0].querySelector("input[name='location']");
   const datalist = selectedInput.nextElementSibling;
@@ -154,21 +155,24 @@ export async function handleCheckbox(arr) {
     return;
   }
 
-  // not sure why this seems to lock up the interface .......
-  if (window.confirm("Are you sure?")) {
-    // const optionEls = Array.from(datalist.querySelectorAll("option"));
-    // const currOption = optionEls.filter(
-    //   (el) => el.textContent === selectedInput.value,
-    // );
-    // handleIncrementLocation(currOption[0], selectedInput);
-    // incrementCheckbox.parentElement.inert = true;
-    // incrementCheckbox.parentElement.style.opacity = "0.3";
-    // incrementFlag = true;
-    return;
-  } else {
-    // handleIncrementReset();
-    return;
-  }
+  btnConfirm.style.display = "block";
+  btnConfirm.addEventListener(
+    "click",
+    (e) => {
+      e.preventDefault();
+
+      const optionEls = Array.from(datalist.querySelectorAll("option"));
+      const currOption = optionEls.filter(
+        (el) => el.textContent === selectedInput.value,
+      );
+
+      handleIncrementLocation(currOption[0], selectedInput);
+
+      incrementFlag = true;
+      btnConfirm.style.display = "none";
+    },
+    { once: true },
+  );
 }
 
 /**

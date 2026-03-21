@@ -474,7 +474,8 @@ cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
 
-incrementCheckbox.addEventListener("change", () => {
+incrementCheckbox.addEventListener("change", (e) => {
+  e.preventDefault();
   if (!incrementFlag) {
     handleCheckbox(forms);
   }
