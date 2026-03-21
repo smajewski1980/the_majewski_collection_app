@@ -37,6 +37,7 @@ const sessionList = document.getElementById("session-list");
 let showSessionList = false;
 let initialLoad = true;
 const mainEl = document.querySelector("main");
+let currentForm = null;
 
 /**
  * when a nav button is clicked, show the appropriate form
@@ -45,6 +46,7 @@ const mainEl = document.querySelector("main");
  */
 function handleNavBtnClick(e) {
   if (e.target.classList.contains("active-nav-btn")) return;
+  currentForm = e.target.dataset.form;
 
   if (!initialLoad) {
     document.startViewTransition(() => {
@@ -182,8 +184,6 @@ async function handleCdSinglesForm(e) {
   );
   // map the options' text to a valid array
   const validCdSingleLocs = cdSinglesOptionElems.map((el) => el.value);
-  // the input element itself to access the current value
-  const cdSinglesInput = document.getElementById("cd-singles-case-type");
 
   const data = {
     artist: formData.get("artist"),
@@ -476,6 +476,11 @@ tapesForm.addEventListener("submit", handleTapesForm);
 
 incrementCheckbox.addEventListener("change", (e) => {
   e.preventDefault();
+  if (currentForm === "cd-singles-form") {
+    e.target.checked = false;
+    toasty("You can not increment the singles locations.", null);
+    return;
+  }
   if (!incrementFlag) {
     handleCheckbox(forms);
   }
