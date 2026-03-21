@@ -7,7 +7,6 @@ import {
   handleIncrementReset,
   incrementCheckbox,
   handleCheckbox,
-  //   incrementLocationSwitch,
   trimDataFields,
   addToSessionList,
   focusFirstField,
@@ -18,7 +17,6 @@ import {
   isLocValValid,
   incrementFlag,
 } from "./add-utils.js";
-import { getLocations } from "./get-current-locations.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
 const cdsMainForm = document.getElementById("cd-main-form");
@@ -34,9 +32,9 @@ const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
 const incrementWrapper = document.querySelector(".increment-wrapper");
 const sessionListWrapper = document.querySelector(".session-list-wrapper");
 const sessionList = document.getElementById("session-list");
+const mainEl = document.querySelector("main");
 let showSessionList = false;
 let initialLoad = true;
-const mainEl = document.querySelector("main");
 let currentForm = null;
 
 /**
@@ -145,10 +143,6 @@ async function handleCdCompsForm(e) {
       handleIncrementReset();
 
       toasty("item successfully added", "green");
-
-      // if (incrementLocationSwitch()) {
-      //   await getLocations();
-      // }
 
       if (!showSessionList) {
         showSessionList = true;
@@ -283,11 +277,6 @@ async function handleCdsMainForm(e) {
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
-      // will revisit this later
-      // if (incrementLocationSwitch()) {
-      //   await getLocations();
-      // }
-
       // if this is the first entry for this session,
       // display the current session list
       if (!showSessionList) {
@@ -363,10 +352,6 @@ async function handleRecordsForm(e) {
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
-      // if (incrementLocationSwitch()) {
-      //   await getLocations();
-      // }
-
       // if this is the first entry for this session,
       // display the current session list
       if (!showSessionList) {
@@ -436,10 +421,6 @@ async function handleTapesForm(e) {
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
-      // if (incrementLocationSwitch()) {
-      //   await getLocations();
-      // }
-
       // if this is the first entry for this session,
       // display the current session list
       if (!showSessionList) {
@@ -461,12 +442,6 @@ navButtons.forEach((btn) => {
   btn.addEventListener("click", handleNavBtnClick);
 });
 
-// if the increment checkbox is checked and then the location is changed
-// const selects = document.querySelectorAll("select");
-// selects.forEach((sel) => {
-//   sel.addEventListener("change", handleIncrementReset);
-// });
-
 // submit listeners on the forms
 cdsMainForm.addEventListener("submit", handleCdsMainForm);
 cdCompsForm.addEventListener("submit", handleCdCompsForm);
@@ -486,7 +461,7 @@ incrementCheckbox.addEventListener("change", (e) => {
   }
 });
 
-// slider
+// theme slider
 const themeSlider = document.getElementById("theme-slider");
 const slide = document.getElementById("slide");
 let theme = document.documentElement.getAttribute("data-theme");
