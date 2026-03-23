@@ -75,6 +75,10 @@ input,
   font-family: monospace;
 }
 
+datalist {
+  scroll-margin-top: 7rem;
+}
+
 body:not(#add-body) {
   a:not(.back-to-top, .home-link),
   button:not(#btn-help) {

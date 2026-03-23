@@ -41,6 +41,12 @@ function highlightCurrOption(options) {
   options[currOptionIdx].style.backgroundColor =
     "var(--accent-purple) !important";
   options[currOptionIdx].style.color = "var(--outline-purple)";
+
+  // if there are more than 5 options in the list
+  // scroll the window so they are all on screen
+  if (options.length > 5) {
+    options[currOptionIdx].parentElement.scrollIntoView();
+  }
 }
 
 /**
