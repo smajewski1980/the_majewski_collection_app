@@ -261,15 +261,82 @@ const recordsSelect = document.getElementById("records-datalist");
 const cdCompsSelect = document.getElementById("cd-comps-datalist");
 const cdSinglesSelect = document.getElementById("cd-singles-datalist");
 
+// trying to make a datalist manually so we can style the options
+const cdCompsInput = document.getElementById("cd-comps-location");
+let currOption = -1;
+// when  the input gains focus, show the datalist
+cdCompsInput.addEventListener("focus", () => {
+  cdCompsSelect.style.display = "block";
+});
+// on input, only show the correct option(s) for the input
+cdCompsInput.addEventListener("input", (e) => {
+  cdCompsSelect.querySelectorAll("option").forEach((opt) => {
+    opt.style.display = "block";
+    if (!opt.value.toLowerCase().startsWith(e.target.value.toLowerCase())) {
+      opt.style.display = "none";
+    }
+  });
+});
+cdCompsInput.addEventListener("keydown", (e) => {
+  const options = cdCompsSelect.querySelectorAll("option");
+
+  if (e.key === "ArrowDown" && currOption < options.length - 1) {
+    currOption++;
+    options.forEach((opt) => {
+      opt.style.backgroundColor = "transparent";
+      opt.style.color = "var(--accent-purple)";
+    });
+    options[currOption].style.backgroundColor =
+      "var(--accent-purple) !important";
+    options[currOption].style.color = "var(--outline-purple)";
+  }
+  if (e.key === "ArrowUp" && currOption > 0) {
+    currOption--;
+    options.forEach((opt) => {
+      opt.style.backgroundColor = "transparent";
+      opt.style.color = "var(--accent-purple)";
+    });
+    options[currOption].style.backgroundColor =
+      "var(--accent-purple) !important";
+    options[currOption].style.color = "var(--outline-purple)";
+  }
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const selectedVal = options[currOption].value;
+    e.target.value = selectedVal;
+    currOption = -1;
+    e.target.nextElementSibling.style.display = "none";
+    options.forEach((opt) => {
+      opt.style.backgroundColor = "transparent";
+      opt.style.color = "var(--accent-purple)";
+    });
+    return;
+  }
+});
+
+cdCompsInput.addEventListener("blur", () => {
+  setTimeout(() => {
+    cdCompsSelect.style.display = "none";
+    currOption = -1;
+  }, 150);
+});
+
 // create the option elements and put in the DOM
 function populateSelectList(data, select) {
-  select.innerHTML = '<option value=""></option>';
+  // select.innerHTML = '<option value=""></option>';
   data.forEach((loc) => {
     const option = document.createElement("option");
     option.value = loc;
     option.textContent = loc;
     option.style.backgroundColor = "var(--body-bg)";
     select.appendChild(option);
+
+    // the below listener is a test for the custom datalist
+    option.addEventListener("click", (e) => {
+      // make the list go away after a selection is made
+      e.target.parentElement.style.display = "none";
+      e.target.parentElement.previousElementSibling.value = loc;
+    });
   });
 }
 
@@ -298,7 +365,6 @@ function processLocations(data) {
 }
 
 // fetch the data
-// this is where we hit the contextBridge, the below is still express
 export async function getLocations() {
   try {
     const res = await getCurrentLocations.getCurrentLocations(
