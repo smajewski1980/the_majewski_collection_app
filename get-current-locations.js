@@ -98,6 +98,7 @@ function addCustomDatalistListeners(input, datalist) {
       datalist.style.display = "block";
       return;
     }
+    handlePopulateListForCurrForm();
     filterOptionList(datalist, e.target.value);
   });
 
@@ -447,6 +448,10 @@ const tapesInput = document.getElementById("tapes-location");
 let currOptionIdx = -1;
 // add all the event listeners to make the custom datalist work
 addCustomDatalistListeners(cdCompsInput, cdCompsSelect);
+addCustomDatalistListeners(cdSinglesInput, cdSinglesSelect);
+addCustomDatalistListeners(cdsMainInput, cdsMainSelect);
+addCustomDatalistListeners(recordsInput, recordsSelect);
+addCustomDatalistListeners(tapesInput, tapesSelect);
 
 /**
  * create the option elements for locations and add to DOM
