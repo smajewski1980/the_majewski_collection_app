@@ -13,7 +13,11 @@ function customSort(a, b) {
   });
 }
 
-// DOCS************************************
+/**
+ * filters a datalist to only have options that start with a given value
+ * @param {HTMLDataListElement} datalist - the datalist to work on
+ * @param {string} value - the string to filter on
+ */
 function filterOptionList(datalist, value) {
   datalist.querySelectorAll("option").forEach((opt) => {
     opt.style.display = "block";
@@ -24,6 +28,11 @@ function filterOptionList(datalist, value) {
   });
 }
 
+/**
+ * reset option styles then 'highlight' the current option
+ * @param {HTMLOptionElement[]} options - an array of options
+ * @return {void}
+ */
 function highlightCurrOption(options) {
   options.forEach((opt) => {
     opt.style.backgroundColor = "transparent";
@@ -34,6 +43,10 @@ function highlightCurrOption(options) {
   options[currOptionIdx].style.color = "var(--outline-purple)";
 }
 
+/**
+ * update the locations datalist based on the active form
+ * @returns {void}
+ */
 function handlePopulateListForCurrForm() {
   // we get the form id to know curr format
   const formId = document.querySelector(".active-form");
@@ -64,6 +77,13 @@ function handlePopulateListForCurrForm() {
   }
 }
 
+/**
+ * takes an input and a datalist and adds event
+ * listeners to create our custom datalist
+ * @param {HTMLInputElement} input - the input to type the option names
+ * @param {HTMLDataListElement} datalist - the list that contains the location options
+ * @returns {void}
+ */
 function addCustomDatalistListeners(input, datalist) {
   // when  the input gains focus, populate and show the datalist
   input.addEventListener("focus", () => {
@@ -124,13 +144,11 @@ function addCustomDatalistListeners(input, datalist) {
     }
   });
 }
-// end new helper funcs
-// ****************************************************************
 
 /**
  * sort the given cd main catalog locations and return currents
- * @param {Object[]} locations the locations to be sorted
- * @param {string} locations[].location
+ * @param {Object[]} locations array of location objects to be sorted
+ * @param {string} locations[].location - location string
  * @returns {string[]} returns an array of current locations
  */
 function getMostCurrentCdsMainLoc(locations) {
@@ -194,7 +212,7 @@ function getMostCurrentCdsMainLoc(locations) {
 /**
  * sort the given cd comps locations and return currents
  * @param {Object[]} locations the locations to be sorted
- * @param {string} locations[].location
+ * @param {string} locations[].location - location string
  * @returns {string[]} returns an array of current locations
  */
 function getMostCurrentCdComps(locations) {
@@ -235,18 +253,18 @@ function getMostCurrentCdComps(locations) {
 
 /**
  * format the cd singles locations to be consistent with the others
- * @param {Object[]} array [{case_type: '<case_type>'}]
- * @param {string} array[].case_type
+ * @param {Object[]} singlesLocs [{case_type: '<case_type>'}]
+ * @param {string} singlesLocs[].case_type - the location/case type
  * @returns {string[]} returns an array of cd singles locations
  */
-function formatCdSinglesLocs(array) {
-  const singleLocs = [];
+function formatCdSinglesLocs(singlesLocs) {
+  const singleLocsArr = [];
 
-  array.forEach((loc) => {
-    singleLocs.push(loc.case_type);
+  singlesLocs.forEach((loc) => {
+    singleLocsArr.push(loc.case_type);
   });
 
-  return singleLocs;
+  return singleLocsArr;
 }
 
 /**
@@ -316,7 +334,7 @@ function getMostCurrent33sLoc(loc33s) {
 /**
  * sort the given records locations and return currents
  * @param {Object[]} locations the locations to be sorted
- * @param {string} locations[].location
+ * @param {string} locations[].location - the record location string
  * @returns {string[]} returns an array of current locations
  */
 function getMostCurrentRecordsLoc(locations) {
@@ -353,7 +371,7 @@ function getMostCurrentRecordsLoc(locations) {
 /**
  * sort the given tapes locations and return currents
  * @param {Object[]} locations the locations to be sorted
- * @param {string} locations[].location
+ * @param {string} locations[].location - the tapes location string
  * @returns {string[]} returns an array of current locations
  */
 function getMostCurrentTapeLoc(locations) {
@@ -390,8 +408,8 @@ function getMostCurrentTapeLoc(locations) {
 /**
  * takes locations and a format and feeds them to the appropriate function
  * @param {Object[]} locations the locations to be sorted
- * @param {string} locations[].location
- * @param {string} format
+ * @param {string} locations[].location - location string
+ * @param {string} format - format string
  * @returns {string[]} returns an array of current locations
  */
 function getMostCurrentLoc(locations, format) {
@@ -425,17 +443,15 @@ const recordsInput = document.getElementById("records-location");
 const tapesInput = document.getElementById("tapes-location");
 
 // make a datalist manually so we can style the options
-
 // this acts as the index for the open list options for using keyboard input
 let currOptionIdx = -1;
-
 // add all the event listeners to make the custom datalist work
 addCustomDatalistListeners(cdCompsInput, cdCompsSelect);
 
 /**
  * create the option elements for locations and add to DOM
- * @param {string[]} locations
- * @param {HTMLDataListElement} datalist
+ * @param {string[]} locations - an array of location strings
+ * @param {HTMLDataListElement} datalist - HTML datalist to populate
  * @returns {void}
  */
 function populateSelectList(locations, datalist) {
@@ -462,7 +478,7 @@ let currCdComps;
 let currCdsMain;
 // sort out the data from the fetch by type and give to the getMostCurrentLoc func
 /**
- * @typedef {Object} LocationData
+ * @typedef {Object} LocationData - the main location data object
  * @property {Array} tapes - An array of tape locataions.
  * @property {Array} records - An array of record locataions.
  * @property {Array} cds - An array of CD locataions.
@@ -472,7 +488,7 @@ let currCdsMain;
 
 /**
  * sort location data, get most curr locs, populate lists.
- * @param {LocationData} locationData - The media data containing various types of media.
+ * @param {LocationData} locationData - The location data for all formats.
  */
 function processLocations(locationData) {
   // sort the locationData
@@ -491,6 +507,11 @@ function processLocations(locationData) {
 }
 
 // fetch the data
+/**
+ * this is the main function that does the initial
+ * fetch of the location data and feeds it to the processLocations function
+ * @returns {void}
+ */
 async function getLocations() {
   try {
     const res = await getCurrentLocations.getCurrentLocations(
