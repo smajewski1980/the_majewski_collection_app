@@ -1,4 +1,11 @@
-// this will sort strings how we want them
+import { toasty } from "./add-utils.js";
+
+/**
+ * sort numerically instead of lexicographically
+ * @param {string} a
+ * @param {string} b
+ * @returns {number}
+ */
 function customSort(a, b) {
   return a.localeCompare(b, undefined, {
     numeric: true,
@@ -6,8 +13,117 @@ function customSort(a, b) {
   });
 }
 
-// for the cds main, this gets the locations, sorts them by category, then sorts those and returns the current location
-function getMostCurrentCdsMainLoc(array) {
+// DOCS************************************
+function filterOptionList(datalist, value) {
+  datalist.querySelectorAll("option").forEach((opt) => {
+    opt.style.display = "block";
+    if (!opt.value.toLowerCase().startsWith(value.toLowerCase())) {
+      // opt.style.display = "none";
+      opt.remove();
+    }
+  });
+}
+
+function highlightCurrOption(options) {
+  options.forEach((opt) => {
+    opt.style.backgroundColor = "transparent";
+    opt.style.color = "var(--accent-purple)";
+  });
+  options[currOptionIdx].style.backgroundColor =
+    "var(--accent-purple) !important";
+  options[currOptionIdx].style.color = "var(--outline-purple)";
+}
+
+function addCustomDatalistListeners(input, datalist) {
+  // when  the input gains focus, populate and show the datalist
+  input.addEventListener("focus", () => {
+    // we get the form id to know curr format
+    const formId = document.querySelector(".active-form");
+    // clear and populate the appropriate datalist
+    switch (formId.id) {
+      case "cd-comps-form":
+        cdCompsSelect.innerHTML = "";
+        populateSelectList(currCdComps, cdCompsSelect);
+        break;
+      case "cd-singles-form":
+        cdSinglesSelect.innerHTML = "";
+        populateSelectList(currCdSinglesLocs, cdSinglesSelect);
+        break;
+      case "cd-main-form":
+        cdsMainSelect.innerHTML = "";
+        populateSelectList(currCdsMain, cdsMainSelect);
+        break;
+      case "records-form":
+        recordsSelect.innerHTML = "";
+        populateSelectList(currRecordsLocs, recordsSelect);
+        break;
+      case "tapes-form":
+        tapesSelect.innerHTML = "";
+        populateSelectList(currTapeLoc, tapesSelect);
+        break;
+      default:
+        break;
+    }
+    datalist.style.display = "block";
+  });
+  // only show the correct option(s) for the input value
+  input.addEventListener("input", (e) => {
+    filterOptionList(datalist, e.target.value);
+  });
+
+  // hide the list when the input loses focus
+  input.addEventListener("blur", () => {
+    setTimeout(() => {
+      datalist.style.display = "none";
+      currOptionIdx = -1;
+    }, 150);
+  });
+
+  input.addEventListener("keydown", (e) => {
+    const options = datalist.querySelectorAll("option");
+
+    if (e.key === "ArrowDown" && currOptionIdx < options.length - 1) {
+      currOptionIdx++;
+      highlightCurrOption(options);
+    }
+
+    if (e.key === "ArrowUp" && currOptionIdx > 0) {
+      currOptionIdx--;
+      highlightCurrOption(options);
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      // if an invalid input val is submitted
+      if (!options[currOptionIdx]?.value) {
+        toasty("that is not a valid option", null);
+        currOptionIdx = -1;
+        return;
+      }
+
+      const selectedVal = options[currOptionIdx].value;
+      e.target.value = selectedVal;
+      currOptionIdx = -1;
+      e.target.nextElementSibling.style.display = "none";
+      options.forEach((opt) => {
+        opt.style.backgroundColor = "transparent";
+        opt.style.color = "var(--accent-purple)";
+      });
+      return;
+    }
+  });
+}
+// end new helper funcs
+// ****************************************************************
+
+/**
+ * sort the given cd main catalog locations and return currents
+ * @param {Object[]} locations the locations to be sorted
+ * @param {string} locations[].location
+ * @returns {string[]} returns an array of current locations
+ */
+function getMostCurrentCdsMainLoc(locations) {
   const misc = [];
   const classical = [];
   const country = [];
@@ -19,7 +135,7 @@ function getMostCurrentCdsMainLoc(array) {
   const xmas = [];
 
   // sort out by category
-  array.forEach((loc) => {
+  locations.forEach((loc) => {
     if (loc.location.includes("Classical")) {
       classical.push(loc.location);
     } else if (loc.location.includes("Country")) {
@@ -65,15 +181,20 @@ function getMostCurrentCdsMainLoc(array) {
   ];
 }
 
-// for the cd comps, this gets the locations, sorts them by category, then sorts those and returns the current location
-function getMostCurrentCdComps(array) {
+/**
+ * sort the given cd comps locations and return currents
+ * @param {Object[]} locations the locations to be sorted
+ * @param {string} locations[].location
+ * @returns {string[]} returns an array of current locations
+ */
+function getMostCurrentCdComps(locations) {
   // sort out by category
   const classical = [];
   const soundtracks = [];
   const va = [];
   const xmas = [];
 
-  array.forEach((loc) => {
+  locations.forEach((loc) => {
     if (loc.location.includes("Classical")) {
       classical.push(loc.location);
     }
@@ -102,8 +223,13 @@ function getMostCurrentCdComps(array) {
   ];
 }
 
-// cd singles didnt need any modification other than just getting the vals into the return array
-function breakDownCdSinglesLocs(array) {
+/**
+ * format the cd singles locations to be consistent with the others
+ * @param {Object[]} array [{case_type: '<case_type>'}]
+ * @param {string} array[].case_type
+ * @returns {string[]} returns an array of cd singles locations
+ */
+function formatCdSinglesLocs(array) {
   const singleLocs = [];
 
   array.forEach((loc) => {
@@ -113,8 +239,12 @@ function breakDownCdSinglesLocs(array) {
   return singleLocs;
 }
 
-// after the records are sorted by speed, this sorts the 33s by category, then sorts again, and returns the current location
-function getMostCurrentSubLoc(array) {
+/**
+ * sort the given 33s locations and return currents
+ * @param {string[]} loc33s the locations to be sorted
+ * @returns {string[]} returns an array of current locations
+ */
+function getMostCurrent33sLoc(loc33s) {
   const misc = [];
   const classical = [];
   const comedy = [];
@@ -126,7 +256,7 @@ function getMostCurrentSubLoc(array) {
   const various = [];
 
   // sort out by category
-  array.forEach((loc) => {
+  loc33s.forEach((loc) => {
     const currLoc = loc.split(" ")[1];
     if (currLoc === "Classical") {
       classical.push(loc);
@@ -173,8 +303,13 @@ function getMostCurrentSubLoc(array) {
   ];
 }
 
-// for the records, this gets the locations, sorts them by speed, then sorts those and returns the current location
-function getMostCurrentRecordsLoc(array) {
+/**
+ * sort the given records locations and return currents
+ * @param {Object[]} locations the locations to be sorted
+ * @param {string} locations[].location
+ * @returns {string[]} returns an array of current locations
+ */
+function getMostCurrentRecordsLoc(locations) {
   const rec45s = [];
   const rec33s = [];
   const rec78s = [];
@@ -182,7 +317,7 @@ function getMostCurrentRecordsLoc(array) {
   const misc = ["Herb Alpert Records", '12" Singles'];
 
   // distibute the values to the appropriate array
-  array.forEach((loc) => {
+  locations.forEach((loc) => {
     if (loc.location.includes("45s ")) {
       rec45s.push(loc.location);
     }
@@ -198,21 +333,26 @@ function getMostCurrentRecordsLoc(array) {
   const sorted45s = rec45s.sort(customSort);
   const sorted78s = rec78s.sort(customSort);
 
-  const curren33sLocs = getMostCurrentSubLoc(rec33s);
+  const curren33sLocs = getMostCurrent33sLoc(rec33s);
   const current45sLoc = sorted45s.at(-1);
   const current78sLoc = sorted78s.at(-1);
 
   return [...curren33sLocs, current45sLoc, current78sLoc, ...misc];
 }
 
-// for the tapes, this gets the locations, sorts them by category, then sorts those and returns the current location
-function getMostCurrentTapeLoc(array) {
+/**
+ * sort the given tapes locations and return currents
+ * @param {Object[]} locations the locations to be sorted
+ * @param {string} locations[].location
+ * @returns {string[]} returns an array of current locations
+ */
+function getMostCurrentTapeLoc(locations) {
   const eightTracks = [];
   const reelToReel = [];
   const cassettes = [];
 
   // distribute the values to the appropriate array
-  array.forEach((loc) => {
+  locations.forEach((loc) => {
     if (loc.location.includes("8-Track")) {
       eightTracks.push(loc.location);
     }
@@ -237,135 +377,111 @@ function getMostCurrentTapeLoc(array) {
   return [currEightLoc, currCassLoc, currReelLoc];
 }
 
-function getMostCurrentLoc(array, format) {
+/**
+ * takes locations and a format and feeds them to the appropriate function
+ * @param {Object[]} locations the locations to be sorted
+ * @param {string} locations[].location
+ * @param {string} format
+ * @returns {string[]} returns an array of current locations
+ */
+function getMostCurrentLoc(locations, format) {
   switch (format) {
     case "tapes":
-      return getMostCurrentTapeLoc(array);
+      return getMostCurrentTapeLoc(locations);
     case "records":
-      return getMostCurrentRecordsLoc(array);
+      return getMostCurrentRecordsLoc(locations);
     case "cds":
-      return getMostCurrentCdsMainLoc(array);
+      return getMostCurrentCdsMainLoc(locations);
     case "cdSingles":
-      return breakDownCdSinglesLocs(array);
+      return formatCdSinglesLocs(locations);
     case "cdComps":
-      return getMostCurrentCdComps(array);
+      return getMostCurrentCdComps(locations);
     default:
       return [];
   }
 }
 
-// the HTML select elements
+// the HTML datalist elements
+const cdCompsSelect = document.getElementById("cd-comps-datalist");
 const cdsMainSelect = document.getElementById("cds-main-datalist");
 const tapesSelect = document.getElementById("tapes-datalist");
 const recordsSelect = document.getElementById("records-datalist");
-const cdCompsSelect = document.getElementById("cd-comps-datalist");
 const cdSinglesSelect = document.getElementById("cd-singles-datalist");
-
-// trying to make a datalist manually so we can style the options
+// the HTML input elements
 const cdCompsInput = document.getElementById("cd-comps-location");
-let currOption = -1;
-// when  the input gains focus, show the datalist
-cdCompsInput.addEventListener("focus", () => {
-  cdCompsSelect.style.display = "block";
-});
-// on input, only show the correct option(s) for the input
-cdCompsInput.addEventListener("input", (e) => {
-  cdCompsSelect.querySelectorAll("option").forEach((opt) => {
-    opt.style.display = "block";
-    if (!opt.value.toLowerCase().startsWith(e.target.value.toLowerCase())) {
-      opt.style.display = "none";
-    }
-  });
-});
-cdCompsInput.addEventListener("keydown", (e) => {
-  const options = cdCompsSelect.querySelectorAll("option");
+const cdSinglesInput = document.getElementById("cd-singles-case-type");
+const cdsMainInput = document.getElementById("cds-main-location");
+const recordsInput = document.getElementById("records-location");
+const tapesInput = document.getElementById("tapes-location");
 
-  if (e.key === "ArrowDown" && currOption < options.length - 1) {
-    currOption++;
-    options.forEach((opt) => {
-      opt.style.backgroundColor = "transparent";
-      opt.style.color = "var(--accent-purple)";
-    });
-    options[currOption].style.backgroundColor =
-      "var(--accent-purple) !important";
-    options[currOption].style.color = "var(--outline-purple)";
-  }
-  if (e.key === "ArrowUp" && currOption > 0) {
-    currOption--;
-    options.forEach((opt) => {
-      opt.style.backgroundColor = "transparent";
-      opt.style.color = "var(--accent-purple)";
-    });
-    options[currOption].style.backgroundColor =
-      "var(--accent-purple) !important";
-    options[currOption].style.color = "var(--outline-purple)";
-  }
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const selectedVal = options[currOption].value;
-    e.target.value = selectedVal;
-    currOption = -1;
-    e.target.nextElementSibling.style.display = "none";
-    options.forEach((opt) => {
-      opt.style.backgroundColor = "transparent";
-      opt.style.color = "var(--accent-purple)";
-    });
-    return;
-  }
-});
+// make a datalist manually so we can style the options
 
-cdCompsInput.addEventListener("blur", () => {
-  setTimeout(() => {
-    cdCompsSelect.style.display = "none";
-    currOption = -1;
-  }, 150);
-});
+// this acts as the index for the open list options for using keyboard input
+let currOptionIdx = -1;
 
-// create the option elements and put in the DOM
-function populateSelectList(data, select) {
-  // select.innerHTML = '<option value=""></option>';
-  data.forEach((loc) => {
+// add all the event listeners to make the custom datalist work
+addCustomDatalistListeners(cdCompsInput, cdCompsSelect);
+
+/**
+ * create the option elements for locations and add to DOM
+ * @param {string[]} locations
+ * @param {HTMLDataListElement} datalist
+ * @returns {void}
+ */
+function populateSelectList(locations, datalist) {
+  locations.forEach((loc) => {
     const option = document.createElement("option");
     option.value = loc;
     option.textContent = loc;
     option.style.backgroundColor = "var(--body-bg)";
-    select.appendChild(option);
+    datalist.appendChild(option);
 
-    // the below listener is a test for the custom datalist
+    // the below listener is for the custom datalist
     option.addEventListener("click", (e) => {
-      // make the list go away after a selection is made
+      // make list go away after selection is made, update the input val
       e.target.parentElement.style.display = "none";
       e.target.parentElement.previousElementSibling.value = loc;
     });
   });
 }
 
+let currTapeLoc;
+let currRecordsLocs;
+let currCdSinglesLocs;
+let currCdComps;
+let currCdsMain;
 // sort out the data from the fetch by type and give to the getMostCurrentLoc func
-function processLocations(data) {
-  // sort the data
-  const tapesLocs = data.tapes;
-  const recordsLocs = data.records;
-  const cdsLocs = data.cds;
-  const cdCompsLocs = data.cdComps;
-  const cdSinglesLocs = data.cdSingles;
+/**
+ * @typedef {Object} LocationData
+ * @property {Array} tapes - An array of tape locataions.
+ * @property {Array} records - An array of record locataions.
+ * @property {Array} cds - An array of CD locataions.
+ * @property {Array} cdComps - An array of CD compilation locataions.
+ * @property {Array} cdSingles - An array of CD single locataions.
+ */
 
-  // get the most current locations
-  const currTapeLoc = getMostCurrentLoc(tapesLocs, "tapes");
-  const currRecordsLocs = getMostCurrentLoc(recordsLocs, "records");
-  const currCdSinglesLocs = getMostCurrentLoc(cdSinglesLocs, "cdSingles");
-  const currCdComps = getMostCurrentLoc(cdCompsLocs, "cdComps");
-  const currCdsMain = getMostCurrentLoc(cdsLocs, "cds");
+/**
+ * sort location data, get most curr locs, populate lists.
+ * @param {LocationData} locationData - The media data containing various types of media.
+ */
+function processLocations(locationData) {
+  // sort the locationData
+  const tapesLocs = locationData.tapes;
+  const recordsLocs = locationData.records;
+  const cdsLocs = locationData.cds;
+  const cdCompsLocs = locationData.cdComps;
+  const cdSinglesLocs = locationData.cdSingles;
 
-  // populate the location select lists in the UI forms
-  populateSelectList(currCdsMain, cdsMainSelect);
-  populateSelectList(currTapeLoc, tapesSelect);
-  populateSelectList(currRecordsLocs, recordsSelect);
-  populateSelectList(currCdComps, cdCompsSelect);
-  populateSelectList(currCdSinglesLocs, cdSinglesSelect);
+  // get the most current locations and set variable vals
+  currTapeLoc = getMostCurrentLoc(tapesLocs, "tapes");
+  currRecordsLocs = getMostCurrentLoc(recordsLocs, "records");
+  currCdSinglesLocs = getMostCurrentLoc(cdSinglesLocs, "cdSingles");
+  currCdComps = getMostCurrentLoc(cdCompsLocs, "cdComps");
+  currCdsMain = getMostCurrentLoc(cdsLocs, "cds");
 }
 
 // fetch the data
-export async function getLocations() {
+async function getLocations() {
   try {
     const res = await getCurrentLocations.getCurrentLocations(
       "getCurrentLocations",
@@ -377,5 +493,4 @@ export async function getLocations() {
   }
 }
 
-// after switched over uncomment
 getLocations();
