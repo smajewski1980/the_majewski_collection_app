@@ -34,40 +34,50 @@ function highlightCurrOption(options) {
   options[currOptionIdx].style.color = "var(--outline-purple)";
 }
 
+function handlePopulateListForCurrForm() {
+  // we get the form id to know curr format
+  const formId = document.querySelector(".active-form");
+  // clear and populate the appropriate datalist
+  switch (formId.id) {
+    case "cd-comps-form":
+      cdCompsSelect.innerHTML = "";
+      populateSelectList(currCdComps, cdCompsSelect);
+      break;
+    case "cd-singles-form":
+      cdSinglesSelect.innerHTML = "";
+      populateSelectList(currCdSinglesLocs, cdSinglesSelect);
+      break;
+    case "cd-main-form":
+      cdsMainSelect.innerHTML = "";
+      populateSelectList(currCdsMain, cdsMainSelect);
+      break;
+    case "records-form":
+      recordsSelect.innerHTML = "";
+      populateSelectList(currRecordsLocs, recordsSelect);
+      break;
+    case "tapes-form":
+      tapesSelect.innerHTML = "";
+      populateSelectList(currTapeLoc, tapesSelect);
+      break;
+    default:
+      break;
+  }
+}
+
 function addCustomDatalistListeners(input, datalist) {
   // when  the input gains focus, populate and show the datalist
   input.addEventListener("focus", () => {
-    // we get the form id to know curr format
-    const formId = document.querySelector(".active-form");
-    // clear and populate the appropriate datalist
-    switch (formId.id) {
-      case "cd-comps-form":
-        cdCompsSelect.innerHTML = "";
-        populateSelectList(currCdComps, cdCompsSelect);
-        break;
-      case "cd-singles-form":
-        cdSinglesSelect.innerHTML = "";
-        populateSelectList(currCdSinglesLocs, cdSinglesSelect);
-        break;
-      case "cd-main-form":
-        cdsMainSelect.innerHTML = "";
-        populateSelectList(currCdsMain, cdsMainSelect);
-        break;
-      case "records-form":
-        recordsSelect.innerHTML = "";
-        populateSelectList(currRecordsLocs, recordsSelect);
-        break;
-      case "tapes-form":
-        tapesSelect.innerHTML = "";
-        populateSelectList(currTapeLoc, tapesSelect);
-        break;
-      default:
-        break;
-    }
+    handlePopulateListForCurrForm();
     datalist.style.display = "block";
   });
   // only show the correct option(s) for the input value
   input.addEventListener("input", (e) => {
+    // if the input gets cleared, show the original list again
+    if (!e.target.value.length) {
+      handlePopulateListForCurrForm();
+      datalist.style.display = "block";
+      return;
+    }
     filterOptionList(datalist, e.target.value);
   });
 
