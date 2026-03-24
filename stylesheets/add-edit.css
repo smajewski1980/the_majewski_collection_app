@@ -33,16 +33,43 @@
   }
 
   /* --------------------------------------------------------- */
-  /* not sure if we are going somewhere with this... */
-  /* input[name="location"]:focus-within ~ datalist {
-    display: block;
-  } */
+  input[name="location"] {
+    anchor-name: --loc-input;
+  }
+  input[name="caseType"] {
+    anchor-name: --loc-input;
+  }
+  datalist {
+    position: absolute;
+    position-anchor: --loc-input;
+    top: calc(anchor(bottom) + 1rem);
+  }
 
   datalist option {
     cursor: pointer;
     color: var(--accent-purple);
+    --gradient-start: var(--accent-purple);
+    --gradient-opacity: 0.15;
+  }
+  option {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0.15rem 0.15rem 0;
+      border-radius: 50px;
+      corner-shape: squircle;
+      background: linear-gradient(
+        to bottom,
+        rgb(from var(--gradient-start) r g b / var(--gradient-opacity)),
+        transparent 25%
+      );
+    }
   }
   datalist option:hover {
+    --gradient-start: white;
+    --gradient-opacity: 0.5;
     background-color: var(--accent-purple) !important;
     color: var(--outline-purple);
   }
@@ -342,13 +369,20 @@
 
         input,
         select,
-        textarea {
+        textarea,
+        option {
           outline: 1px solid currentColor;
           margin-block: 0.5rem 1rem;
           border: none;
           text-align: center;
           padding: 0.25rem 0.5rem 0.35rem;
           border-radius: 10px;
+        }
+
+        option {
+          margin: 0;
+          margin-block-end: 0.25rem;
+          padding: 0.5rem 1rem;
         }
 
         input {

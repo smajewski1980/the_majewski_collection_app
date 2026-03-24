@@ -19,6 +19,7 @@ function customSort(a, b) {
  * @param {string} value - the string to filter on
  */
 function filterOptionList(datalist, value) {
+  currOptionIdx = -1;
   datalist.querySelectorAll("option").forEach((opt) => {
     opt.style.display = "block";
     if (!opt.value.toLowerCase().startsWith(value.toLowerCase())) {
@@ -35,17 +36,25 @@ function filterOptionList(datalist, value) {
  */
 function highlightCurrOption(options) {
   options.forEach((opt) => {
-    opt.style.backgroundColor = "transparent";
+    opt.style.backgroundColor = "var(--bg-color)";
     opt.style.color = "var(--accent-purple)";
   });
   options[currOptionIdx].style.backgroundColor =
     "var(--accent-purple) !important";
   options[currOptionIdx].style.color = "var(--outline-purple)";
 
-  // if there are more than 5 options in the list
+  // if there are more than n options in the list
   // scroll the window so they are all on screen
-  if (options.length > 5) {
-    options[currOptionIdx].parentElement.scrollIntoView();
+  if (currOptionIdx > 12) {
+    options[currOptionIdx].parentElement.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+    return;
+  }
+  if (options.length > 3) {
+    options[currOptionIdx].parentElement.scrollIntoView({ behavior: "smooth" });
+    return;
   }
 }
 
