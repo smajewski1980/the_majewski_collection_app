@@ -29,15 +29,20 @@
   select {
     font: inherit;
     color: currentColor;
-    background: transparent;
+    /* i dont remember why i did transparent
+    but now it interferes with datalist animation */
+    /* background: transparent; */
+    background-color: var(--body-bg);
   }
 
   /* --------------------------------------------------------- */
   input[name="location"] {
     anchor-name: --loc-input;
+    z-index: 9999;
   }
   input[name="caseType"] {
     anchor-name: --loc-input;
+    z-index: 9999;
   }
   datalist {
     position: absolute;
@@ -46,13 +51,24 @@
   }
 
   datalist option {
-    cursor: pointer;
-    color: var(--accent-purple);
     --gradient-start: var(--accent-purple);
     --gradient-opacity: 0.15;
-  }
-  option {
-    position: relative;
+
+    cursor: pointer;
+    color: var(--accent-purple);
+    /* position: relative; */
+    /* margin-block-end: 0.25rem; */
+    margin: 0;
+    z-index: 999;
+    padding: 0.5rem 1rem;
+    /*  */
+    position: absolute;
+    top: var(--options-dropin-start-top);
+    left: 50%;
+    transform: translateX(-50%);
+    transition: top 0.7s var(--timing2);
+    margin-top: 0.5rem;
+    /*  */
 
     &::after {
       content: "";
@@ -236,6 +252,11 @@
     opacity: 0;
     transition: opacity 500ms;
 
+    .form-group {
+      /* outline: 1px solid lime; */
+      position: relative;
+    }
+
     #cd-comps-form.active-form {
       label {
         color: light-dark(var(--clr-cd-comps));
@@ -377,12 +398,6 @@
           text-align: center;
           padding: 0.25rem 0.5rem 0.35rem;
           border-radius: 10px;
-        }
-
-        option {
-          margin: 0;
-          margin-block-end: 0.25rem;
-          padding: 0.5rem 1rem;
         }
 
         input {

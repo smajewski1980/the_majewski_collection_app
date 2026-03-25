@@ -1,4 +1,5 @@
 import { toasty } from "./add-utils.js";
+let datalistIsOpen = false;
 
 /**
  * sort numerically instead of lexicographically
@@ -22,10 +23,18 @@ function filterOptionList(datalist, value) {
   currOptionIdx = -1;
   datalist.querySelectorAll("option").forEach((opt) => {
     opt.style.display = "block";
+
     if (!opt.value.toLowerCase().startsWith(value.toLowerCase())) {
       // opt.style.display = "none";
       opt.remove();
     }
+    const options = datalist.querySelectorAll("option");
+    setTimeout(() => {
+      options.forEach((opt) => {
+        opt.style.top =
+          "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .5rem)";
+      });
+    }, 100);
   });
 }
 
@@ -101,9 +110,23 @@ function handlePopulateListForCurrForm() {
  */
 function addCustomDatalistListeners(input, datalist) {
   // when  the input gains focus, populate and show the datalist
-  input.addEventListener("focus", () => {
+  input.addEventListener("focus", (e) => {
     handlePopulateListForCurrForm();
     datalist.style.display = "block";
+
+    const options = e.target.nextElementSibling.querySelectorAll("option");
+
+    setTimeout(() => {
+      options.forEach((opt) => {
+        // if (!datalistIsOpen) {
+        opt.style.top =
+          "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .5rem)";
+
+        // opt.style.rotate = "0deg";
+        // }
+      });
+    }, 100);
+    // datalistIsOpen = !datalistIsOpen;
   });
   // only show the correct option(s) for the input value
   input.addEventListener("input", (e) => {
@@ -111,6 +134,8 @@ function addCustomDatalistListeners(input, datalist) {
     if (!e.target.value.length) {
       handlePopulateListForCurrForm();
       datalist.style.display = "block";
+      filterOptionList(datalist, e.target.value);
+
       return;
     }
     handlePopulateListForCurrForm();
@@ -118,11 +143,15 @@ function addCustomDatalistListeners(input, datalist) {
   });
 
   // hide the list when the input loses focus
-  input.addEventListener("blur", () => {
+  input.addEventListener("blur", (e) => {
+    const options = e.target.nextElementSibling.querySelectorAll("option");
+    options.forEach((opt) => {
+      opt.style.top = "";
+    });
     setTimeout(() => {
       datalist.style.display = "none";
       currOptionIdx = -1;
-    }, 150);
+    }, 750);
   });
 
   input.addEventListener("keydown", (e) => {
