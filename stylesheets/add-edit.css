@@ -50,6 +50,13 @@
     top: calc(anchor(bottom) + 1rem);
   }
 
+  datalist option:nth-child(even) {
+    rotate: calc(var(--rotate-start) * -1);
+  }
+  datalist option:nth-child(odd) {
+    rotate: var(--rotate-start);
+  }
+
   datalist option {
     --gradient-start: var(--accent-purple);
     --gradient-opacity: 0.15;
@@ -66,8 +73,11 @@
     top: var(--options-dropin-start-top);
     left: 50%;
     transform: translateX(-50%);
-    transition: top 0.7s var(--timing2);
+    transition:
+      top 0.7s var(--timing2),
+      rotate 0.5s var(--timing);
     margin-top: 0.5rem;
+    rotate: 0;
     /*  */
 
     &::after {

@@ -70,7 +70,7 @@
 
 @property --rotate-start {
   syntax: "<angle>";
-  initial-value: 7deg;
+  initial-value: 5deg;
   inherits: false;
 }
 

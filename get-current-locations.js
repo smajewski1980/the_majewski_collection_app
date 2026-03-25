@@ -1,5 +1,4 @@
 import { toasty } from "./add-utils.js";
-let datalistIsOpen = false;
 
 /**
  * sort numerically instead of lexicographically
@@ -25,16 +24,16 @@ function filterOptionList(datalist, value) {
     opt.style.display = "block";
 
     if (!opt.value.toLowerCase().startsWith(value.toLowerCase())) {
-      // opt.style.display = "none";
       opt.remove();
     }
+
     const options = datalist.querySelectorAll("option");
-    setTimeout(() => {
-      options.forEach((opt) => {
-        opt.style.top =
-          "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .5rem)";
-      });
-    }, 100);
+
+    options.forEach((opt) => {
+      opt.style.top =
+        "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .5rem)";
+      opt.style.rotate = "0deg";
+    });
   });
 }
 
@@ -118,15 +117,11 @@ function addCustomDatalistListeners(input, datalist) {
 
     setTimeout(() => {
       options.forEach((opt) => {
-        // if (!datalistIsOpen) {
         opt.style.top =
           "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .5rem)";
-
-        // opt.style.rotate = "0deg";
-        // }
+        opt.style.rotate = "0deg";
       });
-    }, 100);
-    // datalistIsOpen = !datalistIsOpen;
+    }, 50);
   });
   // only show the correct option(s) for the input value
   input.addEventListener("input", (e) => {
