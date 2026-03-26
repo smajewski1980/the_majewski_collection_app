@@ -30,6 +30,8 @@
 
   --body-bg: light-dark(rgb(187, 187, 187), black);
 
+  /* this was the computed height when they were styled
+  needed for the datalist animation calculation */
   --btn-height: 41.59px;
   --options-dropin-start-top: -65px;
   --timing: linear(

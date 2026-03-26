@@ -29,9 +29,6 @@
   select {
     font: inherit;
     color: currentColor;
-    /* i dont remember why i did transparent
-    but now it interferes with datalist animation */
-    /* background: transparent; */
     background-color: var(--body-bg);
   }
 
@@ -48,6 +45,7 @@
     position: absolute;
     position-anchor: --loc-input;
     top: calc(anchor(bottom) + 1rem);
+    width: 100%;
   }
 
   datalist option:nth-child(even) {
@@ -60,11 +58,8 @@
   datalist option {
     --gradient-start: var(--accent-purple);
     --gradient-opacity: 0.15;
-
+    color: red; /* may have to adjust this color in js*/
     cursor: pointer;
-    color: var(--accent-purple);
-    /* position: relative; */
-    /* margin-block-end: 0.25rem; */
     margin: 0;
     z-index: 999;
     padding: 0.5rem 1rem;
@@ -78,6 +73,7 @@
       rotate 0.5s var(--timing);
     margin-top: 0.5rem;
     rotate: 0;
+    min-width: 50%;
     /*  */
 
     &::after {
