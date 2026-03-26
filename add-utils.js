@@ -4,6 +4,28 @@ let isToastShowing = false;
 const btnConfirm = document.querySelector(".btn-confirm-increment");
 
 /**
+ * this takes the current forms id string and returns a class string for styling
+ * @param {string} formId the id of the current form
+ * @returns {string} a class string to be used to style the options in the current form
+ */
+export function getFormClassStr(formId) {
+  switch (formId) {
+    case "cd-comps-form":
+      return "cd-comp-color";
+    case "cd-singles-form":
+      return "cd-single-color";
+    case "cd-main-form":
+      return "cds-main-color";
+    case "records-form":
+      return "record-color";
+    case "tapes-form":
+      return "tape-color";
+    default:
+      break;
+  }
+}
+
+/**
  * takes an array of forms and removes the active class from each
  * @typedef {Array} forms
  * @property {HTMLFormElement} cdCompsForm

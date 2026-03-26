@@ -1,4 +1,4 @@
-import { toasty } from "./add-utils.js";
+import { toasty, getFormClassStr } from "./add-utils.js";
 
 /**
  * sort numerically instead of lexicographically
@@ -499,11 +499,15 @@ addCustomDatalistListeners(tapesInput, tapesSelect);
  * @returns {void}
  */
 function populateSelectList(locations, datalist) {
+  const currFormId = datalist.closest("form").id;
+  const currFormClassStr = getFormClassStr(currFormId);
+
   locations.forEach((loc) => {
     const option = document.createElement("option");
     option.value = loc;
     option.textContent = loc;
     option.style.backgroundColor = "var(--body-bg)";
+    option.classList.add(currFormClassStr);
     datalist.appendChild(option);
 
     // the below listener is for the custom datalist
