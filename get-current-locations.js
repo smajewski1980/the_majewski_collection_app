@@ -45,7 +45,7 @@ function filterOptionList(datalist, value) {
 function highlightCurrOption(options) {
   options.forEach((opt) => {
     opt.style.backgroundColor = "var(--bg-color)";
-    opt.style.color = "var(--accent-purple)";
+    opt.style.color = "";
   });
   options[currOptionIdx].style.backgroundColor =
     "var(--accent-purple) !important";
@@ -53,15 +53,15 @@ function highlightCurrOption(options) {
 
   // if there are more than n options in the list
   // scroll the window so they are all on screen
-  if (currOptionIdx > 12) {
-    options[currOptionIdx].parentElement.scrollIntoView({
+  if (currOptionIdx > 14) {
+    options[currOptionIdx].scrollIntoView({
       behavior: "smooth",
       block: "end",
     });
     return;
   }
-  if (options.length > 3) {
-    options[currOptionIdx].parentElement.scrollIntoView({ behavior: "smooth" });
+  if (currOptionIdx > 2) {
+    options[currOptionIdx].scrollIntoView({ behavior: "smooth" });
     return;
   }
 }
