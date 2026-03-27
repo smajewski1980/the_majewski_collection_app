@@ -3,7 +3,7 @@
   background: var(--body-bg);
   font-family: var(--reg-font);
   display: grid;
-  justify-content: center;
+  /* justify-content: center; */
   overflow-y: scroll;
   transition:
     background-color 200ms,
@@ -103,7 +103,7 @@
     font-family: var(--heading-font);
     letter-spacing: 5px;
     font-size: 3rem;
-    margin-block-start: 1rem;
+    /* margin-block-start: 1rem; */
     text-align: center;
   }
 
@@ -147,11 +147,11 @@
       gap: 2rem;
       margin-block: 1rem;
 
-      img {
-        width: 250px;
-        height: 110px;
-        margin-block-start: 1.125rem;
-      }
+      /* img { */
+      /* width: 250px; */
+      /* height: 110px; */
+      /* margin-block-start: 1.125rem; */
+      /* } */
 
       h1 {
         font-size: 2.5rem;
@@ -160,7 +160,7 @@
     }
 
     nav {
-      margin-block-end: 1rem;
+      /* margin-block-end: 1rem; */
 
       ul {
         display: flex;
@@ -229,6 +229,7 @@
       textarea,
       button {
         outline-color: light-dark(var(--clr-cd-comps));
+        color: light-dark(var(--clr-cd-comps));
       }
       button {
         color: light-dark(var(--clr-cd-comps));
@@ -252,6 +253,7 @@
       textarea,
       button {
         outline-color: light-dark(var(--clr-cd-singles));
+        color: light-dark(var(--clr-cd-singles));
       }
       button {
         color: light-dark(var(--clr-cd-singles));
@@ -273,6 +275,7 @@
       select,
       button {
         outline-color: light-dark(var(--clr-cds-main));
+        color: light-dark(var(--clr-cds-main));
       }
       button {
         color: light-dark(var(--clr-cds-main));
@@ -294,6 +297,7 @@
       select,
       button {
         outline-color: light-dark(var(--clr-records));
+        color: light-dark(var(--clr-records));
       }
       button {
         color: light-dark(var(--clr-records));
@@ -316,6 +320,7 @@
       select,
       button {
         outline-color: light-dark(var(--clr-tapes));
+        color: light-dark(var(--clr-tapes));
       }
 
       fieldset {

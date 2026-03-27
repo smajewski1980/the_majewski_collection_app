@@ -2,16 +2,16 @@
   padding: 2rem 1rem;
 
   header {
-    display: flex;
+    /* display: flex;
     justify-content: space-between;
     align-items: center;
     margin-block-end: 2.5rem;
-    padding-inline: 3.5rem;
+    padding-inline: 3.5rem; */
 
-    img {
+    /* img {
       max-width: 200px;
       anchor-name: --btn-lookup;
-    }
+    } */
 
     h1,
     h2 {
@@ -21,7 +21,7 @@
 
     h1 {
       margin-inline: 2rem auto;
-      transform: translateY(-0.5rem);
+      transform: translateY(-0.75rem);
     }
 
     #result-qty {

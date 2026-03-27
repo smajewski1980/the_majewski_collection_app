@@ -124,6 +124,25 @@ datalist {
   scroll-margin-top: 7rem;
 }
 
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block-end: 2.5rem;
+  padding-inline: 3.5rem;
+
+  img {
+    max-width: 200px;
+    anchor-name: --btn-lookup;
+  }
+
+  /* outline: 1px solid lightblue;
+
+  * {
+    outline: 1px solid red;
+  } */
+}
+
 body:not(#add-body) {
   a:not(.back-to-top, .home-link),
   button:not(#btn-help) {

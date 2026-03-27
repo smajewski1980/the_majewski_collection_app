@@ -186,7 +186,16 @@ function addCustomDatalistListeners(input, datalist) {
       setTimeout(() => {
         e.target.nextElementSibling.style.display = "none";
       }, 750);
-      e.target.parentElement.nextElementSibling.querySelector("label").focus();
+
+      // focus the next item after the option is selected
+      const formId = document.querySelector(".active-form").id;
+      if (formId !== "cd-main-form") {
+        e.target.parentElement.nextElementSibling
+          .querySelector("label")
+          .focus();
+      } else {
+        e.target.parentElement.nextElementSibling.focus();
+      }
 
       return;
     }
