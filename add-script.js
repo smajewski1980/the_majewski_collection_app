@@ -10,7 +10,6 @@ import {
   trimDataFields,
   addToSessionList,
   focusFirstField,
-  handleThemeChange,
   removeActiveClass,
   showForm,
   initialShowForm,
@@ -460,26 +459,3 @@ incrementCheckbox.addEventListener("change", (e) => {
     handleCheckbox(forms);
   }
 });
-
-// theme slider
-const themeSlider = document.getElementById("theme-slider");
-const slide = document.getElementById("slide");
-let theme = document.documentElement.getAttribute("data-theme");
-
-/**
- * toggle themes
- * @returns {void}
- */
-function handleThemeToggle() {
-  if (theme === "dark") {
-    theme = "light";
-    slide.style.right = ".125rem";
-    handleThemeChange();
-  } else {
-    theme = "dark";
-    slide.style.right = "1.125rem";
-    handleThemeChange();
-  }
-}
-
-themeSlider.addEventListener("click", handleThemeToggle);

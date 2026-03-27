@@ -257,20 +257,6 @@ export function focusFirstField(form) {
 }
 
 /**
- * handles the page theme switch
- * @returns {void}
- */
-export function handleThemeChange() {
-  const currTheme = document.documentElement.getAttribute("data-theme");
-  document.documentElement.style.colorScheme =
-    currTheme === "light" ? "dark" : "light";
-  document.documentElement.setAttribute(
-    "data-theme",
-    currTheme === "light" ? "dark" : "light",
-  );
-}
-
-/**
  * remove active class from form select btns
  * @property {HTMLButtonElement[]} btns
  * @returns {void}
