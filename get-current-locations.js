@@ -165,7 +165,7 @@ function addCustomDatalistListeners(input, datalist) {
       highlightCurrOption(options);
     }
 
-    if (e.key === "Enter") {
+    if (e.key === "Enter" || (e.key === "Tab" && currOptionIdx > -1)) {
       e.preventDefault();
 
       // if an invalid input val is submitted
@@ -186,6 +186,7 @@ function addCustomDatalistListeners(input, datalist) {
       setTimeout(() => {
         e.target.nextElementSibling.style.display = "none";
       }, 750);
+      e.target.parentElement.nextElementSibling.querySelector("label").focus();
 
       return;
     }
