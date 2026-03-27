@@ -1,4 +1,5 @@
 import { toasty, getFormClassStr } from "./add-utils.js";
+let optionClicked = false;
 
 /**
  * sort numerically instead of lexicographically
@@ -139,14 +140,16 @@ function addCustomDatalistListeners(input, datalist) {
 
   // hide the list when the input loses focus
   input.addEventListener("blur", (e) => {
-    const options = e.target.nextElementSibling.querySelectorAll("option");
-    options.forEach((opt) => {
-      opt.style.top = "";
-    });
     setTimeout(() => {
-      datalist.style.display = "none";
-      currOptionIdx = -1;
-    }, 750);
+      const options = e.target.nextElementSibling.querySelectorAll("option");
+      options.forEach((opt) => {
+        opt.style.top = "";
+      });
+      setTimeout(() => {
+        datalist.style.display = "none";
+        currOptionIdx = -1;
+      }, 750);
+    }, 100);
   });
 
   input.addEventListener("keydown", (e) => {
@@ -175,11 +178,15 @@ function addCustomDatalistListeners(input, datalist) {
       const selectedVal = options[currOptionIdx].value;
       e.target.value = selectedVal;
       currOptionIdx = -1;
-      e.target.nextElementSibling.style.display = "none";
       options.forEach((opt) => {
         opt.style.backgroundColor = "transparent";
         opt.style.color = "var(--accent-purple)";
+        opt.style.top = "";
       });
+      setTimeout(() => {
+        e.target.nextElementSibling.style.display = "none";
+      }, 750);
+
       return;
     }
   });
@@ -512,6 +519,7 @@ function populateSelectList(locations, datalist) {
 
     // the below listener is for the custom datalist
     option.addEventListener("click", (e) => {
+      //this is not working
       // make list go away after selection is made, update the input val
       e.target.parentElement.style.display = "none";
       e.target.parentElement.previousElementSibling.value = loc;
