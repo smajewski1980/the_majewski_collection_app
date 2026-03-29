@@ -42,7 +42,10 @@ let currentForm = null;
  * @returns {void}
  */
 function handleNavBtnClick(e) {
-  if (e.target.classList.contains("active-nav-btn")) return;
+  if (e.target.classList.contains("active-nav-btn")) {
+    document.getElementById(`${e.target.dataset.form}`).reset();
+    return;
+  }
   currentForm = e.target.dataset.form;
 
   if (!initialLoad) {
