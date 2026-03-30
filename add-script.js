@@ -15,6 +15,7 @@ import {
   initialShowForm,
   isLocValValid,
   incrementFlag,
+  addToSessionStore,
 } from "./add-utils.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
@@ -154,6 +155,9 @@ async function handleCdCompsForm(e) {
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.title} was added to cd comps`;
       addToSessionList(sessionList, sessionListStr, "cd-comp-color");
+
+      addToSessionStore("cdComps", data);
+
       focusFirstField(cdCompsForm);
       console.log("new item id: ", res);
       window.scrollTo(0, 0);
@@ -229,6 +233,8 @@ async function handleCdSinglesForm(e) {
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cd singles.`;
       addToSessionList(sessionList, sessionListStr, "cd-single-color");
+
+      addToSessionStore("cdSingles", data);
     } catch (error) {
       console.log(error);
     }
@@ -289,6 +295,8 @@ async function handleCdsMainForm(e) {
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cds main.`;
       addToSessionList(sessionList, sessionListStr, "cds-main-color");
+
+      addToSessionStore("cdsMain", data);
       // }
     } catch (error) {
       toasty(error, "red");
@@ -364,6 +372,8 @@ async function handleRecordsForm(e) {
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to records.`;
       addToSessionList(sessionList, sessionListStr, "record-color");
+
+      addToSessionStore("records", data);
       // }
     } catch (error) {
       console.log(error);
@@ -433,6 +443,8 @@ async function handleTapesForm(e) {
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to tapes.`;
       addToSessionList(sessionList, sessionListStr, "tape-color");
+
+      addToSessionStore("tapes", data);
     } catch (error) {
       console.log(error);
     }

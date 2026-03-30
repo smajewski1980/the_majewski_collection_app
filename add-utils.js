@@ -246,6 +246,14 @@ export function addToSessionList(list, str, className) {
   list.prepend(li);
 }
 
+export async function addToSessionStore(format, insertedData) {
+  sessionStore.sessionSet("sessionSet", {
+    key: `currInsertData.${format}`,
+    value: insertedData,
+  });
+  console.log("item added to sessionStore");
+}
+
 /**
  * take a form element and places focus on the first input
  * @param {HTMLFormElement} form

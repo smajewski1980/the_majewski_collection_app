@@ -31,7 +31,16 @@ const createWindow = () => {
   }
 };
 
-const sessionStore = {};
+const sessionStore = {
+  currInsertData: {
+    cdComps: [],
+    cdSingles: [],
+    cdsMain: [],
+    records: [],
+    tapes: [],
+  },
+  currentSessionList: [],
+};
 
 // i switched on the experimental features flag so i could
 // use the old school block cursor in my text inputs
@@ -50,8 +59,16 @@ app.whenReady().then(() => {
   ipcMain.handle("insertCdComps", handleInsertCdComps);
   ipcMain.handle("insertCdSingles", handleInsertCdSingles);
   ipcMain.on("sessionSet", (e, { key, value }) => {
+    if (key.startsWith("currInsertData")) {
+      sessionStore.currInsertData[key.split(".")[1]].unshift(value);
+      console.log(`setting session store ${key} to ${value}`);
+      console.log(sessionStore);
+      return;
+    }
+
     sessionStore[key] = value;
     console.log(`setting session store ${key} to ${value}`);
+    console.log(sessionStore);
   });
   ipcMain.handle("sessionGet", (e, key) => {
     console.log(`getting ${key}`);
