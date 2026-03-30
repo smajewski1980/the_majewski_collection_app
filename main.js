@@ -30,6 +30,9 @@ const createWindow = () => {
     win.webContents.openDevTools();
   }
 };
+
+const sessionStore = {};
+
 // i switched on the experimental features flag so i could
 // use the old school block cursor in my text inputs
 app.commandLine.appendSwitch("enable-experimental-web-platform-features");
@@ -46,6 +49,14 @@ app.whenReady().then(() => {
   ipcMain.handle("insertRecords", handleInsertRecords);
   ipcMain.handle("insertCdComps", handleInsertCdComps);
   ipcMain.handle("insertCdSingles", handleInsertCdSingles);
+  ipcMain.on("sessionSet", (e, { key, value }) => {
+    sessionStore[key] = value;
+    console.log(`setting session store ${key} to ${value}`);
+  });
+  ipcMain.handle("sessionGet", (e, key) => {
+    console.log(`getting ${key}`);
+    return sessionStore[key];
+  });
 
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();

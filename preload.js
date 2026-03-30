@@ -23,3 +23,8 @@ contextBridge.exposeInMainWorld("inserts", {
   insertCdComps: (channel, data) => ipcRenderer.invoke(channel, data),
   insertCdSingles: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("sessionStore", {
+  sessionSet: (channel, data) => ipcRenderer.send(channel, data),
+  sessionGet: (channel, data) => ipcRenderer.invoke(channel, data),
+});
