@@ -248,7 +248,7 @@ export function addToSessionList(list, str, className) {
 
 export async function addToSessionStore(format, insertedData) {
   sessionStore.sessionSet("sessionSet", {
-    key: `currInsertData.${format}`,
+    key: `${format}Curr`,
     value: insertedData,
   });
   console.log("item added to sessionStore");

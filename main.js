@@ -32,13 +32,11 @@ const createWindow = () => {
 };
 
 const sessionStore = {
-  currInsertData: {
-    cdComps: [],
-    cdSingles: [],
-    cdsMain: [],
-    records: [],
-    tapes: [],
-  },
+  cdCompsCurr: [],
+  cdSinglesCurr: [],
+  cdsMainCurr: [],
+  recordsCurr: [],
+  tapesCurr: [],
   currentSessionList: [],
 };
 
@@ -59,9 +57,9 @@ app.whenReady().then(() => {
   ipcMain.handle("insertCdComps", handleInsertCdComps);
   ipcMain.handle("insertCdSingles", handleInsertCdSingles);
   ipcMain.on("sessionSet", (e, { key, value }) => {
-    if (key.startsWith("currInsertData")) {
-      sessionStore.currInsertData[key.split(".")[1]].unshift(value);
-      console.log(`setting session store ${key} to ${value}`);
+    if (key.endsWith("Curr")) {
+      sessionStore[key].unshift(value);
+      console.log(`setting session store ${key}`);
       console.log(sessionStore);
       return;
     }
