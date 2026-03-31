@@ -60,13 +60,12 @@ app.whenReady().then(() => {
     if (key.endsWith("Curr")) {
       sessionStore[key].unshift(value);
       console.log(`setting session store ${key}`);
-      console.log(sessionStore);
       return;
     }
 
     sessionStore[key] = value;
-    console.log(`setting session store ${key} to ${value}`);
-    console.log(sessionStore);
+    console.log(`setting session store ${key}`);
+    return;
   });
   ipcMain.handle("sessionGet", (e, key) => {
     console.log(`getting ${key}`);

@@ -246,12 +246,74 @@ export function addToSessionList(list, str, className) {
   list.prepend(li);
 }
 
-export async function addToSessionStore(format, insertedData) {
-  sessionStore.sessionSet("sessionSet", {
-    key: `${format}Curr`,
-    value: insertedData,
-  });
+/**
+ * this takes data and send to the session store
+ * @param {string} format format of the current form entry, '' if setting something else
+ * @param {object} insertedData the data being sent to the session store
+ * @param {string} optionalKey the key if not entering an inserted item
+ * @returns {void}
+ */
+export async function addToSessionStore(
+  format,
+  insertedData,
+  optionalKey = undefined,
+) {
+  if (format) {
+    sessionStore.sessionSet("sessionSet", {
+      key: `${format}Curr`,
+      value: insertedData,
+    });
+  } else {
+    sessionStore.sessionSet("sessionSet", {
+      key: optionalKey,
+      value: insertedData,
+    });
+  }
+
   console.log("item added to sessionStore");
+}
+
+/**
+ * this returns data from the most recent item entry for a given format
+ * @param {string} formId the id of the active form
+ * @returns {object} the last entry object
+ */
+export async function getLastEntry(formId) {
+  switch (formId) {
+    case "cd-comps-form":
+      const currComps = await sessionStore.sessionGet(
+        "sessionGet",
+        "cdCompsCurr",
+      );
+      return currComps[0];
+    case "cd-singles-form":
+      const currSingles = await sessionStore.sessionGet(
+        "sessionGet",
+        "cdSinglesCurr",
+      );
+      return currSingles[0];
+    case "cd-main-form":
+      const currCdsMain = await sessionStore.sessionGet(
+        "sessionGet",
+        "cdsMainCurr",
+      );
+      return currCdsMain[0];
+    case "records-form":
+      const currRecords = await sessionStore.sessionGet(
+        "sessionGet",
+        "recordsCurr",
+      );
+      return currRecords[0];
+    case "tapes-form":
+      const currTapes = await sessionStore.sessionGet(
+        "sessionGet",
+        "tapesCurr",
+      );
+      return currTapes[0];
+    default:
+      break;
+  }
+  return formId;
 }
 
 /**

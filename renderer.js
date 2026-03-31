@@ -9,9 +9,6 @@ const btnHelpClose = document.getElementById("btn-close");
 const dialog = document.getElementById("help-dialog");
 let scrollDist;
 
-const testMessage = sessionStore.sessionGet("sessionGet", "testProperty");
-console.log(await testMessage);
-
 ut.toggleInertEl(field, true);
 ut.toggleInertEl(term, true);
 ut.toggleInertEl(btnLookup, true);

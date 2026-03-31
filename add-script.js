@@ -16,6 +16,7 @@ import {
   isLocValValid,
   incrementFlag,
   addToSessionStore,
+  getLastEntry,
 } from "./add-utils.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
@@ -36,6 +37,7 @@ const mainEl = document.querySelector("main");
 let showSessionList = false;
 let initialLoad = true;
 let currentForm = null;
+const btnLoadLast = document.querySelector(".btn-load-last");
 
 /**
  * when a nav button is clicked, show the appropriate form
@@ -472,5 +474,24 @@ incrementCheckbox.addEventListener("change", (e) => {
   }
   if (!incrementFlag) {
     handleCheckbox(forms);
+  }
+});
+
+let loadLastCounter = 0;
+
+btnLoadLast.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const activeForm = document.querySelector(".active-form");
+  const lastEntry = await getLastEntry(activeForm.id);
+
+  if (!loadLastCounter) {
+    toasty(
+      "the current forms data will be lost, push the button again if you are sure",
+      "red",
+    );
+    loadLastCounter++;
+  } else {
+    console.log(lastEntry);
+    loadLastCounter = 0;
   }
 });
