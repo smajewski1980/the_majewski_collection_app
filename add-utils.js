@@ -453,14 +453,7 @@ function populateTapesFormFields(form, data) {
   title.value = data.title;
   location.value = data.location;
   year.value = data.year;
-
-  const speedOpts = speed.querySelectorAll("option");
-  speedOpts.forEach((opt) => {
-    opt.selected = "false";
-    if (opt.value === data.speed) {
-      opt.selected = "true";
-    } //<---the only one we havent gotten yet *******************88
-  });
+  speed.value = data.speed;
 
   data.needsRepair === "Yes"
     ? (radioBtns[0].checked = true)
