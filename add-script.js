@@ -17,6 +17,7 @@ import {
   incrementFlag,
   addToSessionStore,
   getLastEntry,
+  populateFormWithLastEntry,
 } from "./add-utils.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
@@ -477,21 +478,12 @@ incrementCheckbox.addEventListener("change", (e) => {
   }
 });
 
-let loadLastCounter = 0;
-
 btnLoadLast.addEventListener("click", async (e) => {
   e.preventDefault();
   const activeForm = document.querySelector(".active-form");
   const lastEntry = await getLastEntry(activeForm.id);
 
-  if (!loadLastCounter) {
-    toasty(
-      "the current forms data will be lost, push the button again if you are sure",
-      "red",
-    );
-    loadLastCounter++;
-  } else {
-    console.log(lastEntry);
-    loadLastCounter = 0;
-  }
+  populateFormWithLastEntry(activeForm, lastEntry);
+
+  // console.log(lastEntry);
 });
