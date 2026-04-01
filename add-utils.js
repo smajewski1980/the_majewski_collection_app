@@ -429,26 +429,15 @@ function populateRecordsFormFields(form, data) {
   label.value = data.label;
   diameter.value = data.diameter;
 
-  const slvCondOptions = sleeveCondition.querySelectorAll("option");
-  slvCondOptions.forEach((opt) => {
-    opt.selected = "false";
-    if (opt.value === data.sleeveCondition) {
-      opt.selected = "true";
-    }
-  });
-  const recCondOptions = recordCondition.querySelectorAll("option");
-  recCondOptions.forEach((opt) => {
-    opt.selected = "false";
-    if (opt.value === data.recordCondition) {
-      opt.selected = "true";
-    }
-  });
+  sleeveCondition.value = data.sleeve_condition;
+  recordCondition.value = data.record_condition;
 }
 
 function populateTapesFormFields(form, data) {
   const [artist, title, location, year] = form.querySelectorAll("input");
   const radioBtns = form.querySelectorAll('input[type="radio"]');
   const speed = form.querySelector("select");
+
   artist.value = data.artist;
   title.value = data.title;
   location.value = data.location;
@@ -461,9 +450,6 @@ function populateTapesFormFields(form, data) {
 }
 
 export function populateFormWithLastEntry(form, data) {
-  // const inputs = form.querySelectorAll("input");
-  // const textArea = form.querySelectorAll("textarea");
-  // const selects = form.querySelectorAll("select");
   switch (form.id) {
     case "cd-comps-form":
       populateCdCompsFormFields(form, data);
