@@ -1,3 +1,4 @@
+const sessionList = document.getElementById("session-list");
 let isToastShowing = false;
 
 /**
@@ -142,20 +143,34 @@ export function trimDataFields(data) {
   return data;
 }
 
-/**
- * makes a li with a given string and prepends to
- * given list, also adds class to li to add styles
- * @param {HTMLUListElement} list
- * @param {String} str
- * @param {String} className
- * @returns {void}
- */
-export function addToSessionList(list, str, className) {
-  // want to get this data from the session store
-  const li = document.createElement("li");
-  li.textContent = str;
-  li.classList.add(className);
-  list.prepend(li);
+// /**
+//  * makes a li with a given string and prepends to
+//  * given list, also adds class to li to add styles
+//  * @param {HTMLUListElement} list
+//  * @param {String} str
+//  * @param {String} className
+//  * @returns {void}
+//  */
+// export function addToSessionList(list, str, className) {
+//   // want to get this data from the session store
+//   const li = document.createElement("li");
+//   li.textContent = str;
+//   li.classList.add(className);
+//   list.prepend(li);
+// }
+
+export async function updateUiSessionList() {
+  const currSessionList = await sessionStore.sessionGet(
+    "sessionGet",
+    "currAdded",
+  );
+  // need to make a check for page load if there are items to show, show them
+  sessionList.innerHTML = "";
+  currSessionList.forEach((itemStr) => {
+    const li = document.createElement("li");
+    li.textContent = itemStr;
+    sessionList.append(li);
+  });
 }
 
 /**

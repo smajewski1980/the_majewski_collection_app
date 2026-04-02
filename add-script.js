@@ -4,20 +4,15 @@ import {
   noEmptyFields,
   toasty,
   trimTracks,
-  // handleIncrementReset,
-  // incrementCheckbox,
-  // handleCheckbox,
   trimDataFields,
-  addToSessionList,
+  // addToSessionList,
+  updateUiSessionList,
   focusFirstField,
   removeActiveClass,
   showForm,
   initialShowForm,
   isLocValValid,
-  // incrementFlag,
   addToSessionStore,
-  // getLastEntry,
-  // populateFormWithLastEntry,
 } from "./add-utils.js";
 import { populateFormWithLastEntry, getLastEntry } from "./last-entry.js";
 import {
@@ -42,7 +37,7 @@ const navButtons = [btnComps, btnSingles, btnMain, btnRecords, btnTapes];
 const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
 const incrementWrapper = document.querySelector(".increment-wrapper");
 const sessionListWrapper = document.querySelector(".session-list-wrapper");
-const sessionList = document.getElementById("session-list");
+// const sessionList = document.getElementById("session-list");
 const mainEl = document.querySelector("main");
 let showSessionList = false;
 let initialLoad = true;
@@ -171,8 +166,9 @@ async function handleCdCompsForm(e) {
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.title} was added to cd comps`;
-      addToSessionList(sessionList, sessionListStr, "cd-comp-color");
-
+      // addToSessionList(sessionList, sessionListStr, "cd-comp-color");
+      addToSessionStore("", sessionListStr, "currAdded");
+      updateUiSessionList();
       addToSessionStore("cdComps", data);
 
       focusFirstField(cdCompsForm);
@@ -249,8 +245,9 @@ async function handleCdSinglesForm(e) {
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cd singles.`;
-      addToSessionList(sessionList, sessionListStr, "cd-single-color");
-
+      // addToSessionList(sessionList, sessionListStr, "cd-single-color");
+      addToSessionStore("", sessionListStr, "currAdded");
+      updateUiSessionList();
       addToSessionStore("cdSingles", data);
     } catch (error) {
       console.log(error);
@@ -316,8 +313,9 @@ async function handleCdsMainForm(e) {
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cds main.`;
-      addToSessionList(sessionList, sessionListStr, "cds-main-color");
-
+      // addToSessionList(sessionList, sessionListStr, "cds-main-color");
+      addToSessionStore("", sessionListStr, "currAdded");
+      updateUiSessionList();
       addToSessionStore("cdsMain", data);
       // }
     } catch (error) {
@@ -398,8 +396,9 @@ async function handleRecordsForm(e) {
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to records.`;
-      addToSessionList(sessionList, sessionListStr, "record-color");
-
+      // addToSessionList(sessionList, sessionListStr, "record-color");
+      addToSessionStore("", sessionListStr, "currAdded");
+      updateUiSessionList();
       addToSessionStore("records", data);
       // }
     } catch (error) {
@@ -474,8 +473,9 @@ async function handleTapesForm(e) {
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to tapes.`;
-      addToSessionList(sessionList, sessionListStr, "tape-color");
-
+      // addToSessionList(sessionList, sessionListStr, "tape-color");
+      addToSessionStore("", sessionListStr, "currAdded");
+      updateUiSessionList();
       addToSessionStore("tapes", data);
     } catch (error) {
       console.log(error);

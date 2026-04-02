@@ -37,7 +37,7 @@ const sessionStore = {
   cdsMainCurr: [],
   recordsCurr: [],
   tapesCurr: [],
-  currentSessionList: [],
+  currAdded: [],
 };
 
 // i switched on the experimental features flag so i could
@@ -60,6 +60,13 @@ app.whenReady().then(() => {
     if (key.endsWith("Curr")) {
       sessionStore[key].unshift(value);
       console.log(`setting session store ${key}`);
+      return;
+    }
+
+    if (key === "currAdded") {
+      sessionStore.currAdded.unshift(value);
+      console.log(`adding to session store ${key}`);
+      console.log(sessionStore.currAdded);
       return;
     }
 
