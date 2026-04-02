@@ -1,3 +1,12 @@
+/**
+ * this takes the data from the last entry and loads it into the form
+ * @param {HTMLFormElement} form the cd comps insert form
+ * @param {Object} data the data from the last entry
+ * @param {string} data.title
+ * @param {string} data.year
+ * @param {string} data.location
+ * @returns {void}
+ */
 function populateCdCompsFormFields(form, data) {
   const [title, year, location] = form.querySelectorAll("input");
   const textarea = form.querySelector("textarea");
@@ -15,6 +24,16 @@ function populateCdCompsFormFields(form, data) {
   });
 }
 
+/**
+ * this takes the data from the last entry and loads it into the form
+ * @param {HTMLFormElement} form the cd singles insert form
+ * @param {Object} data the data from the last entry
+ * @param {string} data.artist
+ * @param {string} data.title
+ * @param {string} data.location
+ * @param {string} data.year
+ * @returns {void}
+ */
 function populateCdSinglesFormFields(form, data) {
   const [artist, title, location, year] = form.querySelectorAll("input");
   const textarea = form.querySelector("textarea");
@@ -29,6 +48,15 @@ function populateCdSinglesFormFields(form, data) {
   });
 }
 
+/**
+ * this takes the data from the last entry and loads it into the form
+ * @param {HTMLFormElement} form the cd main insert form
+ * @param {Object} data the data from the last entry
+ * @param {string} data.artist
+ * @param {string} data.title
+ * @param {string} data.location
+ * @returns {void}
+ */
 function populateCdMainFormFields(form, data) {
   const [artist, title, location] = form.querySelectorAll("input");
 
@@ -37,6 +65,20 @@ function populateCdMainFormFields(form, data) {
   location.value = data.location;
 }
 
+/**
+ * this takes the data from the last entry and loads it into the form
+ * @param {HTMLFormElement} form the records insert form
+ * @param {Object} data the data from the last entry
+ * @param {string} data.artist
+ * @param {string} data.title
+ * @param {string} data.location
+ * @param {string} data.year
+ * @param {string} data.label
+ * @param {string} data.diameter
+ * @param {string} data.sleeveCondition
+ * @param {string} data.recordCondition
+ * @returns {void}
+ */
 function populateRecordsFormFields(form, data) {
   const [artist, title, location, year, label] = form.querySelectorAll("input");
   const [diameter, sleeveCondition, recordCondition] =
@@ -53,6 +95,18 @@ function populateRecordsFormFields(form, data) {
   recordCondition.value = data.record_condition;
 }
 
+/**
+ * this takes the data from the last entry and loads it into the form
+ * @param {HTMLFormElement} form the tapes insert form
+ * @param {Object} data the data from the last entry
+ * @param {string} data.artist
+ * @param {string} data.title
+ * @param {string} data.location
+ * @param {string} data.year
+ * @param {string} data.needsRepair
+ * @param {string} data.speed
+ * @returns {void}
+ */
 function populateTapesFormFields(form, data) {
   const [artist, title, location, year] = form.querySelectorAll("input");
   const radioBtns = form.querySelectorAll('input[type="radio"]');
@@ -69,6 +123,11 @@ function populateTapesFormFields(form, data) {
     : (radioBtns[1].checked = true);
 }
 
+/**
+ * this routes the form and the last entry data to the proper function
+ * @param {HTMLFormElement} form the active form
+ * @param {*} data the last entry's data
+ */
 export function populateFormWithLastEntry(form, data) {
   switch (form.id) {
     case "cd-comps-form":
@@ -94,7 +153,7 @@ export function populateFormWithLastEntry(form, data) {
 /**
  * this returns data from the most recent item entry for a given format
  * @param {string} formId the id of the active form
- * @returns {object} the last entry object
+ * @returns {Object} the last entry object
  */
 export async function getLastEntry(formId) {
   switch (formId) {

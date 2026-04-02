@@ -1,5 +1,4 @@
 import { toasty, getFormClassStr } from "./add-utils.js";
-let optionClicked = false;
 
 /**
  * sort numerically instead of lexicographically

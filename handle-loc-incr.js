@@ -2,6 +2,9 @@ const btnConfirm = document.querySelector(".btn-confirm-increment");
 export const incrementCheckbox = document.getElementById("increment-location");
 export let incrementFlag = false;
 
+/**
+ * setter function to toggle the increment flag
+ */
 export function toggleIncFlag() {
   incrementFlag = !incrementFlag;
 }
