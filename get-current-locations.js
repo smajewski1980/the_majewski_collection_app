@@ -187,13 +187,15 @@ function addCustomDatalistListeners(input, datalist) {
       }, 750);
 
       // focus the next item after the option is selected
-      const formId = document.querySelector(".active-form").id;
+      const activeForm = document.querySelector(".active-form");
+      const formId = activeForm.id;
       if (formId !== "cd-main-form") {
         e.target.parentElement.nextElementSibling
           .querySelector("label")
           .focus();
       } else {
-        e.target.parentElement.nextElementSibling.focus();
+        const button = activeForm.querySelector("button");
+        button.focus();
       }
 
       return;

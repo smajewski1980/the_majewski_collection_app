@@ -39,10 +39,12 @@ const incrementWrapper = document.querySelector(".increment-wrapper");
 const sessionListWrapper = document.querySelector(".session-list-wrapper");
 // const sessionList = document.getElementById("session-list");
 const mainEl = document.querySelector("main");
-let showSessionList = false;
+// let showSessionList = false;
 let initialLoad = true;
 let currentForm = null;
 const btnLoadLast = document.querySelector(".btn-load-last");
+
+updateUiSessionList();
 
 /**
  * when a nav button is clicked, show the appropriate form
@@ -154,10 +156,10 @@ async function handleCdCompsForm(e) {
 
       toasty("item successfully added", "green");
 
-      if (!showSessionList) {
-        showSessionList = true;
-        sessionListWrapper.style.display = "block";
-      }
+      // if (!showSessionList) {
+      //   showSessionList = true;
+      //   sessionListWrapper.style.display = "block";
+      // }
 
       if (incrementFlag) {
         getLocations();
@@ -166,8 +168,7 @@ async function handleCdCompsForm(e) {
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.title} was added to cd comps`;
-      // addToSessionList(sessionList, sessionListStr, "cd-comp-color");
-      addToSessionStore("", sessionListStr, "currAdded");
+      addToSessionStore("", [sessionListStr, "cd-comp-color"], "currAdded");
       updateUiSessionList();
       addToSessionStore("cdComps", data);
 
@@ -236,17 +237,16 @@ async function handleCdSinglesForm(e) {
 
       console.log("new item id: ", res);
 
-      if (!showSessionList) {
-        showSessionList = true;
-        sessionListWrapper.style.display = "block";
-      }
+      // if (!showSessionList) {
+      //   showSessionList = true;
+      //   sessionListWrapper.style.display = "block";
+      // }
 
       window.scrollTo(0, 0);
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cd singles.`;
-      // addToSessionList(sessionList, sessionListStr, "cd-single-color");
-      addToSessionStore("", sessionListStr, "currAdded");
+      addToSessionStore("", [sessionListStr, "cd-single-color"], "currAdded");
       updateUiSessionList();
       addToSessionStore("cdSingles", data);
     } catch (error) {
@@ -301,10 +301,10 @@ async function handleCdsMainForm(e) {
 
       // if this is the first entry for this session,
       // display the current session list
-      if (!showSessionList) {
-        showSessionList = true;
-        sessionListWrapper.style.display = "block";
-      }
+      // if (!showSessionList) {
+      //   showSessionList = true;
+      //   sessionListWrapper.style.display = "block";
+      // }
 
       if (incrementFlag) {
         getLocations();
@@ -313,8 +313,7 @@ async function handleCdsMainForm(e) {
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cds main.`;
-      // addToSessionList(sessionList, sessionListStr, "cds-main-color");
-      addToSessionStore("", sessionListStr, "currAdded");
+      addToSessionStore("", [sessionListStr, "cds-main-color"], "currAdded");
       updateUiSessionList();
       addToSessionStore("cdsMain", data);
       // }
@@ -389,15 +388,14 @@ async function handleRecordsForm(e) {
 
       // if this is the first entry for this session,
       // display the current session list
-      if (!showSessionList) {
-        showSessionList = true;
-        sessionListWrapper.style.display = "block";
-      }
+      // if (!showSessionList) {
+      //   showSessionList = true;
+      //   sessionListWrapper.style.display = "block";
+      // }
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to records.`;
-      // addToSessionList(sessionList, sessionListStr, "record-color");
-      addToSessionStore("", sessionListStr, "currAdded");
+      addToSessionStore("", [sessionListStr, "record-color"], "currAdded");
       updateUiSessionList();
       addToSessionStore("records", data);
       // }
@@ -466,15 +464,14 @@ async function handleTapesForm(e) {
 
       // if this is the first entry for this session,
       // display the current session list
-      if (!showSessionList) {
-        showSessionList = true;
-        sessionListWrapper.style.display = "block";
-      }
+      // if (!showSessionList) {
+      //   showSessionList = true;
+      //   sessionListWrapper.style.display = "block";
+      // }
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to tapes.`;
-      // addToSessionList(sessionList, sessionListStr, "tape-color");
-      addToSessionStore("", sessionListStr, "currAdded");
+      addToSessionStore("", [sessionListStr, "tape-color"], "currAdded");
       updateUiSessionList();
       addToSessionStore("tapes", data);
     } catch (error) {

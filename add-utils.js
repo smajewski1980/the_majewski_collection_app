@@ -143,34 +143,22 @@ export function trimDataFields(data) {
   return data;
 }
 
-// /**
-//  * makes a li with a given string and prepends to
-//  * given list, also adds class to li to add styles
-//  * @param {HTMLUListElement} list
-//  * @param {String} str
-//  * @param {String} className
-//  * @returns {void}
-//  */
-// export function addToSessionList(list, str, className) {
-//   // want to get this data from the session store
-//   const li = document.createElement("li");
-//   li.textContent = str;
-//   li.classList.add(className);
-//   list.prepend(li);
-// }
-
 export async function updateUiSessionList() {
   const currSessionList = await sessionStore.sessionGet(
     "sessionGet",
     "currAdded",
   );
-  // need to make a check for page load if there are items to show, show them
+  if (!currSessionList.length) {
+    return;
+  }
   sessionList.innerHTML = "";
-  currSessionList.forEach((itemStr) => {
+  currSessionList.forEach((item) => {
     const li = document.createElement("li");
-    li.textContent = itemStr;
+    li.textContent = item[0];
+    li.classList.add(item[1]);
     sessionList.append(li);
   });
+  sessionList.parentElement.style.display = "block";
 }
 
 /**
