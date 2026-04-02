@@ -578,7 +578,7 @@ function processLocations(locationData) {
  * fetch of the location data and feeds it to the processLocations function
  * @returns {void}
  */
-async function getLocations() {
+export async function getLocations() {
   try {
     const res = await getCurrentLocations.getCurrentLocations(
       "getCurrentLocations",

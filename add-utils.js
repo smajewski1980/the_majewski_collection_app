@@ -1,7 +1,4 @@
-export const incrementCheckbox = document.getElementById("increment-location");
-export let incrementFlag = false;
 let isToastShowing = false;
-const btnConfirm = document.querySelector(".btn-confirm-increment");
 
 /**
  * this takes the current forms id string and returns a class string for styling
@@ -129,92 +126,6 @@ export function trimTracks(arr) {
 }
 
 /**
- * takes the current location value, increments it,
- * and updates the ui and values for submission
- * @param {HTMLOptionElement} selectedOption
- * @param {HTMLInputElement} selectedInput
- * @returns {void}
- */
-function handleIncrementLocation(selectedOption, selectedInput) {
-  // split the option value, last index will be the number portion of location
-  const splitOptionVal = selectedOption.value.split(" ");
-  let numVal = parseInt(splitOptionVal.at(-1));
-
-  // if one of the options without an ending number is selected, return
-  if (Number.isNaN(numVal) || selectedInput.value === '33s 10"') {
-    handleIncrementReset();
-    toasty("That location can not be incremented.", null);
-    return;
-  }
-
-  // increment num and reassemble string
-  const incrementedNumString = (numVal += 1).toString();
-  splitOptionVal[splitOptionVal.length - 1] = incrementedNumString;
-  const reassembledString = splitOptionVal.join(" ");
-
-  // set the new vals
-  selectedOption.innerText = reassembledString;
-  selectedOption.value = reassembledString;
-  selectedInput.value = reassembledString;
-}
-
-/**
- * resets the increment process
- * @returns {void}
- */
-export function handleIncrementReset() {
-  // still have a bug if you accidentally try to
-  // increment a location that shouldn't be
-  // the checkbox stays inactive till the form resets
-  incrementCheckbox.checked = false;
-  incrementFlag = false;
-  btnConfirm.style.display = "none";
-}
-
-/**
- * when the box is checked, get the active form to pass into the increment location function
- * @param {HTMLFormElement[]} arr
- * @returns {void}
- */
-export async function handleCheckbox(arr) {
-  const activeForm = arr.filter((form) =>
-    form.classList.contains("active-form"),
-  );
-
-  // grab the active location input and the datalist
-  const activeInput = activeForm[0].querySelector("input[name='location']");
-  const datalist = activeInput.nextElementSibling;
-
-  // if a location was never selected
-  if (!activeInput.value) {
-    toasty("Select a location to increment first.", null);
-    incrementCheckbox.checked = false;
-    incrementFlag = false;
-    return;
-  }
-  // the window.confirm didnt work here in electron
-  // this button provides a confirm check
-  btnConfirm.style.display = "block";
-  btnConfirm.addEventListener(
-    "click",
-    (e) => {
-      e.preventDefault();
-      // get the current option element to increment
-      const optionEls = Array.from(datalist.querySelectorAll("option"));
-      const currOption = optionEls.filter(
-        (el) => el.textContent === activeInput.value,
-      );
-
-      handleIncrementLocation(currOption[0], activeInput);
-
-      incrementFlag = true;
-      btnConfirm.style.display = "none";
-    },
-    { once: true },
-  );
-}
-
-/**
  * takes data object and trims the vals
  * @typedef {object} data
  * @property {string} artist
@@ -240,6 +151,7 @@ export function trimDataFields(data) {
  * @returns {void}
  */
 export function addToSessionList(list, str, className) {
+  // want to get this data from the session store
   const li = document.createElement("li");
   li.textContent = str;
   li.classList.add(className);
@@ -271,49 +183,6 @@ export async function addToSessionStore(
   }
 
   console.log("item added to sessionStore");
-}
-
-/**
- * this returns data from the most recent item entry for a given format
- * @param {string} formId the id of the active form
- * @returns {object} the last entry object
- */
-export async function getLastEntry(formId) {
-  switch (formId) {
-    case "cd-comps-form":
-      const currComps = await sessionStore.sessionGet(
-        "sessionGet",
-        "cdCompsCurr",
-      );
-      return currComps[0];
-    case "cd-singles-form":
-      const currSingles = await sessionStore.sessionGet(
-        "sessionGet",
-        "cdSinglesCurr",
-      );
-      return currSingles[0];
-    case "cd-main-form":
-      const currCdsMain = await sessionStore.sessionGet(
-        "sessionGet",
-        "cdsMainCurr",
-      );
-      return currCdsMain[0];
-    case "records-form":
-      const currRecords = await sessionStore.sessionGet(
-        "sessionGet",
-        "recordsCurr",
-      );
-      return currRecords[0];
-    case "tapes-form":
-      const currTapes = await sessionStore.sessionGet(
-        "sessionGet",
-        "tapesCurr",
-      );
-      return currTapes[0];
-    default:
-      break;
-  }
-  return formId;
 }
 
 /**
@@ -376,99 +245,4 @@ export function isLocValValid(locVal, validArr) {
     toasty("Location field does not contain a valid value.", "red");
     return false;
   }
-}
-
-function populateCdCompsFormFields(form, data) {
-  const [title, year, location] = form.querySelectorAll("input");
-  const textarea = form.querySelector("textarea");
-
-  title.value = data.title;
-  year.value = data.year;
-  location.value = data.location;
-
-  data.tracks.forEach((track, idx) => {
-    textarea.value +=
-      track[0] +
-      "|" +
-      track[1] +
-      `${idx == data.tracks.length - 1 ? "" : "\n"}`;
-  });
-}
-
-function populateCdSinglesFormFields(form, data) {
-  const [artist, title, location, year] = form.querySelectorAll("input");
-  const textarea = form.querySelector("textarea");
-
-  artist.value = data.artist;
-  title.value = data.title;
-  location.value = data.caseType;
-  year.value = data.year;
-
-  data.tracks.forEach((track, idx) => {
-    textarea.value += `${track}${idx == data.tracks.length - 1 ? "" : "\n"}`;
-  });
-}
-
-function populateCdMainFormFields(form, data) {
-  const [artist, title, location] = form.querySelectorAll("input");
-
-  artist.value = data.artist;
-  title.value = data.title;
-  location.value = data.location;
-}
-
-function populateRecordsFormFields(form, data) {
-  const [artist, title, location, year, label] = form.querySelectorAll("input");
-  const [diameter, sleeveCondition, recordCondition] =
-    form.querySelectorAll("select");
-
-  artist.value = data.artist;
-  title.value = data.title;
-  location.value = data.location;
-  year.value = data.year;
-  label.value = data.label;
-  diameter.value = data.diameter;
-
-  sleeveCondition.value = data.sleeve_condition;
-  recordCondition.value = data.record_condition;
-}
-
-function populateTapesFormFields(form, data) {
-  const [artist, title, location, year] = form.querySelectorAll("input");
-  const radioBtns = form.querySelectorAll('input[type="radio"]');
-  const speed = form.querySelector("select");
-
-  artist.value = data.artist;
-  title.value = data.title;
-  location.value = data.location;
-  year.value = data.year;
-  speed.value = data.speed;
-
-  data.needsRepair === "Yes"
-    ? (radioBtns[0].checked = true)
-    : (radioBtns[1].checked = true);
-}
-
-export function populateFormWithLastEntry(form, data) {
-  switch (form.id) {
-    case "cd-comps-form":
-      populateCdCompsFormFields(form, data);
-      break;
-    case "cd-singles-form":
-      populateCdSinglesFormFields(form, data);
-      break;
-    case "cd-main-form":
-      populateCdMainFormFields(form, data);
-      break;
-    case "records-form":
-      populateRecordsFormFields(form, data);
-      break;
-    case "tapes-form":
-      populateTapesFormFields(form, data);
-      break;
-    default:
-      break;
-  }
-
-  console.log(data);
 }

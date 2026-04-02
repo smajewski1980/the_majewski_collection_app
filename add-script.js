@@ -4,9 +4,9 @@ import {
   noEmptyFields,
   toasty,
   trimTracks,
-  handleIncrementReset,
-  incrementCheckbox,
-  handleCheckbox,
+  // handleIncrementReset,
+  // incrementCheckbox,
+  // handleCheckbox,
   trimDataFields,
   addToSessionList,
   focusFirstField,
@@ -14,11 +14,20 @@ import {
   showForm,
   initialShowForm,
   isLocValValid,
-  incrementFlag,
+  // incrementFlag,
   addToSessionStore,
-  getLastEntry,
-  populateFormWithLastEntry,
+  // getLastEntry,
+  // populateFormWithLastEntry,
 } from "./add-utils.js";
+import { populateFormWithLastEntry, getLastEntry } from "./last-entry.js";
+import {
+  incrementCheckbox,
+  incrementFlag,
+  toggleIncFlag,
+  handleIncrementReset,
+  handleCheckbox,
+} from "./handle-loc-incr.js";
+import { getLocations } from "./get-current-locations.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
 const cdsMainForm = document.getElementById("cd-main-form");
@@ -153,6 +162,11 @@ async function handleCdCompsForm(e) {
       if (!showSessionList) {
         showSessionList = true;
         sessionListWrapper.style.display = "block";
+      }
+
+      if (incrementFlag) {
+        getLocations();
+        toggleIncFlag();
       }
 
       // add item data to the session list
@@ -295,6 +309,11 @@ async function handleCdsMainForm(e) {
         sessionListWrapper.style.display = "block";
       }
 
+      if (incrementFlag) {
+        getLocations();
+        toggleIncFlag();
+      }
+
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cds main.`;
       addToSessionList(sessionList, sessionListStr, "cds-main-color");
@@ -363,6 +382,11 @@ async function handleRecordsForm(e) {
       handleIncrementReset();
       focusFirstField(recordsForm);
       toasty("item successfully added", "green");
+
+      if (incrementFlag) {
+        getLocations();
+        toggleIncFlag();
+      }
       window.scrollTo(0, 0);
 
       // if this is the first entry for this session,
@@ -434,6 +458,11 @@ async function handleTapesForm(e) {
       handleIncrementReset();
       focusFirstField(tapesForm);
       toasty("item successfully added", "green");
+
+      if (incrementFlag) {
+        getLocations();
+        toggleIncFlag();
+      }
       window.scrollTo(0, 0);
 
       // if this is the first entry for this session,
