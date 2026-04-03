@@ -31,7 +31,7 @@ function filterOptionList(datalist, value) {
 
     options.forEach((opt) => {
       opt.style.top =
-        "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .5rem)";
+        "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .6rem)";
       opt.style.rotate = "0deg";
     });
   });
@@ -118,7 +118,7 @@ function addCustomDatalistListeners(input, datalist) {
     setTimeout(() => {
       options.forEach((opt) => {
         opt.style.top =
-          "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .5rem)";
+          "calc(var(--btn-height) * calc(sibling-index() - 1) + calc(sibling-index() - 1) * .6rem)";
         opt.style.rotate = "0deg";
       });
     }, 50);

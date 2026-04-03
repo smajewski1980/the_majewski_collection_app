@@ -143,6 +143,10 @@ export function trimDataFields(data) {
   return data;
 }
 
+/**
+ * gets the current session data, if it exists, populate the session list UIS
+ * @returns {void}
+ */
 export async function updateUiSessionList() {
   const currSessionList = await sessionStore.sessionGet(
     "sessionGet",

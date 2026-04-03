@@ -32,8 +32,8 @@
 
   /* this was the computed height when they were styled
   needed for the datalist animation calculation */
-  --btn-height: 41.59px;
-  --options-dropin-start-top: -65px;
+  --btn-height: 31.2px;
+  --options-dropin-start-top: -50px;
   --timing: linear(
     0,
     0.532 20.8%,

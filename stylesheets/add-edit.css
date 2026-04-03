@@ -44,7 +44,7 @@
   datalist {
     position: absolute;
     position-anchor: --loc-input;
-    top: calc(anchor(bottom) + 1rem);
+    top: calc(anchor(bottom) + 0.5rem);
     width: 100%;
   }
 
@@ -71,7 +71,7 @@
     transition:
       top 0.7s var(--timing2),
       rotate 0.5s var(--timing);
-    margin-top: 0.5rem;
+    margin-block-start: 0.25rem;
     rotate: 0;
     min-width: 50%;
     /*  */
@@ -215,11 +215,11 @@
   }
 
   main {
-    /* min-width: 40rem; */
-    /* max-width: 640px; */
-    /* margin-inline: auto; */
     opacity: 0;
     transition: opacity 500ms;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    padding-inline: 1rem;
 
     .form-group {
       position: relative;
@@ -359,7 +359,7 @@
         display: grid;
         justify-items: center;
         max-width: 100%;
-        font-size: 1.5rem;
+        font-size: 1.125rem;
 
         input,
         select,
@@ -373,10 +373,12 @@
           border-radius: 10px;
         }
 
-        input {
+        input,
+        textarea,
+        select {
           field-sizing: content;
-          min-width: 75%;
-          max-width: 800px;
+          min-width: 50%;
+          max-width: 95%;
         }
 
         input:focus-visible,
@@ -391,22 +393,14 @@
         }
 
         select {
-          min-width: 75%;
-
           option {
             background-color: var(--body-bg);
           }
         }
-
-        textarea {
-          field-sizing: content;
-          min-width: 75%;
-          max-width: 800px;
-        }
       }
 
       fieldset {
-        width: 40%;
+        width: 50%;
         border-color: light-dark(var(--clr-font-main));
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -457,12 +451,6 @@
           scale: 1.05;
           box-shadow: 0px 1px 6px currentColor;
         }
-      }
-
-      .form-groups-wrapper {
-        display: grid;
-        grid-template-columns: 50% 50%;
-        align-items: start;
       }
     }
     .active-form {

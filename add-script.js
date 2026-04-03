@@ -5,7 +5,6 @@ import {
   toasty,
   trimTracks,
   trimDataFields,
-  // addToSessionList,
   updateUiSessionList,
   focusFirstField,
   removeActiveClass,
@@ -36,10 +35,7 @@ const btnTapes = document.querySelector(".btn-tapes");
 const navButtons = [btnComps, btnSingles, btnMain, btnRecords, btnTapes];
 const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
 const incrementWrapper = document.querySelector(".increment-wrapper");
-const sessionListWrapper = document.querySelector(".session-list-wrapper");
-// const sessionList = document.getElementById("session-list");
 const mainEl = document.querySelector("main");
-// let showSessionList = false;
 let initialLoad = true;
 let currentForm = null;
 const btnLoadLast = document.querySelector(".btn-load-last");
@@ -156,11 +152,6 @@ async function handleCdCompsForm(e) {
 
       toasty("item successfully added", "green");
 
-      // if (!showSessionList) {
-      //   showSessionList = true;
-      //   sessionListWrapper.style.display = "block";
-      // }
-
       if (incrementFlag) {
         getLocations();
         toggleIncFlag();
@@ -237,11 +228,6 @@ async function handleCdSinglesForm(e) {
 
       console.log("new item id: ", res);
 
-      // if (!showSessionList) {
-      //   showSessionList = true;
-      //   sessionListWrapper.style.display = "block";
-      // }
-
       window.scrollTo(0, 0);
 
       // add item data to the session list
@@ -298,13 +284,6 @@ async function handleCdsMainForm(e) {
       focusFirstField(cdsMainForm);
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
-
-      // if this is the first entry for this session,
-      // display the current session list
-      // if (!showSessionList) {
-      //   showSessionList = true;
-      //   sessionListWrapper.style.display = "block";
-      // }
 
       if (incrementFlag) {
         getLocations();
@@ -386,13 +365,6 @@ async function handleRecordsForm(e) {
       }
       window.scrollTo(0, 0);
 
-      // if this is the first entry for this session,
-      // display the current session list
-      // if (!showSessionList) {
-      //   showSessionList = true;
-      //   sessionListWrapper.style.display = "block";
-      // }
-
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to records.`;
       addToSessionStore("", [sessionListStr, "record-color"], "currAdded");
@@ -461,13 +433,6 @@ async function handleTapesForm(e) {
         toggleIncFlag();
       }
       window.scrollTo(0, 0);
-
-      // if this is the first entry for this session,
-      // display the current session list
-      // if (!showSessionList) {
-      //   showSessionList = true;
-      //   sessionListWrapper.style.display = "block";
-      // }
 
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to tapes.`;
