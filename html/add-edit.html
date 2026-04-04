@@ -130,8 +130,8 @@
               rows="10"
             ></textarea>
           </div>
+          <button>submit</button>
         </div>
-        <button>submit</button>
       </form>
 
       <!-- ------------------------------------------------------CD SINGLES -->
@@ -185,8 +185,8 @@
               rows="10"
             ></textarea>
           </div>
+          <button>submit</button>
         </div>
-        <button>submit</button>
       </form>
 
       <!-- ----------------------------------------------------CDS MAIN -->
@@ -221,8 +221,8 @@
             />
             <datalist id="cds-main-datalist"> </datalist>
           </div>
+          <button>submit</button>
         </div>
-        <button>submit</button>
       </form>
 
       <!-- ----------------------------------------------------RECORDS -->
@@ -385,8 +385,8 @@
               autocomplete="off"
             />
           </div>
+          <button>submit</button>
         </div>
-        <button>submit</button>
       </form>
 
       <!-- -------------------------------------------------------TAPES -->
@@ -481,11 +481,14 @@
               </option>
             </select>
           </div>
+          <button>submit</button>
         </div>
-        <button>submit</button>
       </form>
 
       <div class="increment-wrapper">
+        <button class="btn-load-last">
+          temp button to load last entry info
+        </button>
         <div class="increment-inner-wrapper">
           <input
             type="checkbox"
@@ -495,13 +498,10 @@
           <label for="increment-location">increment location</label>
         </div>
         <button class="btn-confirm-increment">Are You Sure?</button>
-      </div>
-
-      <button class="btn-load-last">temp button to load last entry info</button>
-
-      <div class="session-list-wrapper">
-        <p>Items added this session:</p>
-        <ul id="session-list"></ul>
+        <div class="session-list-wrapper">
+          <p>Items added this session:</p>
+          <ul id="session-list"></ul>
+        </div>
       </div>
     </main>
   </body>
