@@ -131,7 +131,7 @@ export const handleLookupBtn = async (e, format, field, term) => {
           titles.slice(utils.resultStart(), utils.resultEnd()),
           term,
         );
-        console.log("num titles: ", titles.length);
+        // console.log("num titles: ", titles.length);
         break;
       case "cd-singles":
         utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
@@ -163,7 +163,7 @@ export const handleLookupBtn = async (e, format, field, term) => {
           singles.slice(utils.resultStart(), utils.resultEnd()),
           term,
         );
-        console.log("num titles: ", singles.length);
+        // console.log("num titles: ", singles.length);
         break;
       default:
         break;

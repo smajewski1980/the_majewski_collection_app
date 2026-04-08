@@ -1,4 +1,5 @@
 import utils from "./utils.js";
+import { getHeader } from "./header.js";
 
 /**
  * this gets and displays the cds main query results
@@ -17,7 +18,7 @@ export const displayCds = (rows, term) => {
 
   // get and append the header if its a fresh search
   if (utils.resultPage === 0) {
-    utils.resultsElement.append(utils.getHeader("Cds"));
+    utils.resultsElement.append(getHeader("Cds"));
   }
   // loop through the results, make and append elements to display the data
   rows.forEach((row) => {
@@ -49,7 +50,7 @@ export const displayRecords = (rows, term = null) => {
 
   // get and append the header if its a fresh search
   if (utils.resultPage === 0) {
-    utils.resultsElement.append(utils.getHeader("Records"));
+    utils.resultsElement.append(getHeader("Records"));
   }
 
   // loop through data and create elements
@@ -99,7 +100,7 @@ export const displayTapes = (rows, term) => {
 
   // get and append the header if its a fresh search
   if (utils.resultPage === 0) {
-    utils.resultsElement.append(utils.getHeader("Tapes"));
+    utils.resultsElement.append(getHeader("Tapes"));
   }
 
   // loop through the data and create and append the elements
@@ -145,7 +146,7 @@ export const displayCdComps = (rows, term) => {
 
   // get and append the header if its a fresh search
   if (utils.resultPage === 0) {
-    utils.resultsElement.append(utils.getHeader("CdComps"));
+    utils.resultsElement.append(getHeader("CdComps"));
   }
 
   rows.forEach((row) => {
@@ -189,7 +190,7 @@ export const displayCdSingles = (rows, term) => {
 
   // get and append the header if its a fresh search
   if (utils.resultPage === 0) {
-    utils.resultsElement.append(utils.getHeader("CdSingles"));
+    utils.resultsElement.append(getHeader("CdSingles"));
   }
 
   rows.forEach((row) => {
