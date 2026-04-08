@@ -1,4 +1,5 @@
 import ut from "./utils.js";
+import { handleLookupBtn } from "./lookup.js";
 const format = document.getElementById("query-format");
 const field = document.getElementById("query-field");
 const term = document.getElementById("query-term");
@@ -32,13 +33,13 @@ field.addEventListener("change", (e) => {
 // if enter is pressed in the term field, send the data for the query
 term.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
-    ut.handleLookupBtn(e, format.value, field.value, term.value);
+    handleLookupBtn(e, format.value, field.value, term.value);
   }
 });
 
 // send the data for the query
 btnLookup.addEventListener("click", (e) => {
-  ut.handleLookupBtn(e, format.value, field.value, term.value);
+  handleLookupBtn(e, format.value, field.value, term.value);
 });
 
 // "infinite scrolling"

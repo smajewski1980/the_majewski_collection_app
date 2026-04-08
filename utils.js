@@ -1,3 +1,11 @@
+import {
+  displayCdComps,
+  displayCdSingles,
+  displayCds,
+  displayRecords,
+  displayTapes,
+} from "./display-functions.js";
+
 const utils = {
   /**
    * takes an HTML Element and toggle an inert state
@@ -76,401 +84,6 @@ const utils = {
       default:
         break;
     }
-  },
-  /**
-   * prob need to be adjusted later
-   * this takes the query vals and sends them to main.js
-   * the results are then added to the results element
-   * @param {Event} e
-   * @param {String} format
-   * @param {String} field
-   * @param {String} term
-   */
-  handleLookupBtn: async (e, format, field, term) => {
-    e.preventDefault();
-    const vals = { format: format, field: field, term: term };
-    if (!field) {
-      utils.displayNotFound("Please select a field to search.");
-      return;
-    }
-
-    // validate id or year are numbers
-    if (
-      (field === "id" ||
-        field === "year" ||
-        field === "title_id" ||
-        field === "track_id" ||
-        field === "single_id") &&
-      !parseInt(term)
-    ) {
-      utils.displayNotFound(
-        "Please enter a valid number to search by that field.",
-      );
-      return;
-    }
-    // validate that the year is lower than the current year and higher than 1885
-    // (1885?... maybe have some grammophone discs someday...)
-    if (field === "year") {
-      const parsedYear = parseInt(term);
-      const currentYear = new Date().getFullYear();
-
-      if (
-        (1885 > parsedYear || parsedYear > currentYear) &&
-        parsedYear !== 1234
-      ) {
-        utils.displayNotFound("Please enter a valid 4 digit year.");
-        return;
-      }
-    }
-    // check that the condition field only consists of 1-5 asterisks
-    if (
-      (field === "sleeve_condition" || field === "record_condition") &&
-      !/^\*{1,5}$/.test(term)
-    ) {
-      utils.displayNotFound("Please enter 1-5 *'s to search by condition.");
-      return;
-    }
-
-    // the needs repair field should only be a yes or no search term
-    const needs_repair_valid = ["y", "yes", "n", "no"];
-    if (
-      format === "tapes" &&
-      field === "needs_repair" &&
-      !needs_repair_valid.includes(term.toLowerCase())
-    ) {
-      utils.displayNotFound("For that field, term must be yes(y) or no(n).");
-      return;
-    }
-
-    // send data to main.js
-    const res = await handleQueryValues.handleQueryValues(
-      "handleQueryValues",
-      vals,
-    );
-
-    // reset the "page" counter for a fresh search
-    utils.resultPage = 0;
-
-    switch (format) {
-      case "cds":
-        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
-        utils.currentCdsData = res;
-        utils.displayCds(
-          res.slice(utils.resultStart(), utils.resultEnd()),
-          term,
-        );
-        break;
-      case "records":
-        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
-        utils.currentRecordsData = res;
-        utils.displayRecords(
-          res.slice(utils.resultStart(), utils.resultEnd()),
-          term,
-        );
-        break;
-      case "tapes":
-        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
-        utils.currentTapesData = res;
-        utils.displayTapes(
-          res.slice(utils.resultStart(), utils.resultEnd()),
-          term,
-        );
-        break;
-      case "cd-compilations":
-        const titles = [];
-        // assemble a title obj if this title not in titles
-        res.forEach((title) => {
-          if (!titles.some((t) => title.title_id in t)) {
-            titles.push({
-              [title.title_id]: {
-                titleId: title.title_id,
-                title: title.title,
-                year: title.year,
-                location: title.location,
-                tracks: {
-                  [title.track_id]: {
-                    artist: title.artist,
-                    trackName: title.track_name,
-                  },
-                },
-              },
-            });
-          } else {
-            // keep adding the tracks to a title if title is in titles
-            titles[titles.length - 1][title.title_id].tracks[title.track_id] = {
-              artist: title.artist,
-              trackName: title.track_name,
-            };
-          }
-        });
-        utils.resQtyEl.innerText = `${titles.length} result${titles.length > 1 ? "s" : ""}`;
-        utils.currentCdCompsData = titles;
-        utils.displayCdComps(
-          titles.slice(utils.resultStart(), utils.resultEnd()),
-          term,
-        );
-        console.log("num titles: ", titles.length);
-        break;
-      case "cd-singles":
-        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
-        const singles = [];
-        res.forEach((sing) => {
-          // on the first iteration, set up a single including the first track
-          if (!singles.some((s) => sing.single_id in s)) {
-            singles.push({
-              [sing.single_id]: {
-                singleId: sing.single_id,
-                artist: sing.artist,
-                title: sing.title,
-                year: sing.year,
-                case_type: sing.case_type,
-                tracks: {
-                  [sing.track_id]: sing.track_name,
-                },
-              },
-            });
-          } else {
-            // add the rest of the tracks
-            singles[singles.length - 1][sing.single_id].tracks[sing.track_id] =
-              sing.track_name;
-          }
-        });
-        utils.resQtyEl.innerText = `${singles.length} result${singles.length > 1 ? "s" : ""}`;
-        utils.currentCdSinglesData = singles;
-        utils.displayCdSingles(
-          singles.slice(utils.resultStart(), utils.resultEnd()),
-          term,
-        );
-        console.log("num titles: ", singles.length);
-        break;
-      default:
-        break;
-    }
-  },
-  /**
-   * this gets and displays the cds main query results
-   * @param {QueryResultRow} rows
-   * @param {String} term
-   * @returns {void}
-   */
-  displayCds: (rows, term) => {
-    // if no results, show msg
-    if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${term}`);
-      return;
-    }
-
-    utils.clearResults();
-
-    // get and append the header if its a fresh search
-    if (utils.resultPage === 0) {
-      utils.resultsElement.append(utils.getHeader("Cds"));
-    }
-    // loop through the results, make and append elements to display the data
-    rows.forEach((row) => {
-      const p = utils.makeP();
-
-      Object.values(row).forEach((val, idx) => {
-        p.append(utils.createLoadedSpan(val, idx));
-      });
-
-      utils.resultsElement.append(p);
-    });
-
-    utils.setArtistColWidths();
-  },
-  /**
-   * this gets and displays the records query results
-   * @param {QueryResultRow} rows
-   * @param {String} term
-   * @returns {void}
-   */
-  displayRecords: (rows, term = null) => {
-    // if no results, show msg
-    if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${term}`);
-      return;
-    }
-
-    utils.clearResults();
-
-    // get and append the header if its a fresh search
-    if (utils.resultPage === 0) {
-      utils.resultsElement.append(utils.getHeader("Records"));
-    }
-
-    // loop through data and create elements
-    rows.forEach((row) => {
-      const p = utils.makeP();
-      // add the data to be always visible
-      p.append(
-        utils.createLoadedSpan(row.id, 0),
-        utils.createLoadedSpan(row.artist, 1),
-        utils.createLoadedSpan(row.title, 2),
-        utils.createLoadedSpan(row.location, 3),
-      );
-
-      p.className = `item-idx-${row.id}`;
-      p.tabIndex = "0";
-
-      // add the listeners to the row that will load and open the tracks popover
-      p.addEventListener("click", (e) => {
-        utils.populatePopover(row.id, "records");
-        utils.resultPopover.showPopover();
-      });
-      p.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          utils.populatePopover(row.id, "records");
-          utils.resultPopover.showPopover();
-        }
-      });
-      utils.resultsElement.append(p);
-    });
-    // adjust the second column widths for centering
-    utils.setArtistColWidths();
-  },
-  /**
-   * this gets and displays the tapes query results
-   * @param {QueryResultRow} rows
-   * @param {String} term
-   * @returns {void}
-   */
-  displayTapes: (rows, term) => {
-    // if no results, show msg
-    if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${term}`);
-      return;
-    }
-
-    utils.clearResults();
-
-    // get and append the header if its a fresh search
-    if (utils.resultPage === 0) {
-      utils.resultsElement.append(utils.getHeader("Tapes"));
-    }
-
-    // loop through the data and create and append the elements
-    rows.forEach((row) => {
-      const p = utils.makeP();
-
-      // add the always visible fields
-      p.append(
-        utils.createLoadedSpan(row.id, 0),
-        utils.createLoadedSpan(row.artist, 1),
-        utils.createLoadedSpan(row.title, 2),
-        utils.createLoadedSpan(row.location, 3),
-      );
-      p.className = `item-idx-${row.id}`;
-      p.tabIndex = "0";
-
-      // add the listeners to the row that will load and open the tracks popover
-      p.addEventListener("click", (e) => {
-        utils.populatePopover(row.id, "tapes");
-        utils.resultPopover.showPopover();
-      });
-      p.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          utils.populatePopover(row.id, "tapes");
-          utils.resultPopover.showPopover();
-        }
-      });
-
-      utils.resultsElement.append(p);
-    });
-
-    // adjust the second column widths for centering
-    utils.setArtistColWidths();
-  },
-  displayCdComps: (rows, term) => {
-    // if no results, show msg
-    if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${term}`);
-      return;
-    }
-
-    utils.clearResults();
-
-    // get and append the header if its a fresh search
-    if (utils.resultPage === 0) {
-      utils.resultsElement.append(utils.getHeader("CdComps"));
-    }
-
-    rows.forEach((row) => {
-      const p = utils.makeP();
-      // add the data to be always visible
-      p.append(
-        utils.createLoadedSpan(row[Object.keys(row)[0]].titleId, 0),
-        utils.createLoadedSpan(row[Object.keys(row)[0]].title, 1),
-        utils.createLoadedSpan(row[Object.keys(row)[0]].year, 2),
-        utils.createLoadedSpan(row[Object.keys(row)[0]].location, 3),
-      );
-
-      p.className = `cd-comps item-idx-${row[Object.keys(row)[0]].titleId}`;
-      p.tabIndex = "0";
-
-      // add the listeners to the row that will load and open the tracks popover
-      p.addEventListener("click", (e) => {
-        utils.populatePopover(row[Object.keys(row)[0]].titleId, "comps");
-        utils.resultPopover.showPopover();
-      });
-      p.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          utils.populatePopover(row[Object.keys(row)[0]].titleId, "comps");
-          utils.resultPopover.showPopover();
-        }
-      });
-
-      utils.resultsElement.append(p);
-    });
-
-    document.querySelector(".result-header").classList.add("cd-comps");
-  },
-  displayCdSingles: (rows, term) => {
-    // if no results, show msg
-    if (rows.length === 0) {
-      utils.displayNotFound(`No matching results found for: ${term}`);
-      return;
-    }
-
-    utils.clearResults();
-
-    // get and append the header if its a fresh search
-    if (utils.resultPage === 0) {
-      utils.resultsElement.append(utils.getHeader("CdSingles"));
-    }
-
-    rows.forEach((row) => {
-      const p = utils.makeP();
-
-      // add the data to be always visible
-      p.append(
-        utils.createLoadedSpan(row[Object.keys(row)[0]].singleId, 0),
-        utils.createLoadedSpan(row[Object.keys(row)[0]].artist, 1),
-        utils.createLoadedSpan(row[Object.keys(row)[0]].title, 2),
-        utils.createLoadedSpan(row[Object.keys(row)[0]].year, 3),
-        utils.createLoadedSpan(row[Object.keys(row)[0]].case_type, 4),
-      );
-
-      p.className = `cd-singles item-idx-${row[Object.keys(row)[0]].singleId}`;
-      p.tabIndex = "0";
-
-      // add the listeners to the row that will load and open the tracks popover
-      p.addEventListener("click", (e) => {
-        utils.populatePopover(row[Object.keys(row)[0]].singleId, "singles");
-        utils.resultPopover.showPopover();
-      });
-      p.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          utils.populatePopover(row[Object.keys(row)[0]].singleId, "singles");
-          utils.resultPopover.showPopover();
-        }
-      });
-
-      utils.resultsElement.append(p);
-
-      // adjust the second column widths for centering
-      utils.setArtistColWidths();
-    });
   },
   /**
    * this takes the current term value and displays an error msg
@@ -776,27 +389,27 @@ const utils = {
     // display the results
     if (format === "Records") {
       utils.currentRecordsData = sorted;
-      utils.displayRecords(
+      displayRecords(
         utils.currentRecordsData.slice(utils.resultStart(), utils.resultEnd()),
       );
     } else if (format === "Tapes") {
       utils.currentTapesData = sorted;
-      utils.displayTapes(
+      displayTapes(
         utils.currentTapesData.slice(utils.resultStart(), utils.resultEnd()),
       );
     } else if (format === "Cds") {
       utils.currentCdsData = sorted;
-      utils.displayCds(
+      displayCds(
         utils.currentCdsData.slice(utils.resultStart(), utils.resultEnd()),
       );
     } else if (format === "CdComps") {
       utils.currentCdCompsData = sorted;
-      utils.displayCdComps(
+      displayCdComps(
         utils.currentCdCompsData.slice(utils.resultStart(), utils.resultEnd()),
       );
     } else if (format === "CdSingles") {
       utils.currentCdSinglesData = sorted;
-      utils.displayCdSingles(
+      displayCdSingles(
         utils.currentCdSinglesData.slice(
           utils.resultStart(),
           utils.resultEnd(),
