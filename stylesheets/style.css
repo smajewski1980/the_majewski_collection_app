@@ -120,6 +120,13 @@ input,
   font-family: monospace;
 }
 
+/* input[type="text"], */
+input,
+textarea {
+  caret-color: hsl(from var(--accent-purple), h s l / 0.5);
+  caret-shape: block;
+}
+
 datalist {
   scroll-margin-top: 7rem;
 }
