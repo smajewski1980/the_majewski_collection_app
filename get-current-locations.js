@@ -51,16 +51,8 @@ function highlightCurrOption(options) {
     "var(--accent-purple) !important";
   options[currOptionIdx].style.color = "var(--outline-purple)";
 
-  // if there are more than n options in the list
-  // scroll the window so they are all on screen
-  if (currOptionIdx > 14) {
-    options[currOptionIdx].scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
-    return;
-  }
-  if (currOptionIdx > 2) {
+  // when using the arrow keys, keep the option in the scrollport
+  if (currOptionIdx > 7) {
     options[currOptionIdx].scrollIntoView({ behavior: "smooth" });
     return;
   }
