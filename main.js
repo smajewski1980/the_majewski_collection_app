@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu } = require("electron/main");
 const path = require("node:path");
+const fs = require("node:fs");
 const handleGetRecordsFields = require("./ipc-handlers/handleGetRecordsFields");
 const handleGetTapesFields = require("./ipc-handlers/handleGetTapesFields");
 const handleGetCdsFields = require("./ipc-handlers/handleGetCdsFields");
@@ -32,6 +33,7 @@ const createWindow = () => {
 };
 
 const sessionStore = {
+  env: process.env.DB_NAME,
   cdCompsCurr: [],
   cdSinglesCurr: [],
   cdsMainCurr: [],
@@ -65,17 +67,17 @@ app.whenReady().then(() => {
 
     if (key === "currAdded") {
       sessionStore.currAdded.unshift(value);
-      console.log(`adding to session store ${key}`);
-      console.log(sessionStore.currAdded);
+      // console.log(`adding to session store ${key}`);
+      // console.log(sessionStore.currAdded);
       return;
     }
 
     sessionStore[key] = value;
-    console.log(`setting session store ${key}`);
+    // console.log(`setting session store ${key}`);
     return;
   });
   ipcMain.handle("sessionGet", (e, key) => {
-    console.log(`getting ${key}`);
+    // console.log(`getting ${key}`);
     return sessionStore[key];
   });
 
@@ -87,5 +89,27 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+app.on("will-quit", () => {
+  const now = new Date(Date.now());
+  const newDir = "session-logs";
+  const data = JSON.stringify(sessionStore);
+  const filenameSuffix = now.toISOString().split(".")[0].replaceAll(":", "_");
+  const filepath = path.join(
+    app.getPath("userData"),
+    newDir,
+    `session-log-${filenameSuffix}.json`,
+  );
+
+  try {
+    fs.mkdirSync(path.join(app.getPath("userData"), newDir), {
+      recursive: true,
+    });
+    fs.writeFileSync(filepath, data);
+    console.log("the session was successfully logged before it was closed");
+  } catch (error) {
+    console.log(error);
   }
 });
