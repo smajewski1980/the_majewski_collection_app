@@ -143,8 +143,6 @@
           color: var(--accent-purple);
           accent-color: var(--accent-purple);
           font-weight: 700;
-          /* caret-color: hsl(from var(--accent-purple), h s l / 0.5);
-          caret-shape: block; */
         }
 
         #btn-lookup {

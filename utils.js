@@ -73,6 +73,9 @@ const utils = {
         utils.populateSelectOptions(cdSingRes, field);
         utils.toggleInertEl(field, false);
         break;
+      case "all-formats":
+        utils.populateSelectOptions(["ARTIST"], field);
+        utils.toggleInertEl(field, false);
       default:
         break;
     }

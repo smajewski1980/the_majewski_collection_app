@@ -28,3 +28,7 @@ contextBridge.exposeInMainWorld("sessionStore", {
   sessionSet: (channel, data) => ipcRenderer.send(channel, data),
   sessionGet: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("handleAllFormatQuery", {
+  handleAllFormatQuery: (channel, data) => ipcRenderer.invoke(channel, data),
+});

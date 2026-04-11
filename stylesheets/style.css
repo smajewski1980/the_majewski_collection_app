@@ -120,7 +120,6 @@ input,
   font-family: monospace;
 }
 
-/* input[type="text"], */
 input,
 textarea {
   caret-color: hsl(from var(--accent-purple), h s l / 0.5);
@@ -142,12 +141,6 @@ header {
     max-width: 200px;
     anchor-name: --btn-lookup;
   }
-
-  /* outline: 1px solid lightblue;
-
-  * {
-    outline: 1px solid red;
-  } */
 }
 
 body:not(#add-body) {

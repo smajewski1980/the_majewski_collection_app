@@ -73,11 +73,19 @@ export const handleLookupBtn = async (e, format, field, term) => {
   }
 
   try {
+    let res;
     // send data to main.js
-    const res = await handleQueryValues.handleQueryValues(
-      "handleQueryValues",
-      vals,
-    );
+    if (format !== "all-formats") {
+      res = await handleQueryValues.handleQueryValues(
+        "handleQueryValues",
+        vals,
+      );
+    } else {
+      res = await handleAllFormatQuery.handleAllFormatQuery(
+        "handleAllFormatQuery",
+        term,
+      );
+    }
 
     // reset the "page" counter for a fresh search
     utils.resultPage = 0;
