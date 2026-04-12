@@ -13,24 +13,6 @@ export const getHeader = (format = undefined) => {
   span1.className = "span1";
   const inner1 = utils.makeSpan();
 
-  if (format === "all") {
-    inner1.textContent = "ARTIST";
-    span1.append(inner1);
-    const span2 = utils.makeSpan();
-    span2.className = "span2";
-    const inner2 = utils.makeSpan();
-    inner2.textContent = "TITLE";
-    span2.append(inner2);
-    const span3 = utils.makeSpan();
-    span3.className = "span3";
-    const inner3 = utils.makeSpan();
-    inner3.textContent = "LOCATION";
-    span3.append(inner3);
-    p.append(span1, span2, span3);
-
-    return p;
-  }
-
   if (format === "CdComps") {
     inner1.textContent = "TITLE ID";
   } else if (format === "CdSingles") {
@@ -39,6 +21,29 @@ export const getHeader = (format = undefined) => {
     inner1.textContent = "ID";
   }
   span1.append(inner1);
+
+  if (format === "all") {
+    const span2 = utils.makeSpan();
+    span2.className = "span2";
+    const inner2 = utils.makeSpan();
+    inner2.textContent = "ARTIST";
+    span2.append(inner2);
+    const span3 = utils.makeSpan();
+    span3.className = "span3";
+    const inner3 = utils.makeSpan();
+    inner3.textContent = "TITLE";
+    span3.append(inner3);
+    const span4 = utils.makeSpan();
+    span4.className = "span4";
+    const inner4 = utils.makeSpan();
+    inner4.textContent = "LOCATION";
+    span4.append(inner4);
+
+    p.append(span1, span2, span3, span4);
+
+    return p;
+  }
+
   inner1.addEventListener("click", (e) => {
     if (format) {
       // format will need capital letter

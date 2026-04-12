@@ -15,6 +15,19 @@ export const displayAllFormats = (rows, term) => {
     utils.resultsElement.append(getHeader("all"));
   }
 
+  // loop through the results, make and append elements to display the data
+  rows.forEach((row) => {
+    const p = utils.makeP();
+
+    Object.values(row).forEach((val, idx) => {
+      p.append(utils.createLoadedSpan(val, idx));
+    });
+
+    utils.resultsElement.append(p);
+  });
+
+  utils.setArtistColWidths();
+
   console.log(`for the term ${term}:`);
   console.log(rows);
 };
