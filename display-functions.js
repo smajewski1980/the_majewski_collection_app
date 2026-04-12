@@ -2,6 +2,19 @@ import utils from "./utils.js";
 import { getHeader } from "./header.js";
 
 export const displayAllFormats = (rows, term) => {
+  // if no results, show msg
+  if (rows.length === 0) {
+    utils.displayNotFound(`No matching results found for: ${term}`);
+    return;
+  }
+
+  utils.clearResults();
+
+  // get and append the header if its a fresh search
+  if (utils.resultPage === 0) {
+    utils.resultsElement.append(getHeader("all"));
+  }
+
   console.log(`for the term ${term}:`);
   console.log(rows);
 };

@@ -12,6 +12,25 @@ export const getHeader = (format = undefined) => {
   const span1 = utils.makeSpan();
   span1.className = "span1";
   const inner1 = utils.makeSpan();
+
+  if (format === "all") {
+    inner1.textContent = "ARTIST";
+    span1.append(inner1);
+    const span2 = utils.makeSpan();
+    span2.className = "span2";
+    const inner2 = utils.makeSpan();
+    inner2.textContent = "TITLE";
+    span2.append(inner2);
+    const span3 = utils.makeSpan();
+    span3.className = "span3";
+    const inner3 = utils.makeSpan();
+    inner3.textContent = "LOCATION";
+    span3.append(inner3);
+    p.append(span1, span2, span3);
+
+    return p;
+  }
+
   if (format === "CdComps") {
     inner1.textContent = "TITLE ID";
   } else if (format === "CdSingles") {
