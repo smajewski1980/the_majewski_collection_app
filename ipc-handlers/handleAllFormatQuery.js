@@ -1,10 +1,9 @@
 const pool = require("../dbconnect.js");
 
 async function handleAllFormatQuery(e, data) {
-  console.log(data);
-  // write the query
-  const result = await pool.query(
-    ` WITH filtered_cds AS (
+  try {
+    const result = await pool.query(
+      ` WITH filtered_cds AS (
       SELECT id, artist, title, location
       FROM cds
       WHERE LOWER(artist) LIKE LOWER($1)
@@ -38,10 +37,13 @@ async function handleAllFormatQuery(e, data) {
 
       ORDER BY location;
     `,
-    [`%${data}%`],
-  );
-
-  return result.rows;
+      [`%${data}%`],
+    );
+    return result.rows;
+  } catch (error) {
+    console.log(error);
+    return ["error", error];
+  }
 }
 
 module.exports = handleAllFormatQuery;

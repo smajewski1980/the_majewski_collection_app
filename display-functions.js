@@ -10,6 +10,11 @@ export const displayAllFormats = (rows, term) => {
 
   utils.clearResults();
 
+  if (rows[0] === "error") {
+    utils.displayNotFound(rows[1]);
+    return;
+  }
+
   // get and append the header if its a fresh search
   if (utils.resultPage === 0) {
     utils.resultsElement.append(getHeader("all"));
