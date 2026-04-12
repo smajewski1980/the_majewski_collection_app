@@ -5,6 +5,7 @@ import {
   displayCds,
   displayRecords,
   displayTapes,
+  displayAllFormats,
 } from "./display-functions.js";
 
 /**
@@ -91,6 +92,10 @@ export const handleLookupBtn = async (e, format, field, term) => {
     utils.resultPage = 0;
 
     switch (format) {
+      case "all-formats":
+        utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
+        displayAllFormats(res, term);
+        break;
       case "cds":
         utils.resQtyEl.innerText = `${res.length} result${res.length > 1 ? "s" : ""}`;
         utils.currentCdsData = res;

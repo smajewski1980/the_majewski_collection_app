@@ -1,6 +1,11 @@
 import utils from "./utils.js";
 import { getHeader } from "./header.js";
 
+export const displayAllFormats = (rows, term) => {
+  console.log(`for the term ${term}:`);
+  console.log(rows);
+};
+
 /**
  * this gets and displays the cds main query results
  * @param {QueryResultRow} rows
