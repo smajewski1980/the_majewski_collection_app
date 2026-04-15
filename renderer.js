@@ -1,4 +1,11 @@
 import ut from "./utils.js";
+import {
+  displayCds,
+  displayRecords,
+  displayTapes,
+  displayCdComps,
+  displayCdSingles,
+} from "./display-functions.js";
 import { handleLookupBtn } from "./lookup.js";
 const format = document.getElementById("query-format");
 const field = document.getElementById("query-field");
@@ -9,6 +16,15 @@ const btnHelp = document.getElementById("btn-help");
 const btnHelpClose = document.getElementById("btn-close");
 const dialog = document.getElementById("help-dialog");
 let scrollDist;
+
+// these got refactored to their own module, this was the easiest way to keep the infinite scroll function working
+const disp = {
+  displayCds,
+  displayRecords,
+  displayTapes,
+  displayCdComps,
+  displayCdSingles,
+};
 
 ut.toggleInertEl(field, true);
 ut.toggleInertEl(term, true);
@@ -73,7 +89,7 @@ window.addEventListener("scroll", () => {
     ) {
       console.log("loading more results");
       ut.resultPage++; //left of here getting this to work for comps and singles
-      ut[`display${adjFormatStr}`](
+      disp[`display${adjFormatStr}`](
         ut[`current${adjFormatStr}Data`].slice(
           ut.resultStart(),
           ut.resultEnd(),
