@@ -64,6 +64,7 @@ function handleNavBtnClick(e) {
       showForm(e.target.dataset.form, e.target);
     });
   } else {
+    // document.startViewTransition(() => {})
     showForm(e.target.dataset.form, e.target);
     // on the initial load, display the increment location option and the main element
     initialShowForm(mainEl, incrementWrapper);

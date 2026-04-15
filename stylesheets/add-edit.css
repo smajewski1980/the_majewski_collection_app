@@ -536,31 +536,28 @@
     color: light-dark(var(--clr-tapes));
     border-color: light-dark(var(--clr-tapes));
   }
+}
 
-  &::view-transition-group(form-transition) {
-    animation-duration: 800ms;
-  }
+::view-transition-group(form-transition) {
+  animation-duration: 800ms;
+}
 
-  &::view-transition-old(form-transition) {
-    animation-name: form-leave;
-  }
+::view-transition-old(form-transition) {
+  animation-name: form-leave;
+}
 
-  &::view-transition-new(form-transition) {
-    animation-name: form-enter;
-  }
+::view-transition-new(form-transition) {
+  animation-name: form-enter;
 }
 
 @keyframes form-leave {
   from {
-    transform: translateY(0) scale(1);
-  }
-
-  65% {
-    transform: translateY(-50dvh) scale(0);
+    transform-origin: top center;
+    height: 100%;
   }
 
   to {
-    transform: translateY(-100dvh) scale(0);
+    height: 0;
   }
 }
 
@@ -569,11 +566,7 @@
     transform: translateY(200dvh) scale(0);
   }
 
-  35% {
-    transform: translateY(200dvh) scale(0);
-  }
-
-  80% {
+  100% {
     transform: translateY(0) scale(1);
   }
 }

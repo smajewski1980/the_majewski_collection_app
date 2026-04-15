@@ -236,7 +236,9 @@ export function showForm(formStr, navBtn) {
  */
 export function initialShowForm(mainEl, incrementWrapper) {
   incrementWrapper.style.display = "block";
-  mainEl.style.opacity = 1;
+  setTimeout(() => {
+    mainEl.style.opacity = 1;
+  }, 50);
 }
 
 /**
