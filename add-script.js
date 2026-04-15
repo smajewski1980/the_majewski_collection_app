@@ -14,6 +14,7 @@ import {
   addToSessionStore,
 } from "./add-utils.js";
 import { populateFormWithLastEntry, getLastEntry } from "./last-entry.js";
+import utils from "./utils.js";
 import {
   incrementCheckbox,
   incrementFlag,
@@ -77,6 +78,10 @@ function handleNavBtnClick(e) {
  */
 async function handleCdCompsForm(e) {
   e.preventDefault();
+  // disable the form until the submit is complete to prevent resending the same item
+  const currForm = e.target;
+  utils.toggleInertEl(currForm, true);
+
   const formData = new FormData(cdCompsForm);
 
   // get the option elems
@@ -106,6 +111,7 @@ async function handleCdCompsForm(e) {
         }`,
         "red",
       );
+      utils.toggleInertEl(currForm, false);
       return;
     }
     if (track.length === 2) {
@@ -119,6 +125,7 @@ async function handleCdCompsForm(e) {
       tracksToSend.push(track);
     } else {
       toasty("Check your track data. Must be <artist>|<title>.", "red");
+      utils.toggleInertEl(currForm, false);
       return;
     }
   });
@@ -132,11 +139,13 @@ async function handleCdCompsForm(e) {
 
   if (!noEmptyFields(data, true)) {
     toasty("All fields must be filled out.", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits.", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
@@ -149,6 +158,7 @@ async function handleCdCompsForm(e) {
 
       cdCompsForm.reset();
       handleIncrementReset();
+      utils.toggleInertEl(currForm, false);
 
       toasty("item successfully added", "green");
 
@@ -179,6 +189,9 @@ async function handleCdCompsForm(e) {
  */
 async function handleCdSinglesForm(e) {
   e.preventDefault();
+  // disable the form until the submit is complete to prevent resending the same item
+  const currForm = e.target;
+  utils.toggleInertEl(currForm, true);
   // get the form data
   const formData = new FormData(cdSinglesForm);
   // break down the tracks string to an array, each track gets trimmed later
@@ -200,17 +213,20 @@ async function handleCdSinglesForm(e) {
 
   if (!noEmptyFields(data, true)) {
     toasty("All fields must be filled out.", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
   // if only the tracks are empty
   if (!trackList[0] && noEmptyFields(data, true)) {
     toasty("Please add some tracks.", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
@@ -223,6 +239,7 @@ async function handleCdSinglesForm(e) {
 
       cdSinglesForm.reset();
       handleIncrementReset();
+      utils.toggleInertEl(currForm, false);
       focusFirstField(cdSinglesForm);
       toasty("item successfully added", "green");
 
@@ -249,6 +266,10 @@ async function handleCdSinglesForm(e) {
  */
 async function handleCdsMainForm(e) {
   e.preventDefault();
+  // disable the form until the submit is complete to prevent resending the same item
+  const currForm = e.target;
+  utils.toggleInertEl(currForm, true);
+
   const formData = new FormData(cdsMainForm);
 
   // get the option elements
@@ -267,6 +288,7 @@ async function handleCdsMainForm(e) {
 
   if (!noEmptyFields(data, false)) {
     toasty("All fields must be filled out.", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
@@ -281,6 +303,7 @@ async function handleCdsMainForm(e) {
       // focus the first field, scroll window to top
       cdsMainForm.reset();
       handleIncrementReset();
+      utils.toggleInertEl(currForm, false);
       focusFirstField(cdsMainForm);
       toasty("item successfully added", "green");
       window.scrollTo(0, 0);
@@ -310,6 +333,10 @@ async function handleCdsMainForm(e) {
  */
 async function handleRecordsForm(e) {
   e.preventDefault();
+  // disable the form until the submit is complete to prevent resending the same item
+  const currForm = e.target;
+  utils.toggleInertEl(currForm, true);
+
   const formData = new FormData(recordsForm);
 
   // get the option elements
@@ -333,12 +360,13 @@ async function handleRecordsForm(e) {
 
   if (!noEmptyFields(data, false)) {
     toasty("All fields must be filled out.", "red");
-    console.log("All fields must be filled out.");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
 
@@ -356,6 +384,7 @@ async function handleRecordsForm(e) {
       // focus the first field, scroll window to top
       recordsForm.reset();
       handleIncrementReset();
+      utils.toggleInertEl(currForm, false);
       focusFirstField(recordsForm);
       toasty("item successfully added", "green");
 
@@ -385,6 +414,10 @@ async function handleRecordsForm(e) {
  */
 async function handleTapesForm(e) {
   e.preventDefault();
+  // disable the form until the submit is complete to prevent resending the same item
+  const currForm = e.target;
+  utils.toggleInertEl(currForm, true);
+
   const formData = new FormData(tapesForm);
 
   // get the option elements
@@ -407,11 +440,12 @@ async function handleTapesForm(e) {
   // input validation
   if (!noEmptyFields(data, false)) {
     toasty("All fields must be filled out.", "red");
-    console.log("All fields must be filled out.");
+    utils.toggleInertEl(currForm, false);
     return;
   }
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits", "red");
+    utils.toggleInertEl(currForm, false);
     return;
   }
   if (
@@ -425,6 +459,7 @@ async function handleTapesForm(e) {
       // focus the first field, scroll window to top
       tapesForm.reset();
       handleIncrementReset();
+      utils.toggleInertEl(currForm, false);
       focusFirstField(tapesForm);
       toasty("item successfully added", "green");
 
