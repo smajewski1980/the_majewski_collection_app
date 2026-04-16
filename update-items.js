@@ -13,6 +13,7 @@ const btnMain = document.querySelector(".btn-cd-main");
 const btnRecords = document.querySelector(".btn-records");
 const btnTapes = document.querySelector(".btn-tapes");
 const navButtons = [btnComps, btnSingles, btnMain, btnRecords, btnTapes];
+const btnUpdateSubmit = document.querySelector("#update-id-form button");
 
 /**
  * when a nav button is clicked, show the appropriate form
@@ -45,4 +46,9 @@ function handleNavBtnClick(e) {
 // add the listeners to the nav btns
 navButtons.forEach((btn) => {
   btn.addEventListener("click", handleNavBtnClick);
+});
+
+btnUpdateSubmit.addEventListener("click", (e) => {
+  e.preventDefault();
+  console.log(e.target.closest("input"));
 });

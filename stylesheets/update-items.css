@@ -7,7 +7,8 @@
     background-color 200ms,
     color 200ms;
 
-  button:not(form button) {
+  button:not(form button),
+  #update-id-form button {
     cursor: pointer;
     padding: 0.5rem 1rem 0.6rem;
     border-radius: 10px;
@@ -126,6 +127,33 @@
   .tape-color {
     color: light-dark(var(--clr-tapes));
     border-color: light-dark(var(--clr-tapes));
+  }
+
+  #update-id-form {
+    font-size: 1.125rem;
+
+    .form-group {
+      display: flex;
+      gap: 1rem;
+      width: fit-content;
+      margin-inline: auto;
+      align-items: center;
+
+      input {
+        font-size: 1.5rem;
+        outline: 1px solid currentColor;
+        border: none;
+        text-align: center;
+        padding: 0.25rem 0.5rem 0.35rem;
+        border-radius: 10px;
+        width: 6rem;
+      }
+
+      button {
+        padding: 0.25rem 1rem 0.3rem;
+        background-color: var(--body-bg);
+      }
+    }
   }
 
   main {
