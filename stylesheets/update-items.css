@@ -1,0 +1,105 @@
+#update-body {
+  color: light-dark(var(--clr-font-main));
+  background: var(--body-bg);
+  font-family: var(--reg-font);
+
+  overflow-y: scroll;
+  transition:
+    background-color 200ms,
+    color 200ms;
+
+  button:not(form button) {
+    cursor: pointer;
+    padding: 0.5rem 1rem 0.6rem;
+    border-radius: 10px;
+    border: none;
+    outline: 3px solid currentColor;
+    box-shadow: 0px 2px 8px currentColor;
+
+    &:hover {
+      scale: 1.05;
+      box-shadow: 0px 1px 6px currentColor;
+    }
+  }
+  header {
+    padding-block-start: 1rem;
+    padding-inline: 4rem;
+    * {
+      transition:
+        background-color 200ms,
+        color 200ms;
+    }
+
+    view-transition-name: header-transition;
+    z-index: 999;
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+      color: currentColor;
+      background-color: var(--body-bg);
+    }
+
+    .heading-img-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      margin-block: 1rem;
+
+      h1 {
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+    }
+
+    nav {
+      ul {
+        display: flex;
+        gap: 1rem;
+        list-style-type: none;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        li {
+          width: fit-content;
+        }
+      }
+
+      button[data-form="cd-comps-form"].active-nav-btn {
+        background-color: hsl(from light-dark(var(--clr-cd-comps)) h s l / 0.4);
+        outline-color: hsl(from light-dark(var(--clr-cd-comps)) h s l / 0.4);
+        color: hsl(0, 0%, 95%);
+      }
+      button[data-form="cd-singles-form"].active-nav-btn {
+        background-color: hsl(
+          from light-dark(var(--clr-cd-singles)) h s l / 0.4
+        );
+        outline-color: hsl(from light-dark(var(--clr-cd-singles)) h s l / 0.4);
+        color: light-dark(white, hsl(55, 85%, 50%));
+      }
+      button[data-form="cd-main-form"].active-nav-btn {
+        background-color: hsl(from light-dark(var(--clr-cds-main)) h s l / 0.4);
+        outline-color: hsl(from light-dark(var(--clr-cds-main)) h s l / 0.4);
+        color: light-dark(white, hsl(180, 50%, 60%));
+      }
+      button[data-form="records-form"].active-nav-btn {
+        background-color: hsl(from light-dark(var(--clr-records)) h s l / 0.4);
+        outline-color: hsl(from light-dark(var(--clr-records)) h s l / 0.4);
+        color: light-dark(white, hsl(300, 34%, 60%));
+      }
+      button[data-form="tapes-form"].active-nav-btn {
+        background-color: hsl(from light-dark(var(--clr-tapes)) h s l / 0.4);
+        outline-color: hsl(from light-dark(var(--clr-tapes)) h s l / 0.4);
+        color: light-dark(white, hsl(244, 100%, 75%));
+      }
+
+      button:focus-visible {
+        outline: 1px solid light-dark(black, white);
+        outline-offset: 7px;
+      }
+    }
+  }
+}
