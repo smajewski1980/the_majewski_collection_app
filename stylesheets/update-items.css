@@ -127,4 +127,12 @@
     color: light-dark(var(--clr-tapes));
     border-color: light-dark(var(--clr-tapes));
   }
+
+  main {
+    opacity: 0;
+    transition: opacity 500ms;
+    display: grid;
+    grid-template-columns: 65% 35%;
+    padding-inline: 1rem;
+  }
 }
