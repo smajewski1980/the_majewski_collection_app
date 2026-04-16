@@ -98,7 +98,7 @@ img {
   max-width: 100%;
 }
 
-body:not(#add-body) {
+body:not(#add-body):not(#update-body) {
   background-color: var(--bg-color);
   min-height: 100dvh;
   font-family: big-party;
