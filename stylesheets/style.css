@@ -176,7 +176,43 @@ body:not(#add-body):not(#update-body) {
   a:not(:last-child) {
     margin-block-end: 1.5rem;
   }
-  /* a:nth-of-type(1) {
-    margin-block-end: 2rem;
-  } */
+}
+
+.scratch-pad {
+  position: absolute;
+  left: 0;
+  transition: left 0.5s ease-in-out;
+  bottom: 1.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: 2px solid var(--accent-purple);
+  padding-inline-end: 0.75rem;
+  padding-block-end: 0.65rem;
+  border-radius: 0 50% 50% 0;
+  font-family: var(--reg-font);
+
+  .drawer {
+    position: absolute;
+    left: -255px;
+    bottom: -10px;
+
+    textarea {
+      outline: 2px solid var(--accent-purple);
+      width: 250px;
+      height: 250px;
+      resize: none;
+      border-radius: 0 20px 0 0;
+      background-color: var(--body-bg);
+      font-size: 1.25rem !important;
+    }
+    &::after {
+      content: "Scratch Pad";
+      position: absolute;
+      top: -1.5rem;
+      left: 0;
+      font: inherit;
+      font-size: 1rem;
+    }
+  }
 }
