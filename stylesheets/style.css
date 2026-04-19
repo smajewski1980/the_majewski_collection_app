@@ -191,6 +191,17 @@ body:not(#add-body):not(#update-body) {
   padding-block-end: 0.65rem;
   border-radius: 0 50% 50% 0;
   font-family: var(--reg-font);
+  color: var(--accent-purple);
+
+  span {
+    display: inline-block;
+    transition: rotate 0.3s ease;
+    line-height: 1;
+    text-box-edge: cap alphabetic;
+    text-box-trim: trim-start;
+    /* below keeps it centered while it roatates */
+    padding-block-end: 0.15rem;
+  }
 
   .drawer {
     position: absolute;
@@ -205,13 +216,13 @@ body:not(#add-body):not(#update-body) {
       border-radius: 0 20px 0 0;
       background-color: var(--body-bg);
       font-size: 1.25rem !important;
+      color: currentColor;
     }
     &::after {
       content: "Scratch Pad";
       position: absolute;
       top: -1.5rem;
       left: 0;
-      font: inherit;
       font-size: 1rem;
     }
   }
