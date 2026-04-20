@@ -84,7 +84,7 @@ export function noEmptyFields(data, tracksTrigger) {
  * @returns {void}
  */
 export function toasty(msg, color) {
-  const msgEl = document.querySelector(".add-page-message");
+  const msgEl = document.querySelector(".page-message");
 
   if (color === "green") {
     msgEl.style.setProperty("--msg-clr", "chartreuse");
@@ -97,15 +97,15 @@ export function toasty(msg, color) {
   } else {
     isToastShowing = true;
     msgEl.innerText = msg;
-    msgEl.classList.add("add-msg-animation");
+    msgEl.classList.add("msg-animation");
     // remove the toast
     setTimeout(() => {
-      msgEl.classList.add("add-msg-animation-undo");
-      msgEl.classList.remove("add-msg-animation");
+      msgEl.classList.add("msg-animation-undo");
+      msgEl.classList.remove("msg-animation");
       // remove the undo animation class after it runs
       setTimeout(() => {
         msgEl.innerText = "";
-        msgEl.classList.remove("add-msg-animation-undo");
+        msgEl.classList.remove("msg-animation-undo");
         isToastShowing = false;
         if (color === "green") {
           msgEl.style.setProperty("--msg-clr", "var(--error-color)");
@@ -220,8 +220,8 @@ export function removeActiveClass(btns) {
  * @param {HTMLButtonElement} navBtn
  * @returns {void}
  */
-export function showForm(formStr, navBtn) {
-  navBtn.classList.add("active-nav-btn");
+export function showForm(formStr, navBtn = null) {
+  navBtn?.classList.add("active-nav-btn");
   const activeForm = document.getElementById(formStr);
   // remove the if later--------
   if (activeForm) {

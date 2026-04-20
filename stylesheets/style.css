@@ -227,3 +227,41 @@ body:not(#add-body):not(#update-body) {
     }
   }
 }
+
+.page-message {
+  --msg-clr: var(--error-color);
+  position: fixed;
+  font-size: 1.5rem;
+  top: 8rem;
+  left: -35rem;
+  max-width: 30ch;
+  border-inline-start: 5px solid var(--msg-clr);
+  border-radius: 25px;
+  corner-top-left-shape: scoop;
+  corner-bottom-left-shape: scoop;
+  padding: 1rem 2rem;
+  color: white;
+  z-index: 9999;
+  background-color: hsl(from var(--msg-clr) h s l / 0.5);
+}
+
+.msg-animation {
+  animation: toast-in 0.3s ease forwards;
+}
+
+.msg-animation-undo {
+  animation: toast-out 0.3s ease forwards;
+}
+@keyframes toast-in {
+  to {
+    left: 1rem;
+  }
+}
+@keyframes toast-out {
+  from {
+    left: 1rem;
+  }
+  to {
+    left: -35rem;
+  }
+}

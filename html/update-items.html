@@ -16,6 +16,10 @@
     />
     <link
       rel="stylesheet"
+      href="../stylesheets/add-edit.css"
+    />
+    <link
+      rel="stylesheet"
       href="../stylesheets/update-items.css"
     />
     <script
@@ -41,7 +45,7 @@
   </head>
 
   <body id="update-body">
-    <div class="update-page-message"></div>
+    <div class="page-message"></div>
     <header>
       <div class="heading-img-wrapper">
         <a href="index.html">
@@ -110,7 +114,407 @@
         <button type="submit">load data</button>
       </div>
     </form>
-    <main></main>
+    <main>
+      <!-- -----------------------------------------------CD COMPS -->
+      <form id="cd-comps-form">
+        <h2 class="cd-comp-color">Cd Compilations Form</h2>
+        <div class="form-groups-wrapper">
+          <div class="form-group">
+            <label for="cd-comps-title">title</label>
+            <input
+              type="text"
+              name="title"
+              id="cd-comps-title"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cd-comps-year">year</label>
+            <input
+              type="text"
+              name="year"
+              id="cd-comps-year"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cd-comps-location">location</label>
+            <input
+              list=""
+              name="location"
+              id="cd-comps-location"
+              autocomplete="off"
+            />
+            <datalist id="cd-comps-datalist"> </datalist>
+          </div>
+          <div class="form-group">
+            <label for="cd-comps-tracks"
+              >track <span class="comps-line-ctr">1</span></label
+            >
+            <textarea
+              name="tracks"
+              id="cd-comps-tracks"
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <button>submit</button>
+        </div>
+      </form>
+
+      <!-- ------------------------------------------------------CD SINGLES -->
+      <form id="cd-singles-form">
+        <h2 class="cd-single-color">Cd Singles Form</h2>
+        <div class="form-groups-wrapper">
+          <div class="form-group">
+            <label for="cd-singles-artist">artist</label>
+            <input
+              type="text"
+              name="artist"
+              id="cd-singles-artist"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cd-singles-title">title</label>
+            <input
+              type="text"
+              name="title"
+              id="cd-singles-title"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="cd-singles-case-type">case type/location</label>
+            <input
+              list=""
+              name="caseType"
+              id="cd-singles-case-type"
+              autocomplete="off"
+            />
+            <datalist id="cd-singles-datalist"> </datalist>
+          </div>
+          <div class="form-group">
+            <label for="cd-singles-year">year</label>
+            <input
+              type="text"
+              name="year"
+              id="cd-singles-year"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cd-singles-tracks"
+              >track <span class="sing-line-ctr">1</span></label
+            >
+            <textarea
+              name="tracks"
+              id="cd-singles-tracks"
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <button>submit</button>
+        </div>
+      </form>
+
+      <!-- ----------------------------------------------------CDS MAIN -->
+      <form id="cd-main-form">
+        <h2 class="cds-main-color">Cd Main Catalog Form</h2>
+        <div class="form-groups-wrapper">
+          <div class="form-group">
+            <label for="cds-main-artist">artist</label>
+            <input
+              type="text"
+              name="artist"
+              id="cds-main-artist"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cds-main-title">title</label>
+            <input
+              type="text"
+              name="title"
+              id="cds-main-title"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cds-main-location">location</label>
+            <input
+              list=""
+              name="location"
+              id="cds-main-location"
+              autocomplete="off"
+            />
+            <datalist id="cds-main-datalist"> </datalist>
+          </div>
+          <button>submit</button>
+        </div>
+      </form>
+
+      <!-- ----------------------------------------------------RECORDS -->
+      <form id="records-form">
+        <h2 class="record-color">Records Form</h2>
+        <div class="form-groups-wrapper">
+          <div class="form-group">
+            <label for="records-artist">artist</label>
+            <input
+              type="text"
+              name="artist"
+              id="records-artist"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="records-title">title</label>
+            <input
+              type="text"
+              name="title"
+              id="records-title"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="records-location">location</label>
+            <input
+              list=""
+              name="location"
+              id="records-location"
+              autocomplete="off"
+            />
+            <datalist id="records-datalist"> </datalist>
+          </div>
+          <div class="form-group">
+            <label for="records-year">year</label>
+            <input
+              type="text"
+              name="year"
+              id="records-year"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="records-diameter">diameter</label>
+            <select
+              name="diameter"
+              id="records-diameter"
+            >
+              <option
+                style="background-color: var(--body-bg)"
+                value="12 inch"
+              >
+                12 inch
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="10 inch"
+              >
+                10 inch
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="7 inch"
+              >
+                7 inch
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="records-sleeve-cond">sleeve condition</label>
+            <select
+              name="sleeveCondition"
+              id="records-sleeve-cond"
+            >
+              <option
+                style="background-color: var(--body-bg)"
+                value="na"
+              >
+                na
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="*"
+              >
+                *
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="**"
+              >
+                **
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="***"
+                selected="true"
+              >
+                ***
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="****"
+              >
+                ****
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="*****"
+              >
+                *****
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="records-record-cond">record condition</label>
+            <select
+              name="recordCondition"
+              id="records-record-cond"
+            >
+              <option
+                style="background-color: var(--body-bg)"
+                value="*"
+              >
+                *
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="**"
+              >
+                **
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="***"
+                selected="true"
+              >
+                ***
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="****"
+              >
+                ****
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="*****"
+              >
+                *****
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="records-label">label</label>
+            <input
+              type="text"
+              name="label"
+              id="records-label"
+              autocomplete="off"
+            />
+          </div>
+          <button>submit</button>
+        </div>
+      </form>
+
+      <!-- -------------------------------------------------------TAPES -->
+      <form id="tapes-form">
+        <h2 class="tape-color">Tapes Form</h2>
+        <div class="form-groups-wrapper">
+          <div class="form-group">
+            <label for="tapes-artist">artist</label>
+            <input
+              type="text"
+              name="artist"
+              id="tapes-artist"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="tapes-title">title</label>
+            <input
+              type="text"
+              name="title"
+              id="tapes-title"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="tapes-location">location</label>
+            <input
+              list=""
+              name="location"
+              id="tapes-location"
+              autocomplete="off"
+            />
+            <datalist id="tapes-datalist"> </datalist>
+          </div>
+          <div class="form-group">
+            <label for="tapes-year">year</label>
+            <input
+              type="text"
+              name="year"
+              id="tapes-year"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <fieldset>
+              <legend>needs repair?</legend>
+
+              <div class="radio-group">
+                <label for="yes">yes</label>
+                <input
+                  type="radio"
+                  name="needsRepair"
+                  id="yes"
+                  value="Yes"
+                />
+              </div>
+
+              <div class="radio-group">
+                <label for="no">no</label>
+                <input
+                  type="radio"
+                  name="needsRepair"
+                  id="no"
+                  value="No"
+                />
+              </div>
+            </fieldset>
+          </div>
+          <div class="form-group">
+            <label for="tape-speed">tape speed</label>
+            <select
+              name="tapeSpeed"
+              id="tape-speed"
+            >
+              <option
+                style="background-color: var(--body-bg)"
+                value="na"
+              >
+                na
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="3 3/4 ips"
+              >
+                3 3/4 ips
+              </option>
+              <option
+                style="background-color: var(--body-bg)"
+                value="7 1/4 ips"
+              >
+                7 1/4 ips
+              </option>
+            </select>
+          </div>
+          <button>submit</button>
+        </div>
+      </form>
+    </main>
     <div
       class="scratch-pad"
       title="scratch-pad"

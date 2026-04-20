@@ -4,6 +4,7 @@ const scratchPad = document.querySelector(".scratch-pad");
 const scratchPadSpan = document.querySelector(".scratch-pad span");
 const textArea = document.getElementById("scratch-pad");
 
+// this is a notepad that persists between pages
 scratchPadSpan.addEventListener("click", (e) => {
   drawerIsOpen = !drawerIsOpen;
   if (drawerIsOpen) {
@@ -19,7 +20,11 @@ scratchPadSpan.addEventListener("click", (e) => {
 textArea.addEventListener("input", (e) => {
   addToSessionStore("", e.target.value, "scratchPad");
 });
-// populate the text area with the session store value on page load
+
+/**
+ * populate the text area with the session store value
+ * @returns {void}
+ */
 async function loadScratchPadVal() {
   const scratchPadCurrVal = await sessionStore.sessionGet(
     "sessionGet",
@@ -31,4 +36,5 @@ async function loadScratchPadVal() {
   }
 }
 
+// on page load
 loadScratchPadVal();
