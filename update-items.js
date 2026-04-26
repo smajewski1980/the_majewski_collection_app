@@ -17,6 +17,7 @@ const btnTapes = document.querySelector(".btn-tapes");
 const navButtons = [btnComps, btnSingles, btnMain, btnRecords, btnTapes];
 const btnUpdateSubmit = document.querySelector("#update-id-form button");
 const updateIdInput = document.getElementById("update-id");
+const updateForm = document.getElementById("update-id-form");
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
 const cdsMainForm = document.getElementById("cd-main-form");
@@ -31,6 +32,8 @@ const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
  * @returns {void}
  */
 function handleNavBtnClick(e) {
+  if (currentForm) return;
+
   currentForm = e.target.dataset.form;
   removeActiveClass(navButtons);
   e.target.classList.add("active-nav-btn");
@@ -38,6 +41,16 @@ function handleNavBtnClick(e) {
 
 function handleUpdateIdSubmit(e) {
   e.preventDefault();
+
+  if (!updateIdInput.value) {
+    toasty("Please enter an id to update.", "red");
+    return;
+  }
+
+  if (!currentForm) {
+    toasty("Please select a format to update an item.", "red");
+    return;
+  }
 
   if (!initialLoad) {
     document.startViewTransition(() => {
@@ -51,16 +64,6 @@ function handleUpdateIdSubmit(e) {
     // on the initial load, display the increment location option and the main element
     initialShowForm(mainEl, null);
     initialLoad = false;
-  }
-
-  if (!updateIdInput.value) {
-    toasty("Please enter and id to update.", "red");
-    return;
-  }
-
-  if (!currentForm) {
-    toasty("Please select a format to update an item.", "red");
-    return;
   }
 
   const id = updateIdInput.value;
@@ -104,3 +107,9 @@ cdCompsForm.addEventListener("submit", handleCdCompsForm);
 cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
+
+updateForm.addEventListener("reset", () => {
+  removeActiveClass(navButtons);
+  removeActiveFormClass(forms);
+  currentForm = null;
+});
