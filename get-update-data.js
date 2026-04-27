@@ -2,11 +2,52 @@ import { toasty } from "./add-utils.js";
 
 export async function getCdCompsDataById(id) {
   const vals = { format: "cd-compilations", field: "title_id", term: id };
-  console.log("id is:", id);
+
+  try {
+    const res = await handleQueryValues.handleQueryValues(
+      "handleQueryValues",
+      vals,
+    );
+
+    if (!res.length) {
+      throw new Error("No compilations found with that id.");
+    }
+
+    const finessedCompData = { ...res[0] };
+    finessedCompData["tracks"] = [];
+    res.forEach((row) => {
+      finessedCompData.tracks.push([row.artist, row.track_name]);
+    });
+
+    return finessedCompData;
+  } catch (error) {
+    toasty(error);
+  }
 }
 export async function getCdSinglesDataById(id) {
   const vals = { format: "cd-singles", field: "single_id", term: id };
-  console.log("id is:", id);
+
+  try {
+    const res = await handleQueryValues.handleQueryValues(
+      "handleQueryValues",
+      vals,
+    );
+
+    if (!res.length) {
+      throw new Error("No singles found with that id.");
+    }
+
+    const finessedSingleData = { ...res[0] };
+    finessedSingleData["tracks"] = [];
+    finessedSingleData["caseType"] = finessedSingleData.case_type;
+    res.forEach((row) => {
+      finessedSingleData.tracks.push(row.track_name);
+    });
+
+    return finessedSingleData;
+  } catch (error) {
+    toasty(error);
+  }
 }
 export async function getCdsMainDataById(id) {
   const vals = { format: "cds", field: "id", term: id };

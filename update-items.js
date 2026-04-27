@@ -85,10 +85,22 @@ btnUpdateSubmit.addEventListener("click", handleUpdateIdSubmit);
 async function showUpdateForm(formStr, id) {
   switch (formStr) {
     case "cd-comps-form":
-      populateCdCompsFormFields(forms[0], getCdCompsDataById(id));
+      const cdCompData = await getCdCompsDataById(id);
+
+      if (!cdCompData) {
+        document.getElementById(currentForm).classList.remove("active-form");
+      }
+
+      populateCdCompsFormFields(forms[0], cdCompData);
       break;
     case "cd-singles-form":
-      populateCdSinglesFormFields(forms[1], getCdSinglesDataById(id));
+      const cdSingleData = await getCdSinglesDataById(id);
+
+      if (!cdSingleData) {
+        document.getElementById(currentForm).classList.remove("active-form");
+      }
+
+      populateCdSinglesFormFields(forms[1], cdSingleData);
       break;
     case "cd-main-form":
       const cdData = await getCdsMainDataById(id);
