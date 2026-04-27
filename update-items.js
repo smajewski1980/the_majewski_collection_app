@@ -37,7 +37,6 @@ const cdSinglesForm = document.getElementById("cd-singles-form");
 const cdsMainForm = document.getElementById("cd-main-form");
 const recordsForm = document.getElementById("records-form");
 const tapesForm = document.getElementById("tapes-form");
-
 const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
 
 /**
@@ -53,6 +52,12 @@ function handleNavBtnClick(e) {
   e.target.classList.add("active-nav-btn");
 }
 
+/**
+ * check input has a value and a form was selected,
+ * populate and show the form
+ * @param {Event} e
+ * @returns {void}
+ */
 function handleUpdateIdSubmit(e) {
   e.preventDefault();
 
@@ -72,7 +77,8 @@ function handleUpdateIdSubmit(e) {
   initialShowForm(mainEl, null);
 
   const id = updateIdInput.value;
-  showUpdateForm(currentForm, id);
+
+  handlePopulateUpdateForm(currentForm, id);
 }
 
 // add the listeners to the nav btns
@@ -82,7 +88,13 @@ navButtons.forEach((btn) => {
 
 btnUpdateSubmit.addEventListener("click", handleUpdateIdSubmit);
 
-async function showUpdateForm(formStr, id) {
+/**
+ * gets the given id's data and populates the appropriate form
+ * @param {string} formStr
+ * @param {number} id
+ * @returns {void}
+ */
+async function handlePopulateUpdateForm(formStr, id) {
   switch (formStr) {
     case "cd-comps-form":
       const cdCompData = await getCdCompsDataById(id);
