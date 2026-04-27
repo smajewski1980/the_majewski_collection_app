@@ -37,6 +37,7 @@ export function populateCdCompsFormFields(form, data) {
 export function populateCdSinglesFormFields(form, data) {
   const [artist, title, location, year] = form.querySelectorAll("input");
   const textarea = form.querySelector("textarea");
+  textarea.value = "";
 
   artist.value = data.artist;
   title.value = data.title;
@@ -91,7 +92,9 @@ export function populateRecordsFormFields(form, data) {
   label.value = data.label;
   diameter.value = data.diameter;
 
-  sleeveCondition.value = data.sleeve_condition;
+  data.sleeve_condition
+    ? (sleeveCondition.value = data.sleeve_condition)
+    : "na";
   recordCondition.value = data.record_condition;
 }
 
