@@ -7,7 +7,7 @@
  * @param {string} data.location
  * @returns {void}
  */
-function populateCdCompsFormFields(form, data) {
+export function populateCdCompsFormFields(form, data) {
   const [title, year, location] = form.querySelectorAll("input");
   const textarea = form.querySelector("textarea");
 
@@ -34,7 +34,7 @@ function populateCdCompsFormFields(form, data) {
  * @param {string} data.year
  * @returns {void}
  */
-function populateCdSinglesFormFields(form, data) {
+export function populateCdSinglesFormFields(form, data) {
   const [artist, title, location, year] = form.querySelectorAll("input");
   const textarea = form.querySelector("textarea");
 
@@ -57,7 +57,7 @@ function populateCdSinglesFormFields(form, data) {
  * @param {string} data.location
  * @returns {void}
  */
-function populateCdMainFormFields(form, data) {
+export function populateCdMainFormFields(form, data) {
   const [artist, title, location] = form.querySelectorAll("input");
 
   artist.value = data.artist;
@@ -79,7 +79,7 @@ function populateCdMainFormFields(form, data) {
  * @param {string} data.recordCondition
  * @returns {void}
  */
-function populateRecordsFormFields(form, data) {
+export function populateRecordsFormFields(form, data) {
   const [artist, title, location, year, label] = form.querySelectorAll("input");
   const [diameter, sleeveCondition, recordCondition] =
     form.querySelectorAll("select");
@@ -107,7 +107,7 @@ function populateRecordsFormFields(form, data) {
  * @param {string} data.speed
  * @returns {void}
  */
-function populateTapesFormFields(form, data) {
+export function populateTapesFormFields(form, data) {
   const [artist, title, location, year] = form.querySelectorAll("input");
   const radioBtns = form.querySelectorAll('input[type="radio"]');
   const speed = form.querySelector("select");
@@ -116,7 +116,7 @@ function populateTapesFormFields(form, data) {
   title.value = data.title;
   location.value = data.location;
   year.value = data.year;
-  speed.value = data.speed;
+  data.speed ? (speed.value = data.speed) : (speed.value = "na");
 
   data.needsRepair === "Yes"
     ? (radioBtns[0].checked = true)

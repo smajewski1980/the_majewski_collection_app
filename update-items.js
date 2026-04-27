@@ -5,6 +5,20 @@ import {
   initialShowForm,
   toasty,
 } from "./add-utils.js";
+import {
+  populateCdCompsFormFields,
+  populateCdSinglesFormFields,
+  populateCdMainFormFields,
+  populateRecordsFormFields,
+  populateTapesFormFields,
+} from "./last-entry.js";
+import {
+  getCdCompsDataById,
+  getCdSinglesDataById,
+  getCdsMainDataById,
+  getRecordsDataById,
+  getTapesDataById,
+} from "./get-update-data.js";
 import { getLocations } from "./get-current-locations.js";
 const mainEl = document.querySelector("main");
 let initialLoad = true;
@@ -52,19 +66,10 @@ function handleUpdateIdSubmit(e) {
     return;
   }
 
-  if (!initialLoad) {
-    document.startViewTransition(() => {
-      removeActiveFormClass(forms);
-      // the first arg is the id of the form to show, second arg is the nav btn
-      showForm(currentForm);
-    });
-  } else {
-    showForm(currentForm);
+  showForm(currentForm);
 
-    // on the initial load, display the increment location option and the main element
-    initialShowForm(mainEl, null);
-    initialLoad = false;
-  }
+  // on the initial load, display the increment location option and the main element
+  initialShowForm(mainEl, null);
 
   const id = updateIdInput.value;
   showUpdateForm(currentForm, id);
@@ -77,8 +82,32 @@ navButtons.forEach((btn) => {
 
 btnUpdateSubmit.addEventListener("click", handleUpdateIdSubmit);
 
-function showUpdateForm(formStr, id) {
-  console.log(formStr, id);
+async function showUpdateForm(formStr, id) {
+  switch (formStr) {
+    case "cd-comps-form":
+      populateCdCompsFormFields(forms[0], getCdCompsDataById(id));
+      break;
+    case "cd-singles-form":
+      populateCdSinglesFormFields(forms[1], getCdSinglesDataById(id));
+      break;
+    case "cd-main-form":
+      populateCdMainFormFields(forms[2], getCdsMainDataById(id));
+      break;
+    case "records-form":
+      populateRecordsFormFields(forms[3], getRecordsDataById(id));
+      break;
+    case "tapes-form":
+      const data = await getTapesDataById(id);
+
+      if (!data) {
+        document.getElementById(currentForm).classList.remove("active-form");
+      }
+
+      populateTapesFormFields(forms[4], data);
+      break;
+    default:
+      break;
+  }
 }
 
 async function handleCdCompsForm(e) {
