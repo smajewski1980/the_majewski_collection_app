@@ -56,7 +56,6 @@ term.addEventListener("keypress", (e) => {
 // send the data for the query
 btnLookup.addEventListener("click", (e) => {
   handleLookupBtn(e, format.value, field.value, term.value);
-  console.log(field.value);
 });
 
 // "infinite scrolling"

@@ -91,19 +91,33 @@ async function showUpdateForm(formStr, id) {
       populateCdSinglesFormFields(forms[1], getCdSinglesDataById(id));
       break;
     case "cd-main-form":
-      populateCdMainFormFields(forms[2], getCdsMainDataById(id));
-      break;
-    case "records-form":
-      populateRecordsFormFields(forms[3], getRecordsDataById(id));
-      break;
-    case "tapes-form":
-      const data = await getTapesDataById(id);
+      const cdData = await getCdsMainDataById(id);
 
-      if (!data) {
+      if (!cdData) {
         document.getElementById(currentForm).classList.remove("active-form");
       }
 
-      populateTapesFormFields(forms[4], data);
+      populateCdMainFormFields(forms[2], cdData);
+      break;
+    case "records-form":
+      const recordData = await getRecordsDataById(id);
+
+      if (!recordData) {
+        document.getElementById(currentForm).classList.remove("active-form");
+      }
+
+      populateRecordsFormFields(forms[3], recordData);
+
+      break;
+    case "tapes-form":
+      const tapeData = await getTapesDataById(id);
+
+      if (!tapeData) {
+        document.getElementById(currentForm).classList.remove("active-form");
+      }
+
+      populateTapesFormFields(forms[4], tapeData);
+
       break;
     default:
       break;
