@@ -128,7 +128,9 @@ export async function handleCdCompsForm(e) {
         res = await inserts.insertCdComps("insertCdComps", data);
         toasty("item successfully added", "green");
       } else {
-        // fetch update res here
+        data["title_id"] = Number(document.getElementById("update-id").value);
+        res = await updates.updateCdComp("updateCdComp", data);
+        console.log(res);
         toasty("item successfully updated", "green");
       }
 

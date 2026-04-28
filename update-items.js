@@ -149,10 +149,6 @@ async function handlePopulateUpdateForm(formStr, id) {
   }
 }
 
-// async function handleCdCompsForm(e) {
-//   e.preventDefault();
-//   console.log("hello from the handleCdCompsForm");
-// }
 async function handleCdSinglesForm(e) {
   e.preventDefault();
   console.log("hello from the handleCdSinglesForm");

@@ -32,3 +32,7 @@ contextBridge.exposeInMainWorld("sessionStore", {
 contextBridge.exposeInMainWorld("handleAllFormatQuery", {
   handleAllFormatQuery: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("updates", {
+  updateCdComp: (channel, data) => ipcRenderer.invoke(channel, data),
+});
