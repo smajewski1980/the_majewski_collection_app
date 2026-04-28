@@ -20,6 +20,7 @@ import {
   getTapesDataById,
 } from "./get-update-data.js";
 import { getLocations } from "./get-current-locations.js";
+import { handleCdCompsForm } from "./add-script.js";
 const mainEl = document.querySelector("main");
 let initialLoad = true;
 let currentForm = null;
@@ -44,8 +45,8 @@ const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
  * @param {Event} e
  * @returns {void}
  */
-function handleNavBtnClick(e) {
-  if (currentForm) return;
+function handleUpdateNavBtnClick(e) {
+  if (currentForm && updateIdInput.value) return;
 
   currentForm = e.target.dataset.form;
   removeActiveClass(navButtons);
@@ -83,7 +84,7 @@ function handleUpdateIdSubmit(e) {
 
 // add the listeners to the nav btns
 navButtons.forEach((btn) => {
-  btn.addEventListener("click", handleNavBtnClick);
+  btn.addEventListener("click", handleUpdateNavBtnClick);
 });
 
 btnUpdateSubmit.addEventListener("click", handleUpdateIdSubmit);
@@ -148,10 +149,10 @@ async function handlePopulateUpdateForm(formStr, id) {
   }
 }
 
-async function handleCdCompsForm(e) {
-  e.preventDefault();
-  console.log("hello from the handleCdCompsForm");
-}
+// async function handleCdCompsForm(e) {
+//   e.preventDefault();
+//   console.log("hello from the handleCdCompsForm");
+// }
 async function handleCdSinglesForm(e) {
   e.preventDefault();
   console.log("hello from the handleCdSinglesForm");

@@ -254,8 +254,17 @@ export function initialShowForm(mainEl, incrementWrapper) {
  * @param {Array} validArr
  * @returns {Boolean}
  */
-export function isLocValValid(locVal, validArr) {
-  if (validArr.includes(locVal)) {
+export async function isLocValValid(locVal, validArr) {
+  const addPage = "The Majewski Collection Add Items";
+  const updatePage = "The Majewski Collection Update Items";
+  const currPage = document.title;
+  const res = await getCurrentLocations.getCurrentLocations(
+    "getCurrentLocations",
+  );
+
+  if (currPage === addPage && validArr.includes(locVal)) {
+    return true;
+  } else if (currPage === updatePage && res.includes(locVal)) {
     return true;
   } else {
     toasty("Location field does not contain a valid value.", "red");

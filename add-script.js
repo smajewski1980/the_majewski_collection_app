@@ -50,6 +50,7 @@ updateUiSessionList();
  * @returns {void}
  */
 function handleNavBtnClick(e) {
+  if (document.title === "The Majewski Collection Update Items") return;
   if (e.target.classList.contains("active-nav-btn")) {
     document.getElementById(`${e.target.dataset.form}`).reset();
     return;
@@ -78,8 +79,10 @@ function handleNavBtnClick(e) {
  * @param {Event} e
  * @returns {void}
  */
-async function handleCdCompsForm(e) {
+export async function handleCdCompsForm(e) {
   e.preventDefault();
+  // see if add page or update page is the caller
+  const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
   utils.toggleInertEl(currForm, true);
@@ -93,8 +96,7 @@ async function handleCdCompsForm(e) {
   // map the options' text to a valid array
   const validCdCompsLocs = cdCompOptionElems.map((el) => el.value);
 
-  // ----- convert track data from a long string to nested arrays
-  // the whole string
+  // break down the lines of the textarea
   const tracksFull = formData.get("tracks").trim().split("\n");
 
   const data = {
@@ -103,7 +105,6 @@ async function handleCdCompsForm(e) {
     location: formData.get("location"),
     tracks: formatCdCompsTracks(tracksFull, currForm),
   };
-  console.log(data);
 
   if (!noEmptyFields(data, true)) {
     toasty("All fields must be filled out.", "red");
@@ -119,16 +120,21 @@ async function handleCdCompsForm(e) {
 
   if (
     noEmptyFields(data, true) &&
-    isLocValValid(data.location, validCdCompsLocs)
+    (await isLocValValid(data.location, validCdCompsLocs))
   ) {
     try {
-      const res = await inserts.insertCdComps("insertCdComps", data);
+      let res;
+      if (currPage !== "The Majewski Collection Update Items") {
+        res = await inserts.insertCdComps("insertCdComps", data);
+        toasty("item successfully added", "green");
+      } else {
+        // fetch update res here
+        toasty("item successfully updated", "green");
+      }
 
       cdCompsForm.reset();
       handleIncrementReset();
       utils.toggleInertEl(currForm, false);
-
-      toasty("item successfully added", "green");
 
       if (incrementFlag) {
         getLocations();
@@ -142,11 +148,12 @@ async function handleCdCompsForm(e) {
       addToSessionStore("cdComps", data);
 
       focusFirstField(cdCompsForm);
-      console.log("new item id: ", res);
       window.scrollTo(0, 0);
     } catch (error) {
       console.log(error);
     }
+  } else {
+    utils.toggleInertEl(currForm, false);
   }
 }
 
@@ -472,12 +479,12 @@ incrementCheckbox.addEventListener("change", (e) => {
   }
 });
 
-btnLoadLast.addEventListener("click", async (e) => {
-  e.preventDefault();
-  const activeForm = document.querySelector(".active-form");
-  const lastEntry = await getLastEntry(activeForm.id);
+if (document.title === "The Majewski Collection Add Items") {
+  btnLoadLast.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const activeForm = document.querySelector(".active-form");
+    const lastEntry = await getLastEntry(activeForm.id);
 
-  populateFormWithLastEntry(activeForm, lastEntry);
-
-  // console.log(lastEntry);
-});
+    populateFormWithLastEntry(activeForm, lastEntry);
+  });
+}
