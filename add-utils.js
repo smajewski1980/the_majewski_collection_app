@@ -1,3 +1,4 @@
+import utils from "./utils.js";
 const sessionList = document.getElementById("session-list");
 let isToastShowing = false;
 
@@ -59,7 +60,7 @@ export function yearFormatIsGood(year) {
  * @returns {Boolean}
  */
 export function noEmptyFields(data, tracksTrigger) {
-  if (tracksTrigger && !data.tracks) {
+  if (tracksTrigger && (!data.tracks || !data.tracks.length)) {
     return false;
   }
 
@@ -260,4 +261,42 @@ export function isLocValValid(locVal, validArr) {
     toasty("Location field does not contain a valid value.", "red");
     return false;
   }
+}
+
+/**
+ * formats the textarea track data to be ready for insertion to db
+ * @param {Array} tracksArray array of lines from the tracks textarea
+ * @param {HTMLFormElement} currForm
+ * @returns
+ */
+export function formatCdCompsTracks(tracksArray, currForm) {
+  let tracksToSend = [];
+  // break down each track to array of artist and title
+  tracksArray.forEach((tr) => {
+    // i use the pipe to split on
+    const track = tr.split("|");
+    if (track.length !== 2 || track[0].length === 0 || track[1].length === 0) {
+      toasty("Check your track data. Must be <artist>|<title>.", "red");
+      toasty(
+        `${
+          track[0] === ""
+            ? "All tracks must have an artist"
+            : "All tracks must have a track name"
+        }`,
+        "red",
+      );
+      utils.toggleInertEl(currForm, false);
+      return;
+    }
+    if (track.length === 2) {
+      track[0] = track[0].trim();
+      track[1] = track[1].trim();
+      tracksToSend.push(track);
+    } else {
+      toasty("Check your track data. Must be <artist>|<title>.", "red");
+      utils.toggleInertEl(currForm, false);
+      return;
+    }
+  });
+  return tracksToSend;
 }

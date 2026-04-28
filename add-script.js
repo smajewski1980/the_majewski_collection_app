@@ -12,6 +12,7 @@ import {
   initialShowForm,
   isLocValValid,
   addToSessionStore,
+  formatCdCompsTracks,
 } from "./add-utils.js";
 import { populateFormWithLastEntry, getLastEntry } from "./last-entry.js";
 import utils from "./utils.js";
@@ -95,48 +96,14 @@ async function handleCdCompsForm(e) {
   // ----- convert track data from a long string to nested arrays
   // the whole string
   const tracksFull = formData.get("tracks").trim().split("\n");
-  // initialize to undefined to later test easier for empty tracks field
-  let tracksToSend = undefined;
-
-  // loop through and break down each track to array of artist and title
-  tracksFull.forEach((tr) => {
-    // i use the pipe to split on
-    const track = tr.split("|");
-    if (!track[0] || !track[1]) {
-      toasty("Check your track data. Must be <artist>|<title>.", "red");
-      toasty(
-        `${
-          track[0] === ""
-            ? "All tracks must have an artist"
-            : "All tracks must have a track name"
-        }`,
-        "red",
-      );
-      utils.toggleInertEl(currForm, false);
-      return;
-    }
-    if (track.length === 2) {
-      // if still undefined, create an empty array
-      if (!tracksToSend) {
-        tracksToSend = [];
-      }
-      // cleanup and push
-      track[0] = track[0].trim();
-      track[1] = track[1].trim();
-      tracksToSend.push(track);
-    } else {
-      toasty("Check your track data. Must be <artist>|<title>.", "red");
-      utils.toggleInertEl(currForm, false);
-      return;
-    }
-  });
 
   const data = {
     title: formData.get("title"),
     year: Number(formData.get("year")),
     location: formData.get("location"),
-    tracks: tracksToSend,
+    tracks: formatCdCompsTracks(tracksFull, currForm),
   };
+  console.log(data);
 
   if (!noEmptyFields(data, true)) {
     toasty("All fields must be filled out.", "red");
