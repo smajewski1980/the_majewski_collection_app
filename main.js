@@ -16,6 +16,7 @@ const handleInsertCdSingles = require("./ipc-handlers/handleCdSingles");
 const handleAllFormatQuery = require("./ipc-handlers/handleAllFormatQuery");
 const handleUpdateCdComp = require("./ipc-handlers/handleUpdateCdComp");
 const handleUpdateCdSingle = require("./ipc-handlers/handleUpdateCdSingle");
+const handleUpdateCdMain = require("./ipc-handlers/handleUpdateCdMain");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -65,6 +66,7 @@ app.whenReady().then(() => {
   ipcMain.handle("insertCdSingles", handleInsertCdSingles);
   ipcMain.handle("updateCdComp", handleUpdateCdComp);
   ipcMain.handle("updateCdSingle", handleUpdateCdSingle);
+  ipcMain.handle("updateCdMain", handleUpdateCdMain);
 
   ipcMain.on("sessionSet", (e, { key, value }) => {
     // add to the individual format current list for reloading

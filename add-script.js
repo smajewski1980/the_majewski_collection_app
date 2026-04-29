@@ -262,8 +262,9 @@ export async function handleCdSinglesForm(e) {
  * @param {Event} e
  * @returns {void}
  */
-async function handleCdsMainForm(e) {
+export async function handleCdsMainForm(e) {
   e.preventDefault();
+  const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
   utils.toggleInertEl(currForm, true);
@@ -292,18 +293,34 @@ async function handleCdsMainForm(e) {
 
   if (isLocValValid(data.location, validCdsMainLocs)) {
     try {
-      const res = await inserts.insertCdsMain(
-        "insertCdsMain",
-        trimDataFields(data),
-      );
+      let res;
+      if (currPage !== "The Majewski Collection Update Items") {
+        res = await inserts.insertCdsMain(
+          "insertCdsMain",
+          trimDataFields(data),
+        );
+        toasty("item successfully added", "green");
+      } else {
+        data["id"] = Number(document.getElementById("update-id").value);
+        res = await updates.updateCdMain("updateCdMain", trimDataFields(data));
+
+        if (typeof res !== "number") {
+          throw new Error(res);
+        }
+        if (res < 1) {
+          throw new Error(
+            "Please check your fields, no rows have been updated.",
+          );
+        }
+
+        toasty("item successfully updated", "green");
+      }
 
       // if the form submits successfully, clear the form,
       // focus the first field, scroll window to top
       cdsMainForm.reset();
       handleIncrementReset();
-      utils.toggleInertEl(currForm, false);
       focusFirstField(cdsMainForm);
-      toasty("item successfully added", "green");
       window.scrollTo(0, 0);
 
       if (incrementFlag) {
@@ -319,6 +336,8 @@ async function handleCdsMainForm(e) {
       // }
     } catch (error) {
       toasty(error, "red");
+    } finally {
+      utils.toggleInertEl(currForm, false);
     }
   }
 }

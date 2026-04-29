@@ -26,6 +26,8 @@ async function handleUpdateCdComp(e, compData) {
     );
     const trackIds = trackIdsRes.rows.map((row) => row.track_id);
 
+    // if attempting to add additional tracks
+    // will address this later
     if (tracks.length > trackIds.length) {
       throw new Error("Can not ADD tracks here yet, only update.");
     }

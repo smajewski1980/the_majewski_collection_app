@@ -20,7 +20,11 @@ import {
   getTapesDataById,
 } from "./get-update-data.js";
 import { getLocations } from "./get-current-locations.js";
-import { handleCdCompsForm, handleCdSinglesForm } from "./add-script.js";
+import {
+  handleCdCompsForm,
+  handleCdSinglesForm,
+  handleCdsMainForm,
+} from "./add-script.js";
 const mainEl = document.querySelector("main");
 let initialLoad = true;
 let currentForm = null;
@@ -149,10 +153,6 @@ async function handlePopulateUpdateForm(formStr, id) {
   }
 }
 
-async function handleCdsMainForm(e) {
-  e.preventDefault();
-  console.log("hello from the handleCdsMainForm");
-}
 async function handleRecordsForm(e) {
   e.preventDefault();
   console.log("hello from the handleRecordsForm");
