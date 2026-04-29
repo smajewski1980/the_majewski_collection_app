@@ -1,5 +1,18 @@
 const pool = require("../dbconnect");
 
+/**
+ * this takes the cd single data from
+ * the form and does a db update
+ * @param {Event} e
+ * @typedef {object} singleData
+ * @property {string} single_id
+ * @property {string} artist
+ * @property {string} title
+ * @property {string} year
+ * @property {string} caseType
+ * @property {string[]} tracks
+ * @returns {number}
+ */
 async function handleUpdateCdSingle(e, singleData) {
   const { single_id, artist, title, year, caseType, tracks } = singleData;
 
@@ -13,12 +26,15 @@ async function handleUpdateCdSingle(e, singleData) {
     );
     const trackIds = trackIdsRes.rows.map((row) => row.track_id);
 
+    // if attempting to add additional tracks
+    // will address this later
     if (tracks.length > trackIds.length) {
       throw new Error("Can not ADD tracks here yet, only update.");
     }
 
     await client.query("BEGIN");
 
+    // update the single data
     const singleRes = await client.query(
       "UPDATE cd_singles SET artist = $1, title = $2, year = $3, case_type = $4 WHERE single_id = $5",
       [artist, title, year, caseType, single_id],
@@ -26,7 +42,7 @@ async function handleUpdateCdSingle(e, singleData) {
 
     console.log("single update row count", singleRes.rowCount);
 
-    // construct a formatted array to use in the query
+    // construct a formatted array to use in the update query
     const tracksArray = [];
     let queryVars = "";
     let trackIdCounter = 0;
