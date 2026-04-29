@@ -14,7 +14,6 @@ async function handleUpdateCdComp(e, compData) {
     );
     const trackIds = trackIdsRes.rows.map((row) => row.track_id);
 
-    // await pool.query("BEGIN");
     await client.query("BEGIN");
 
     // update the cd compilations table

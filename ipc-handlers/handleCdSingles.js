@@ -15,11 +15,13 @@ const pool = require("../dbconnect.js");
 async function handleCdSingles(e, singlesData) {
   const { artist, title, year, caseType, tracks } = singlesData;
 
+  const client = await pool.connect();
+
   try {
-    // begin transaction
-    await pool.query("BEGIN");
+    await client.query("BEGIN");
+
     // insert single and get single id for track insert
-    const result = await pool.query(
+    const result = await client.query(
       "INSERT INTO cd_singles(artist, title, year, case_type) VALUES($1, $2, $3, $4) RETURNING single_id",
       [artist, title, year, caseType],
     );
@@ -40,23 +42,25 @@ async function handleCdSingles(e, singlesData) {
 
     // insert track info
     try {
-      await pool.query(
+      await client.query(
         `INSERT INTO cd_singles_tracks(track_name, single_id) VALUES${queryVars}`,
         [...tracksArray],
       );
 
       // commit transaction and return id
-      await pool.query("COMMIT");
+      await client.query("COMMIT");
       console.log(`Single ${title} by ${artist} has been committed to the db.`);
       return singleId;
     } catch (error) {
-      await pool.query("ROLLBACK");
+      await client.query("ROLLBACK");
       console.log(error);
       return;
     }
   } catch (error) {
     console.log(error);
-    await pool.query("ROLLBACK");
+    await client.query("ROLLBACK");
+  } finally {
+    client.release();
   }
 }
 
