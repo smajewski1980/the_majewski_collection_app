@@ -130,7 +130,12 @@ export async function handleCdCompsForm(e) {
       } else {
         data["title_id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateCdComp("updateCdComp", data);
-        console.log(res);
+
+        if (typeof res !== "number") {
+          toasty(res);
+          throw new Error(res);
+        }
+
         toasty("item successfully updated", "green");
       }
 
@@ -153,6 +158,8 @@ export async function handleCdCompsForm(e) {
       window.scrollTo(0, 0);
     } catch (error) {
       console.log(error);
+    } finally {
+      utils.toggleInertEl(currForm, false);
     }
   } else {
     utils.toggleInertEl(currForm, false);
@@ -164,8 +171,9 @@ export async function handleCdCompsForm(e) {
  * @param {Event} e
  * @returns {void}
  */
-async function handleCdSinglesForm(e) {
+export async function handleCdSinglesForm(e) {
   e.preventDefault();
+  const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
   utils.toggleInertEl(currForm, true);
@@ -212,15 +220,26 @@ async function handleCdSinglesForm(e) {
     isLocValValid(data.caseType, validCdSingleLocs)
   ) {
     try {
-      const res = await inserts.insertCdSingles("insertCdSingles", data);
+      let res;
+      if (currPage !== "The Majewski Collection Update Items") {
+        res = await inserts.insertCdSingles("insertCdSingles", data);
+        toasty("item successfully added", "green");
+      } else {
+        data["single_id"] = Number(document.getElementById("update-id").value);
+        res = await updates.updateCdSingle("updateCdSingle", data);
+
+        if (typeof res !== "number") {
+          toasty(res);
+          throw new Error(res);
+        }
+
+        toasty("item successfully updated", "green");
+      }
 
       cdSinglesForm.reset();
       handleIncrementReset();
       utils.toggleInertEl(currForm, false);
       focusFirstField(cdSinglesForm);
-      toasty("item successfully added", "green");
-
-      console.log("new item id: ", res);
 
       window.scrollTo(0, 0);
 
@@ -231,6 +250,8 @@ async function handleCdSinglesForm(e) {
       addToSessionStore("cdSingles", data);
     } catch (error) {
       console.log(error);
+    } finally {
+      utils.toggleInertEl(currForm, false);
     }
   }
 }

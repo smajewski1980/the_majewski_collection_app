@@ -1,5 +1,17 @@
 const pool = require("../dbconnect.js");
 
+/**
+ * this takes the cd comp data from
+ * the form and does a db update
+ * @param {Event} e
+ * @typedef {object} compData
+ * @property {string} title_id
+ * @property {string} title
+ * @property {string} year
+ * @property {string} location
+ * @property {string[]} tracks
+ * @returns {number}
+ */
 async function handleUpdateCdComp(e, compData) {
   // console.log(compData);
   const { title_id, title, year, location, tracks } = compData;
@@ -13,6 +25,10 @@ async function handleUpdateCdComp(e, compData) {
       [title_id],
     );
     const trackIds = trackIdsRes.rows.map((row) => row.track_id);
+
+    if (tracks.length > trackIds.length) {
+      throw new Error("Can not ADD tracks here yet, only update.");
+    }
 
     await client.query("BEGIN");
 
@@ -50,9 +66,10 @@ async function handleUpdateCdComp(e, compData) {
         tracksInsertVals,
       );
 
-      console.log("number of rows updated: ", tracksRes.rowCount);
-
       await client.query("COMMIT");
+
+      console.log("number of rows updated: ", tracksRes.rowCount);
+      return tracksRes.rowCount;
     } catch (error) {
       await client.query("ROLLBACK");
       console.log(error);
@@ -61,7 +78,7 @@ async function handleUpdateCdComp(e, compData) {
   } catch (error) {
     await client.query("ROLLBACK");
     console.log(error);
-    return;
+    return error;
   } finally {
     client.release();
   }

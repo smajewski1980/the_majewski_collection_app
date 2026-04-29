@@ -35,4 +35,5 @@ contextBridge.exposeInMainWorld("handleAllFormatQuery", {
 
 contextBridge.exposeInMainWorld("updates", {
   updateCdComp: (channel, data) => ipcRenderer.invoke(channel, data),
+  updateCdSingle: (channel, data) => ipcRenderer.invoke(channel, data),
 });

@@ -10,6 +10,7 @@
 export function populateCdCompsFormFields(form, data) {
   const [title, year, location] = form.querySelectorAll("input");
   const textarea = form.querySelector("textarea");
+  textarea.value = "";
 
   title.value = data.title;
   year.value = data.year;
