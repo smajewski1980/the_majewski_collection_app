@@ -24,6 +24,7 @@ import {
   handleCdCompsForm,
   handleCdSinglesForm,
   handleCdsMainForm,
+  handleRecordsForm,
 } from "./add-script.js";
 const mainEl = document.querySelector("main");
 let initialLoad = true;
@@ -57,6 +58,11 @@ function handleUpdateNavBtnClick(e) {
   e.target.classList.add("active-nav-btn");
 }
 
+function makeInert(el, toBeInert, opac = "1") {
+  el.inert = toBeInert;
+  el.style.opacity = opac;
+}
+
 /**
  * check input has a value and a form was selected,
  * populate and show the form
@@ -84,9 +90,8 @@ function handleUpdateIdSubmit(e) {
   const id = updateIdInput.value;
 
   handlePopulateUpdateForm(currentForm, id);
-  btnUpdateSubmit.inert = true;
-  btnUpdateSubmit.style.opacity = ".5";
-  updateIdInput.inert = true;
+  makeInert(btnUpdateSubmit, true, ".5");
+  makeInert(updateIdInput, true, ".75");
 }
 
 // add the listeners to the nav btns
@@ -156,10 +161,6 @@ async function handlePopulateUpdateForm(formStr, id) {
   }
 }
 
-async function handleRecordsForm(e) {
-  e.preventDefault();
-  console.log("hello from the handleRecordsForm");
-}
 async function handleTapesForm(e) {
   e.preventDefault();
   console.log("hello from the handleTapesForm");
@@ -175,7 +176,6 @@ updateForm.addEventListener("reset", () => {
   removeActiveClass(navButtons);
   removeActiveFormClass(forms);
   currentForm = null;
-  btnUpdateSubmit.inert = false;
-  btnUpdateSubmit.style.opacity = "1";
-  updateIdInput.inert = false;
+  makeInert(btnUpdateSubmit, false);
+  makeInert(updateIdInput, false);
 });

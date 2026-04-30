@@ -41,6 +41,7 @@ const mainEl = document.querySelector("main");
 let initialLoad = true;
 let currentForm = null;
 const btnLoadLast = document.querySelector(".btn-load-last");
+const resetUpdateForm = () => document.getElementById("update-id-form").reset();
 
 updateUiSessionList();
 
@@ -141,6 +142,7 @@ export async function handleCdCompsForm(e) {
         }
 
         toasty("item successfully updated", "green");
+        resetUpdateForm();
       }
 
       cdCompsForm.reset();
@@ -244,6 +246,7 @@ export async function handleCdSinglesForm(e) {
         }
 
         toasty("item successfully updated", "green");
+        resetUpdateForm();
       }
 
       cdSinglesForm.reset();
@@ -318,6 +321,7 @@ export async function handleCdsMainForm(e) {
         if (typeof res !== "number") {
           throw new Error(res);
         }
+
         if (res < 1) {
           throw new Error(
             "Please check your fields, no rows have been updated.",
@@ -325,6 +329,7 @@ export async function handleCdsMainForm(e) {
         }
 
         toasty("item successfully updated", "green");
+        resetUpdateForm();
       }
 
       // if the form submits successfully, clear the form,
@@ -359,8 +364,9 @@ export async function handleCdsMainForm(e) {
  * @param {Event} e
  * @returns {void}
  */
-async function handleRecordsForm(e) {
+export async function handleRecordsForm(e) {
   e.preventDefault();
+  const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
   utils.toggleInertEl(currForm, true);
@@ -403,10 +409,30 @@ async function handleRecordsForm(e) {
     isLocValValid(data.location, validRecordsLocs)
   ) {
     try {
-      const res = await inserts.insertRecords(
-        "insertRecords",
-        trimDataFields(data),
-      );
+      let res;
+      if (currPage !== "The Majewski Collection Update Items") {
+        const res = await inserts.insertRecords(
+          "insertRecords",
+          trimDataFields(data),
+        );
+        toasty("item successfully added", "green");
+      } else {
+        data["id"] = Number(document.getElementById("update-id").value);
+        res = await updates.updateRecord("updateRecord", trimDataFields(data));
+
+        if (typeof res !== "number") {
+          throw new Error(res);
+        }
+
+        if (res < 1) {
+          throw new Error(
+            "Please check your fields, no rows have been updated.",
+          );
+        }
+
+        toasty("item successfully updated", "green");
+        resetUpdateForm();
+      }
 
       // if the form submits successfully, clear the form,
       // focus the first field, scroll window to top
@@ -414,7 +440,6 @@ async function handleRecordsForm(e) {
       handleIncrementReset();
       utils.toggleInertEl(currForm, false);
       focusFirstField(recordsForm);
-      toasty("item successfully added", "green");
 
       if (incrementFlag) {
         getLocations();
@@ -430,6 +455,7 @@ async function handleRecordsForm(e) {
       // }
     } catch (error) {
       console.log(error);
+      toasty(error);
     }
   }
 }
