@@ -34,7 +34,7 @@ const btnMain = document.querySelector(".btn-cd-main");
 const btnRecords = document.querySelector(".btn-records");
 const btnTapes = document.querySelector(".btn-tapes");
 const navButtons = [btnComps, btnSingles, btnMain, btnRecords, btnTapes];
-const btnUpdateSubmit = document.querySelector("#update-id-form button");
+const btnUpdateSubmit = document.getElementById("btn-update-submit");
 const updateIdInput = document.getElementById("update-id");
 const updateForm = document.getElementById("update-id-form");
 const cdCompsForm = document.getElementById("cd-comps-form");
@@ -84,6 +84,9 @@ function handleUpdateIdSubmit(e) {
   const id = updateIdInput.value;
 
   handlePopulateUpdateForm(currentForm, id);
+  btnUpdateSubmit.inert = true;
+  btnUpdateSubmit.style.opacity = ".5";
+  updateIdInput.inert = true;
 }
 
 // add the listeners to the nav btns
@@ -91,7 +94,7 @@ navButtons.forEach((btn) => {
   btn.addEventListener("click", handleUpdateNavBtnClick);
 });
 
-btnUpdateSubmit.addEventListener("click", handleUpdateIdSubmit);
+updateForm.addEventListener("submit", handleUpdateIdSubmit);
 
 /**
  * gets the given id's data and populates the appropriate form
@@ -172,4 +175,7 @@ updateForm.addEventListener("reset", () => {
   removeActiveClass(navButtons);
   removeActiveFormClass(forms);
   currentForm = null;
+  btnUpdateSubmit.inert = false;
+  btnUpdateSubmit.style.opacity = "1";
+  updateIdInput.inert = false;
 });

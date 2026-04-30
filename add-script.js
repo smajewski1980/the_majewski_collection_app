@@ -132,8 +132,12 @@ export async function handleCdCompsForm(e) {
         res = await updates.updateCdComp("updateCdComp", data);
 
         if (typeof res !== "number") {
-          toasty(res);
           throw new Error(res);
+        }
+        if (res < 1) {
+          throw new Error(
+            "Please check your fields, no rows have been updated.",
+          );
         }
 
         toasty("item successfully updated", "green");
@@ -158,6 +162,7 @@ export async function handleCdCompsForm(e) {
       window.scrollTo(0, 0);
     } catch (error) {
       console.log(error);
+      toasty(error);
     } finally {
       utils.toggleInertEl(currForm, false);
     }
@@ -232,6 +237,11 @@ export async function handleCdSinglesForm(e) {
           toasty(res);
           throw new Error(res);
         }
+        if (res < 1) {
+          throw new Error(
+            "Please check your fields, no rows have been updated.",
+          );
+        }
 
         toasty("item successfully updated", "green");
       }
@@ -250,6 +260,7 @@ export async function handleCdSinglesForm(e) {
       addToSessionStore("cdSingles", data);
     } catch (error) {
       console.log(error);
+      toasty(error);
     } finally {
       utils.toggleInertEl(currForm, false);
     }

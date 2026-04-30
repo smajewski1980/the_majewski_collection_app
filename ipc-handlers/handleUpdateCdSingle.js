@@ -26,6 +26,8 @@ async function handleUpdateCdSingle(e, singleData) {
     );
     const trackIds = trackIdsRes.rows.map((row) => row.track_id);
 
+    if (!trackIds.length) return 0;
+
     // if attempting to add additional tracks
     // will address this later
     if (tracks.length > trackIds.length) {
@@ -71,8 +73,9 @@ async function handleUpdateCdSingle(e, singleData) {
     } catch (error) {
       await client.query("ROLLBACK");
       console.log(error);
-      return;
+      return error;
     }
+    return singleRes.rowCount;
   } catch (error) {
     console.log(error);
     await client.query("ROLLBACK");
