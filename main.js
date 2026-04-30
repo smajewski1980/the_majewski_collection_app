@@ -18,6 +18,7 @@ const handleUpdateCdComp = require("./ipc-handlers/handleUpdateCdComp");
 const handleUpdateCdSingle = require("./ipc-handlers/handleUpdateCdSingle");
 const handleUpdateCdMain = require("./ipc-handlers/handleUpdateCdMain");
 const handleUpdateRecord = require("./ipc-handlers/handleUpdateRecord");
+const handleUpdateTape = require("./ipc-handlers/handleUpdateTape");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -69,6 +70,7 @@ app.whenReady().then(() => {
   ipcMain.handle("updateCdSingle", handleUpdateCdSingle);
   ipcMain.handle("updateCdMain", handleUpdateCdMain);
   ipcMain.handle("updateRecord", handleUpdateRecord);
+  ipcMain.handle("updateTape", handleUpdateTape);
 
   ipcMain.on("sessionSet", (e, { key, value }) => {
     // add to the individual format current list for reloading

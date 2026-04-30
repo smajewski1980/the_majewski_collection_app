@@ -452,7 +452,6 @@ export async function handleRecordsForm(e) {
       addToSessionStore("", [sessionListStr, "record-color"], "currAdded");
       updateUiSessionList();
       addToSessionStore("records", data);
-      // }
     } catch (error) {
       console.log(error);
       toasty(error);
@@ -466,8 +465,9 @@ export async function handleRecordsForm(e) {
  * @param {Event} e
  * @returns {void}
  */
-async function handleTapesForm(e) {
+export async function handleTapesForm(e) {
   e.preventDefault();
+  const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
   utils.toggleInertEl(currForm, true);
@@ -507,7 +507,27 @@ async function handleTapesForm(e) {
     isLocValValid(data.location, validTapesLocs)
   ) {
     try {
-      const res = await inserts.insertTapes("insertTapes", data);
+      let res;
+      if (currPage !== "The Majewski Collection Update Items") {
+        res = await inserts.insertTapes("insertTapes", trimDataFields(data));
+        toasty("item successfully added", "green");
+      } else {
+        data["id"] = Number(document.getElementById("update-id").value);
+        res = await updates.updateTape("updateTape", trimDataFields(data));
+
+        if (typeof res !== "number") {
+          throw new Error(res);
+        }
+
+        if (res < 1) {
+          throw new Error(
+            "Please check your fields, no rows have been updated.",
+          );
+        }
+
+        toasty("item successfully updated", "green");
+        resetUpdateForm();
+      }
 
       // if the form submits successfully, clear the form,
       // focus the first field, scroll window to top
@@ -515,7 +535,6 @@ async function handleTapesForm(e) {
       handleIncrementReset();
       utils.toggleInertEl(currForm, false);
       focusFirstField(tapesForm);
-      toasty("item successfully added", "green");
 
       if (incrementFlag) {
         getLocations();
@@ -530,6 +549,7 @@ async function handleTapesForm(e) {
       addToSessionStore("tapes", data);
     } catch (error) {
       console.log(error);
+      toasty(error);
     }
   }
 }

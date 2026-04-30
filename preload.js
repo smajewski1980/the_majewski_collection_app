@@ -38,4 +38,5 @@ contextBridge.exposeInMainWorld("updates", {
   updateCdSingle: (channel, data) => ipcRenderer.invoke(channel, data),
   updateCdMain: (channel, data) => ipcRenderer.invoke(channel, data),
   updateRecord: (channel, data) => ipcRenderer.invoke(channel, data),
+  updateTape: (channel, data) => ipcRenderer.invoke(channel, data),
 });

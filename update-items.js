@@ -25,6 +25,7 @@ import {
   handleCdSinglesForm,
   handleCdsMainForm,
   handleRecordsForm,
+  handleTapesForm,
 } from "./add-script.js";
 const mainEl = document.querySelector("main");
 let initialLoad = true;
@@ -159,11 +160,6 @@ async function handlePopulateUpdateForm(formStr, id) {
     default:
       break;
   }
-}
-
-async function handleTapesForm(e) {
-  e.preventDefault();
-  console.log("hello from the handleTapesForm");
 }
 
 cdsMainForm.addEventListener("submit", handleCdsMainForm);
