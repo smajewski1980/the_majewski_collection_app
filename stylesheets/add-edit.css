@@ -512,6 +512,10 @@
     color: light-dark(var(--clr-tapes));
     border-color: light-dark(var(--clr-tapes));
   }
+
+  .update-color {
+    color: light-dark(var(--clr-update));
+  }
 }
 
 ::view-transition-group(form-transition) {

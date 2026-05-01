@@ -26,6 +26,8 @@
 
   --clr-tapes: hsl(244, 87%, 42%), hsl(244, 100%, 75%);
 
+  --clr-update: hsl(0, 100%, 50%), hsl(0, 100%, 50%);
+
   --heading-font: big-party;
 
   --body-bg: light-dark(rgb(187, 187, 187), black);
