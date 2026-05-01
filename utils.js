@@ -309,6 +309,10 @@ const utils = {
     }
   },
   resultPopover: document.getElementById("info-popover"),
+  makeInert: (el, toBeInert, opac = "1") => {
+    el.inert = toBeInert;
+    el.style.opacity = opac;
+  },
 };
 
 export default utils;

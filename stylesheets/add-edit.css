@@ -179,7 +179,7 @@
   }
 
   main {
-    opacity: 0;
+    /* opacity: 0; */
     transition: opacity 500ms;
     display: grid;
     grid-template-columns: 60% 38%;
@@ -437,6 +437,7 @@
 
     .increment-wrapper {
       width: 100%;
+      grid-column: 2;
 
       & * {
         cursor: pointer;

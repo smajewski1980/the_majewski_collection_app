@@ -107,7 +107,7 @@ export async function handleCdCompsForm(e) {
   const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
-  utils.toggleInertEl(currForm, true);
+  utils.makeInert(currForm, true);
 
   const formData = new FormData(cdCompsForm);
 
@@ -130,13 +130,13 @@ export async function handleCdCompsForm(e) {
 
   if (!noEmptyFields(data, true)) {
     toasty("All fields must be filled out.", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits.", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
@@ -168,7 +168,7 @@ export async function handleCdCompsForm(e) {
 
       cdCompsForm.reset();
       handleIncrementReset();
-      utils.toggleInertEl(currForm, false);
+      utils.makeInert(currForm, false);
 
       if (incrementFlag) {
         getLocations();
@@ -187,10 +187,10 @@ export async function handleCdCompsForm(e) {
       console.log(error);
       toasty(error);
     } finally {
-      utils.toggleInertEl(currForm, false);
+      utils.makeInert(currForm, false);
     }
   } else {
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
   }
 }
 
@@ -204,7 +204,7 @@ export async function handleCdSinglesForm(e) {
   const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
-  utils.toggleInertEl(currForm, true);
+  utils.makeInert(currForm, true);
   // get the form data
   const formData = new FormData(cdSinglesForm);
   // break down the tracks string to an array, each track gets trimmed later
@@ -226,20 +226,20 @@ export async function handleCdSinglesForm(e) {
 
   if (!noEmptyFields(data, true)) {
     toasty("All fields must be filled out.", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
   // if only the tracks are empty
   if (!trackList[0] && noEmptyFields(data, true)) {
     toasty("Please add some tracks.", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
@@ -272,7 +272,7 @@ export async function handleCdSinglesForm(e) {
 
       cdSinglesForm.reset();
       handleIncrementReset();
-      utils.toggleInertEl(currForm, false);
+      utils.makeInert(currForm, false);
       focusFirstField(cdSinglesForm);
 
       window.scrollTo(0, 0);
@@ -286,7 +286,7 @@ export async function handleCdSinglesForm(e) {
       console.log(error);
       toasty(error);
     } finally {
-      utils.toggleInertEl(currForm, false);
+      utils.makeInert(currForm, false);
     }
   }
 }
@@ -302,7 +302,7 @@ export async function handleCdsMainForm(e) {
   const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
-  utils.toggleInertEl(currForm, true);
+  utils.makeInert(currForm, true);
 
   const formData = new FormData(cdsMainForm);
 
@@ -322,7 +322,7 @@ export async function handleCdsMainForm(e) {
 
   if (!noEmptyFields(data, false)) {
     toasty("All fields must be filled out.", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
@@ -374,7 +374,7 @@ export async function handleCdsMainForm(e) {
     } catch (error) {
       toasty(error, "red");
     } finally {
-      utils.toggleInertEl(currForm, false);
+      utils.makeInert(currForm, false);
     }
   }
 }
@@ -390,7 +390,7 @@ export async function handleRecordsForm(e) {
   const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
-  utils.toggleInertEl(currForm, true);
+  utils.makeInert(currForm, false);
 
   const formData = new FormData(recordsForm);
 
@@ -415,13 +415,13 @@ export async function handleRecordsForm(e) {
 
   if (!noEmptyFields(data, false)) {
     toasty("All fields must be filled out.", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
 
@@ -459,7 +459,7 @@ export async function handleRecordsForm(e) {
       // focus the first field, scroll window to top
       recordsForm.reset();
       handleIncrementReset();
-      utils.toggleInertEl(currForm, false);
+      utils.makeInert(currForm, false);
       focusFirstField(recordsForm);
 
       if (incrementFlag) {
@@ -491,7 +491,7 @@ export async function handleTapesForm(e) {
   const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
-  utils.toggleInertEl(currForm, true);
+  utils.makeInert(currForm, true);
 
   const formData = new FormData(tapesForm);
 
@@ -515,12 +515,12 @@ export async function handleTapesForm(e) {
   // input validation
   if (!noEmptyFields(data, false)) {
     toasty("All fields must be filled out.", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
   if (!yearFormatIsGood(data.year)) {
     toasty("Year must be 4 digits", "red");
-    utils.toggleInertEl(currForm, false);
+    utils.makeInert(currForm, false);
     return;
   }
   if (
@@ -554,7 +554,7 @@ export async function handleTapesForm(e) {
       // focus the first field, scroll window to top
       tapesForm.reset();
       handleIncrementReset();
-      utils.toggleInertEl(currForm, false);
+      utils.makeInert(currForm, false);
       focusFirstField(tapesForm);
 
       if (incrementFlag) {

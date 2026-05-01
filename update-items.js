@@ -27,6 +27,7 @@ import {
   handleRecordsForm,
   handleTapesForm,
 } from "./add-script.js";
+import utils from "./utils.js";
 const mainEl = document.querySelector("main");
 let initialLoad = true;
 let currentForm = null;
@@ -59,11 +60,6 @@ function handleUpdateNavBtnClick(e) {
   e.target.classList.add("active-nav-btn");
 }
 
-function makeInert(el, toBeInert, opac = "1") {
-  el.inert = toBeInert;
-  el.style.opacity = opac;
-}
-
 /**
  * check input has a value and a form was selected,
  * populate and show the form
@@ -91,8 +87,8 @@ function handleUpdateIdSubmit(e) {
   const id = updateIdInput.value;
 
   handlePopulateUpdateForm(currentForm, id);
-  makeInert(btnUpdateSubmit, true, ".5");
-  makeInert(updateIdInput, true, ".75");
+  utils.makeInert(btnUpdateSubmit, true, ".5");
+  utils.makeInert(updateIdInput, true, ".75");
 }
 
 // add the listeners to the nav btns
@@ -169,13 +165,14 @@ recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
 
 updateForm.addEventListener("reset", () => {
-  mainEl.style.opacity = "0";
+  console.log("the form should be reset and main should be opac 0");
+  // mainEl.style.opacity = "0";
   setTimeout(() => {
     removeActiveClass(navButtons);
     removeActiveFormClass(forms);
     currentForm = null;
-    makeInert(btnUpdateSubmit, false);
-    makeInert(updateIdInput, false);
+    utils.makeInert(btnUpdateSubmit, false);
+    utils.makeInert(updateIdInput, false);
     initialLoad = true;
   }, 350);
 });
