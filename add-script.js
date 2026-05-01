@@ -36,14 +36,18 @@ const btnRecords = document.querySelector(".btn-records");
 const btnTapes = document.querySelector(".btn-tapes");
 const navButtons = [btnComps, btnSingles, btnMain, btnRecords, btnTapes];
 const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
-const incrementWrapper = document.querySelector(".increment-wrapper");
 const mainEl = document.querySelector("main");
 let initialLoad = true;
 let currentForm = null;
 const btnLoadLast = document.querySelector(".btn-load-last");
 const resetUpdateForm = () => document.getElementById("update-id-form").reset();
+const addedItemsTitle = document.getElementById("added-list-title");
 
 updateUiSessionList();
+
+function changeElClass(el, cl_ss) {
+  el.className = cl_ss;
+}
 
 /**
  * when a nav button is clicked, show the appropriate form
@@ -58,6 +62,23 @@ function handleNavBtnClick(e) {
   }
   currentForm = e.target.dataset.form;
 
+  if (currentForm === "cd-comps-form") {
+    changeElClass(addedItemsTitle, "cd-comp-color");
+    changeElClass(btnLoadLast, "btn-load-last cd-comp-color");
+  } else if (currentForm === "cd-singles-form") {
+    changeElClass(addedItemsTitle, "cd-single-color");
+    changeElClass(btnLoadLast, "btn-load-last cd-single-color");
+  } else if (currentForm === "cd-main-form") {
+    changeElClass(addedItemsTitle, "cds-main-color");
+    changeElClass(btnLoadLast, "btn-load-last cds-main-color");
+  } else if (currentForm === "records-form") {
+    changeElClass(addedItemsTitle, "record-color");
+    changeElClass(btnLoadLast, "btn-load-last record-color");
+  } else {
+    changeElClass(addedItemsTitle, "tape-color");
+    changeElClass(btnLoadLast, "btn-load-last tape-color");
+  }
+
   if (!initialLoad) {
     document.startViewTransition(() => {
       removeActiveFormClass(forms);
@@ -70,7 +91,7 @@ function handleNavBtnClick(e) {
     // document.startViewTransition(() => {})
     showForm(e.target.dataset.form, e.target);
     // on the initial load, display the increment location option and the main element
-    initialShowForm(mainEl, incrementWrapper);
+    initialShowForm(mainEl);
     initialLoad = false;
   }
 }
@@ -411,7 +432,7 @@ export async function handleRecordsForm(e) {
     try {
       let res;
       if (currPage !== "The Majewski Collection Update Items") {
-        const res = await inserts.insertRecords(
+        res = await inserts.insertRecords(
           "insertRecords",
           trimDataFields(data),
         );
@@ -446,7 +467,7 @@ export async function handleRecordsForm(e) {
         toggleIncFlag();
       }
       window.scrollTo(0, 0);
-
+      console.log(res);
       // add item data to the session list
       const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to records.`;
       addToSessionStore("", [sessionListStr, "record-color"], "currAdded");

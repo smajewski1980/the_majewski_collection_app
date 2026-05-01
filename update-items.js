@@ -169,9 +169,13 @@ recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
 
 updateForm.addEventListener("reset", () => {
-  removeActiveClass(navButtons);
-  removeActiveFormClass(forms);
-  currentForm = null;
-  makeInert(btnUpdateSubmit, false);
-  makeInert(updateIdInput, false);
+  mainEl.style.opacity = "0";
+  setTimeout(() => {
+    removeActiveClass(navButtons);
+    removeActiveFormClass(forms);
+    currentForm = null;
+    makeInert(btnUpdateSubmit, false);
+    makeInert(updateIdInput, false);
+    initialLoad = true;
+  }, 350);
 });

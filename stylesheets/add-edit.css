@@ -182,8 +182,8 @@
     opacity: 0;
     transition: opacity 500ms;
     display: grid;
-    grid-template-columns: 65% 35%;
-    padding-inline: 1rem;
+    grid-template-columns: 60% 38%;
+    padding-inline: 2rem;
 
     h2 {
       text-align: start;
@@ -436,8 +436,6 @@
     }
 
     .increment-wrapper {
-      display: none;
-      margin-inline: auto;
       width: 100%;
 
       & * {
@@ -476,7 +474,7 @@
     }
 
     .session-list-wrapper {
-      display: none;
+      /* display: none; */
       width: 100%;
       text-align: center;
 

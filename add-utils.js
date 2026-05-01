@@ -224,12 +224,9 @@ export function removeActiveClass(btns) {
 export function showForm(formStr, navBtn = null) {
   navBtn?.classList.add("active-nav-btn");
   const activeForm = document.getElementById(formStr);
-  // remove the if later--------
-  if (activeForm) {
-    activeForm.classList.add("active-form");
-    activeForm.querySelector("input").focus();
-  }
-  // ---------------
+
+  activeForm.classList.add("active-form");
+  activeForm.querySelector("input").focus();
 }
 
 /**
@@ -239,10 +236,7 @@ export function showForm(formStr, navBtn = null) {
  * @param {HTMLElement} incrementWrapper
  * @returns {void}
  */
-export function initialShowForm(mainEl, incrementWrapper) {
-  if (incrementWrapper) {
-    incrementWrapper.style.display = "block";
-  }
+export function initialShowForm(mainEl) {
   setTimeout(() => {
     mainEl.style.opacity = 1;
   }, 50);
