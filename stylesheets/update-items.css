@@ -25,5 +25,10 @@
         background-color: var(--body-bg);
       }
     }
+
+    .btn-delete {
+      color: light-dark(var(--clr-update));
+      opacity: 0.5;
+    }
   }
 }

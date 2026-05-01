@@ -467,10 +467,15 @@
         display: none;
       }
 
-      .btn-load-last {
+      .btn-load-last,
+      .btn-delete {
         margin-inline: auto;
         display: block;
         margin-block: 0.5rem;
+      }
+
+      .btn-delete {
+        color: light-dark(var(--clr-update));
       }
     }
 
