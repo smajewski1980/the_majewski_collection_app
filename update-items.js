@@ -107,11 +107,14 @@ async function handleIdDelete(e) {
     "Are you sure you want to delete this item?",
   );
   if (confirmed) {
-    console.log("it shall be done");
+    const id = updateIdInput.value;
+    const res = await deleteId.deleteId({ currentForm, id });
+    toasty(res, "red");
+    updateForm.reset();
     return;
   }
 
-  console.log("thats right, we collect not get rid of, no delete.");
+  console.log("Delete aborted.");
 }
 
 /**

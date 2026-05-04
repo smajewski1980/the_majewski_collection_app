@@ -189,8 +189,6 @@ export async function addToSessionStore(
       value: insertedData,
     });
   }
-
-  console.log("item added to sessionStore");
 }
 
 /**
