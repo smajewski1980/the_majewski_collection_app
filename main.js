@@ -77,6 +77,8 @@ app.whenReady().then(() => {
       buttons: ["DELETE ID", "GO BACK"],
       title: "Confirm Delete",
       message: msg,
+      noLink: true,
+      cancelId: 1,
     });
     return res.response === 0; // returns true if 'DELETE ID'
   });
