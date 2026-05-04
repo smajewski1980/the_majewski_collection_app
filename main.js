@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu } = require("electron/main");
+const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron/main");
 const path = require("node:path");
 const fs = require("node:fs");
 const handleGetRecordsFields = require("./ipc-handlers/handleGetRecordsFields");
@@ -71,6 +71,15 @@ app.whenReady().then(() => {
   ipcMain.handle("updateCdMain", handleUpdateCdMain);
   ipcMain.handle("updateRecord", handleUpdateRecord);
   ipcMain.handle("updateTape", handleUpdateTape);
+  ipcMain.handle("showDelConf", async (e, msg) => {
+    const res = await dialog.showMessageBox({
+      type: "warning",
+      buttons: ["DELETE ID", "GO BACK"],
+      title: "Confirm Delete",
+      message: msg,
+    });
+    return res.response === 0; // returns true if 'DELETE ID'
+  });
 
   ipcMain.on("sessionSet", (e, { key, value }) => {
     // add to the individual format current list for reloading

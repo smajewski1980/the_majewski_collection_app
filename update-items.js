@@ -46,6 +46,7 @@ const cdsMainForm = document.getElementById("cd-main-form");
 const recordsForm = document.getElementById("records-form");
 const tapesForm = document.getElementById("tapes-form");
 const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
+const btnDelete = document.querySelector(".btn-delete");
 
 /**
  * when a nav button is clicked, show the appropriate form
@@ -89,6 +90,7 @@ function handleUpdateIdSubmit(e) {
   handlePopulateUpdateForm(currentForm, id);
   utils.makeInert(btnUpdateSubmit, true, ".5");
   utils.makeInert(updateIdInput, true, ".75");
+  utils.makeInert(btnDelete, false, "1");
 }
 
 // add the listeners to the nav btns
@@ -97,6 +99,20 @@ navButtons.forEach((btn) => {
 });
 
 updateForm.addEventListener("submit", handleUpdateIdSubmit);
+btnDelete.addEventListener("click", handleIdDelete);
+
+async function handleIdDelete(e) {
+  e.preventDefault();
+  const confirmed = await deleteId.confirmDeleteId(
+    "Are you sure you want to delete this item?",
+  );
+  if (confirmed) {
+    console.log("it shall be done");
+    return;
+  }
+
+  console.log("thats right, we collect not get rid of, no delete.");
+}
 
 /**
  * gets the given id's data and populates the appropriate form
@@ -165,7 +181,6 @@ recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
 
 updateForm.addEventListener("reset", () => {
-  console.log("the form should be reset and main should be opac 0");
   // mainEl.style.opacity = "0";
   setTimeout(() => {
     removeActiveClass(navButtons);
@@ -173,6 +188,7 @@ updateForm.addEventListener("reset", () => {
     currentForm = null;
     utils.makeInert(btnUpdateSubmit, false);
     utils.makeInert(updateIdInput, false);
+    utils.makeInert(btnDelete, true, ".5");
     initialLoad = true;
   }, 350);
 });

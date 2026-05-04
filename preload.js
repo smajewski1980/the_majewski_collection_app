@@ -40,3 +40,7 @@ contextBridge.exposeInMainWorld("updates", {
   updateRecord: (channel, data) => ipcRenderer.invoke(channel, data),
   updateTape: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("deleteId", {
+  confirmDeleteId: (msg) => ipcRenderer.invoke("showDelConf", msg),
+});
