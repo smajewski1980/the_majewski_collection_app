@@ -26,7 +26,9 @@
 
   --clr-tapes: hsl(244, 87%, 42%), hsl(244, 100%, 75%);
 
-  --clr-update: hsla(0, 100%, 50%, 0.85), hsla(0, 100%, 50%, 0.85);
+  --clr-update: hsla(120, 100%, 50%, 0.85), hsla(120, 100%, 50%, 0.85);
+
+  --clr-delete: hsla(0, 100%, 50%, 0.85), hsla(0, 100%, 50%, 0.85);
 
   --heading-font: big-party;
 

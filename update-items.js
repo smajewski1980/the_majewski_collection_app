@@ -106,15 +106,25 @@ async function handleIdDelete(e) {
   const confirmed = await deleteId.confirmDeleteId(
     "Are you sure you want to delete this item?",
   );
-  if (confirmed) {
-    const id = updateIdInput.value;
-    const res = await deleteId.deleteId({ currentForm, id });
+  let res;
+  try {
+    if (confirmed) {
+      const id = updateIdInput.value;
+      res = await deleteId.deleteId({ currentForm, id });
+
+      return;
+    } else {
+      console.log("Delete aborted.");
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
     toasty(res, "red");
     updateForm.reset();
-    return;
   }
 
-  console.log("Delete aborted.");
+  return;
 }
 
 /**
@@ -130,6 +140,8 @@ async function handlePopulateUpdateForm(formStr, id) {
 
       if (!cdCompData) {
         document.getElementById(currentForm).classList.remove("active-form");
+        updateForm.reset();
+        return;
       }
 
       populateCdCompsFormFields(forms[0], cdCompData);
@@ -139,6 +151,8 @@ async function handlePopulateUpdateForm(formStr, id) {
 
       if (!cdSingleData) {
         document.getElementById(currentForm).classList.remove("active-form");
+        updateForm.reset();
+        return;
       }
 
       populateCdSinglesFormFields(forms[1], cdSingleData);
@@ -148,6 +162,8 @@ async function handlePopulateUpdateForm(formStr, id) {
 
       if (!cdData) {
         document.getElementById(currentForm).classList.remove("active-form");
+        updateForm.reset();
+        return;
       }
 
       populateCdMainFormFields(forms[2], cdData);
@@ -157,6 +173,8 @@ async function handlePopulateUpdateForm(formStr, id) {
 
       if (!recordData) {
         document.getElementById(currentForm).classList.remove("active-form");
+        updateForm.reset();
+        return;
       }
 
       populateRecordsFormFields(forms[3], recordData);
@@ -167,6 +185,8 @@ async function handlePopulateUpdateForm(formStr, id) {
 
       if (!tapeData) {
         document.getElementById(currentForm).classList.remove("active-form");
+        updateForm.reset();
+        return;
       }
 
       populateTapesFormFields(forms[4], tapeData);

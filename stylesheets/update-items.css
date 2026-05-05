@@ -27,7 +27,7 @@
     }
 
     .btn-delete {
-      color: light-dark(var(--clr-update));
+      color: light-dark(var(--clr-delete));
       opacity: 0.5;
     }
   }
