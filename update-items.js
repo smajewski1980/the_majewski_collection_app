@@ -69,7 +69,7 @@ function handleUpdateNavBtnClick(e) {
  * @param {Event} e
  * @returns {void}
  */
-function handleUpdateIdSubmit(e) {
+async function handleUpdateIdSubmit(e) {
   e.preventDefault();
 
   if (!updateIdInput.value) {
@@ -83,7 +83,7 @@ function handleUpdateIdSubmit(e) {
   }
 
   const id = updateIdInput.value;
-  const isGoodId = handlePopulateUpdateForm(currentForm, id);
+  const isGoodId = await handlePopulateUpdateForm(currentForm, id);
   utils.makeInert(btnUpdateSubmit, true, ".5");
   utils.makeInert(updateIdInput, true, ".75");
   utils.makeInert(btnDelete, false, "1");
