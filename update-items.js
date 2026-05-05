@@ -4,6 +4,8 @@ import {
   showForm,
   initialShowForm,
   toasty,
+  updateUiSessionList,
+  addToSessionStore,
 } from "./add-utils.js";
 import {
   populateCdCompsFormFields,
@@ -80,17 +82,18 @@ function handleUpdateIdSubmit(e) {
     return;
   }
 
-  showForm(currentForm);
+  const id = updateIdInput.value;
+  const isGoodId = handlePopulateUpdateForm(currentForm, id);
+  utils.makeInert(btnUpdateSubmit, true, ".5");
+  utils.makeInert(updateIdInput, true, ".75");
+  utils.makeInert(btnDelete, false, "1");
 
   // on the initial load, display the increment location option and the main element
   initialShowForm(mainEl, null);
 
-  const id = updateIdInput.value;
-
-  handlePopulateUpdateForm(currentForm, id);
-  utils.makeInert(btnUpdateSubmit, true, ".5");
-  utils.makeInert(updateIdInput, true, ".75");
-  utils.makeInert(btnDelete, false, "1");
+  if (isGoodId) {
+    showForm(currentForm);
+  }
 }
 
 // add the listeners to the nav btns
@@ -107,21 +110,46 @@ async function handleIdDelete(e) {
     "Are you sure you want to delete this item?",
   );
   let res;
+  let format;
+
+  switch (currentForm) {
+    case "cd-comps-form":
+      format = "cd compilations";
+      break;
+    case "cd-singles-form":
+      format = "cd singles";
+      break;
+    case "cd-main-form":
+      format = "cds main";
+      break;
+    case "records-form":
+      format = "records";
+      break;
+    case "tapes-form":
+      format = "tapes";
+      break;
+    default:
+      break;
+  }
   try {
     if (confirmed) {
       const id = updateIdInput.value;
       res = await deleteId.deleteId({ currentForm, id });
 
+      const sessionListStr = `id: ${id} was deleted from ${format}.`;
+      toasty(res, "red");
+      updateForm.reset();
+      addToSessionStore("", [sessionListStr, "delete-color"], "currAdded");
+      updateUiSessionList();
       return;
     } else {
       console.log("Delete aborted.");
+      toasty("Delete aborted.", "red");
       return;
     }
   } catch (error) {
     console.log(error);
-  } finally {
-    toasty(res, "red");
-    updateForm.reset();
+    toasty(error, "red");
   }
 
   return;
@@ -141,57 +169,57 @@ async function handlePopulateUpdateForm(formStr, id) {
       if (!cdCompData) {
         document.getElementById(currentForm).classList.remove("active-form");
         updateForm.reset();
-        return;
+        return 0;
       }
 
       populateCdCompsFormFields(forms[0], cdCompData);
-      break;
+      return 1;
     case "cd-singles-form":
       const cdSingleData = await getCdSinglesDataById(id);
 
       if (!cdSingleData) {
         document.getElementById(currentForm).classList.remove("active-form");
         updateForm.reset();
-        return;
+        return 0;
       }
 
       populateCdSinglesFormFields(forms[1], cdSingleData);
-      break;
+      return 1;
     case "cd-main-form":
       const cdData = await getCdsMainDataById(id);
 
       if (!cdData) {
         document.getElementById(currentForm).classList.remove("active-form");
         updateForm.reset();
-        return;
+        return 0;
       }
 
       populateCdMainFormFields(forms[2], cdData);
-      break;
+      return 1;
     case "records-form":
       const recordData = await getRecordsDataById(id);
 
       if (!recordData) {
         document.getElementById(currentForm).classList.remove("active-form");
         updateForm.reset();
-        return;
+        return 0;
       }
 
       populateRecordsFormFields(forms[3], recordData);
 
-      break;
+      return 1;
     case "tapes-form":
       const tapeData = await getTapesDataById(id);
 
       if (!tapeData) {
         document.getElementById(currentForm).classList.remove("active-form");
         updateForm.reset();
-        return;
+        return 0;
       }
 
       populateTapesFormFields(forms[4], tapeData);
 
-      break;
+      return 1;
     default:
       break;
   }

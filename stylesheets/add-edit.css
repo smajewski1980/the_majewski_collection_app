@@ -521,6 +521,9 @@
   .update-color {
     color: light-dark(var(--clr-update));
   }
+  .delete-color {
+    color: light-dark(var(--clr-delete));
+  }
 }
 
 ::view-transition-group(form-transition) {
