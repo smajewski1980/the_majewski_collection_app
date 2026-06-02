@@ -30,7 +30,31 @@
       <a href="lookup.html">LOOKUP</a>
       <a href="add-items.html">ADD ITEMS</a>
       <a href="update-items.html">UPDATE ITEMS</a>
-      <button id="btn-update-web">UPDATE WEB CATALOG</button>
+      <button
+        id="btn-update-web"
+        command="show-modal"
+        commandfor="update-confirm-dialog"
+      >
+        UPDATE WEB CATALOG
+      </button>
+      <dialog id="update-confirm-dialog">
+        <div id="dialog-inner">
+          <h2>UPDATE WEB CATALOG</h2>
+          <p>
+            This will gather the most up to date data and update the web
+            catalog.
+          </p>
+
+          <button
+            id="btn-close"
+            command="close"
+            commandfor="update-confirm-dialog"
+          >
+            x
+          </button>
+        </div>
+        <button id="btn-update-confirm">UPDATE</button>
+      </dialog>
     </main>
   </body>
 </html>
