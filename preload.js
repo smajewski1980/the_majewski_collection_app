@@ -45,3 +45,7 @@ contextBridge.exposeInMainWorld("deleteId", {
   confirmDeleteId: (msg) => ipcRenderer.invoke("showDelConf", msg),
   deleteId: (id) => ipcRenderer.invoke("deleteId", id),
 });
+
+contextBridge.exposeInMainWorld("updateWeb", {
+  getWebUpdateData: (channel, data) => ipcRenderer.invoke(channel, data),
+});

@@ -20,6 +20,7 @@ const handleUpdateCdMain = require("./ipc-handlers/handleUpdateCdMain");
 const handleUpdateRecord = require("./ipc-handlers/handleUpdateRecord");
 const handleUpdateTape = require("./ipc-handlers/handleUpdateTape");
 const handleDelete = require("./ipc-handlers/handleDelete");
+const handleGetWebUpdateData = require("./ipc-handlers/handleGetWebUpdateData");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -84,6 +85,7 @@ app.whenReady().then(() => {
     return res.response === 0; // returns true if 'DELETE ID'
   });
   ipcMain.handle("deleteId", handleDelete);
+  ipcMain.handle("getWebUpdateData", handleGetWebUpdateData);
 
   ipcMain.on("sessionSet", (e, { key, value }) => {
     // add to the individual format current list for reloading

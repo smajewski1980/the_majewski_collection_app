@@ -180,6 +180,12 @@ body:not(#add-body):not(#update-body) {
   a:not(:last-child) {
     margin-block-end: 1.5rem;
   }
+
+  #btn-update-web {
+    background-color: var(--bg-color);
+    font-size: 2rem !important;
+    margin-inline: auto;
+  }
 }
 
 .scratch-pad {
