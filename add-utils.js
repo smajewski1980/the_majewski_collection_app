@@ -153,15 +153,53 @@ export async function updateUiSessionList() {
     "sessionGet",
     "currAdded",
   );
+  // this gets refreshed when a page is loaded
+  // if there isnt anything in the list yet return
   if (!currSessionList.length) {
     return;
   }
+
   sessionList.innerHTML = "";
   currSessionList.forEach((item) => {
     const li = document.createElement("li");
-    li.textContent = item[0];
-    li.classList.add(item[1]);
-    sessionList.append(li);
+
+    // if its an update than just put the given string through
+    if (item[1] === "update-color") {
+      li.textContent = item[0];
+      li.classList.add(item[1]);
+      sessionList.append(li);
+      return;
+    }
+
+    // if its a new item that was added
+    for (const i in item[0]) {
+      if (i !== "tracks") {
+        // format and add the non track item info
+        li.textContent += item[0][`${i}`] + " * ";
+        li.classList.add(item[1]);
+        sessionList.append(li);
+      } else {
+        if (item[1] === "cd-comp-color") {
+          // break down and add the comps tracks array
+          item[0][`${i}`].forEach((track) => {
+            const newLi = document.createElement("li");
+            newLi.textContent = `${track[0]} - ${track[1]}`;
+            newLi.classList.add(item[1]);
+            sessionList.append(newLi);
+          });
+        } else {
+          // break down and add the singles tracks
+          item[0].tracks.forEach((track) => {
+            const newLi = document.createElement("li");
+            newLi.textContent = track;
+            newLi.classList.add(item[1]);
+            sessionList.append(newLi);
+          });
+        }
+      }
+    }
+    // cut off the last delineator at the end of the li
+    li.textContent = li.textContent.slice(0, -2);
   });
   sessionList.parentElement.style.display = "block";
 }

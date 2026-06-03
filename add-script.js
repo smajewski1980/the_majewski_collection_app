@@ -122,6 +122,7 @@ export async function handleCdCompsForm(e) {
   const tracksFull = formData.get("tracks").trim().split("\n");
 
   const data = {
+    id: "id will go here",
     title: formData.get("title"),
     year: Number(formData.get("year")),
     location: formData.get("location"),
@@ -152,9 +153,8 @@ export async function handleCdCompsForm(e) {
         toasty("item successfully added", "green");
 
         // add item data to the session list
-        const sessionListStr = `id: ${res} ${data.title} was added to cd comps`;
-        addToSessionStore("", [sessionListStr, "cd-comp-color"], "currAdded");
-        addToSessionStore("cdComps", data);
+        data.id = `id: ${res}`;
+        addToSessionStore("", [data, "cd-comp-color"], "currAdded");
       } else {
         data["title_id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateCdComp("updateCdComp", data);
@@ -176,6 +176,7 @@ export async function handleCdCompsForm(e) {
       }
 
       cdCompsForm.reset();
+      document.querySelector(".comps-line-ctr").textContent = "s";
       handleIncrementReset();
       utils.makeInert(currForm, false);
 
@@ -222,6 +223,7 @@ export async function handleCdSinglesForm(e) {
   const validCdSingleLocs = cdSinglesOptionElems.map((el) => el.value);
 
   const data = {
+    id: "id will go here",
     artist: formData.get("artist"),
     title: formData.get("title"),
     year: Number(formData.get("year")),
@@ -260,9 +262,8 @@ export async function handleCdSinglesForm(e) {
         toasty("item successfully added", "green");
 
         // add item data to the session list
-        const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cd singles.`;
-        addToSessionStore("", [sessionListStr, "cd-single-color"], "currAdded");
-        addToSessionStore("cdSingles", data);
+        data.id = `id: ${res}`;
+        addToSessionStore("", [data, "cd-single-color"], "currAdded");
       } else {
         data["single_id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateCdSingle("updateCdSingle", data);
@@ -285,6 +286,7 @@ export async function handleCdSinglesForm(e) {
       }
 
       cdSinglesForm.reset();
+      document.querySelector(".sing-line-ctr").textContent = "s";
       handleIncrementReset();
       utils.makeInert(currForm, false);
       focusFirstField(cdSinglesForm);
