@@ -376,6 +376,7 @@ export async function handleCdsMainForm(e) {
       // focus the first field, scroll window to top
       cdsMainForm.reset();
       handleIncrementReset();
+      utils.makeInert(currForm, false);
       focusFirstField(cdsMainForm);
       window.scrollTo(0, 0);
 
