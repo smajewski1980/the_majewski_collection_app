@@ -327,6 +327,7 @@ export async function handleCdsMainForm(e) {
   const validCdsMainLocs = cdsMainOptionElems.map((el) => el.value);
 
   const data = {
+    id: "id will go here",
     artist: formData.get("artist"),
     title: formData.get("title"),
     location: formData.get("location"),
@@ -350,9 +351,8 @@ export async function handleCdsMainForm(e) {
         toasty("item successfully added", "green");
 
         // add item data to the session list
-        const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to cds main.`;
-        addToSessionStore("", [sessionListStr, "cds-main-color"], "currAdded");
-        addToSessionStore("cdsMain", data);
+        data.id = `id: ${res}`;
+        addToSessionStore("", [data, "cds-main-color"], "currAdded");
       } else {
         data["id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateCdMain("updateCdMain", trimDataFields(data));
@@ -421,6 +421,7 @@ export async function handleRecordsForm(e) {
   const validRecordsLocs = recordsOptionElems.map((el) => el.value);
 
   const data = {
+    id: "id will go here",
     artist: formData.get("artist"),
     title: formData.get("title"),
     location: formData.get("location"),
@@ -458,9 +459,8 @@ export async function handleRecordsForm(e) {
         toasty("item successfully added", "green");
 
         // add item data to the session list
-        const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to records.`;
-        addToSessionStore("", [sessionListStr, "record-color"], "currAdded");
-        addToSessionStore("records", data);
+        data.id = `id: ${res}`;
+        addToSessionStore("", [data, "record-color"], "currAdded");
       } else {
         data["id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateRecord("updateRecord", trimDataFields(data));
@@ -527,6 +527,7 @@ export async function handleTapesForm(e) {
   const validTapesLocs = tapesOptionElems.map((el) => el.value);
 
   const data = {
+    id: "id will go here",
     artist: formData.get("artist"),
     title: formData.get("title"),
     location: formData.get("location"),
@@ -558,9 +559,8 @@ export async function handleTapesForm(e) {
         toasty("item successfully added", "green");
 
         // add item data to the session list
-        const sessionListStr = `id: ${res} ${data.artist} - ${data.title} was added to tapes.`;
-        addToSessionStore("", [sessionListStr, "tape-color"], "currAdded");
-        addToSessionStore("tapes", data);
+        data.id = `id: ${res}`;
+        addToSessionStore("", [data, "tape-color"], "currAdded");
       } else {
         data["id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateTape("updateTape", trimDataFields(data));

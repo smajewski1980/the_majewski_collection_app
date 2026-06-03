@@ -164,7 +164,7 @@ export async function updateUiSessionList() {
     const li = document.createElement("li");
 
     // if its an update than just put the given string through
-    if (item[1] === "update-color") {
+    if (item[1] === "update-color" || item[1] === "delete-color") {
       li.textContent = item[0];
       li.classList.add(item[1]);
       sessionList.append(li);
@@ -175,7 +175,7 @@ export async function updateUiSessionList() {
     for (const i in item[0]) {
       if (i !== "tracks") {
         // format and add the non track item info
-        li.textContent += item[0][`${i}`] + " * ";
+        li.textContent += item[0][`${i}`] + " , ";
         li.classList.add(item[1]);
         sessionList.append(li);
       } else {
@@ -212,6 +212,8 @@ export async function updateUiSessionList() {
  * @returns {void}
  */
 export async function addToSessionStore(
+  // since we changed and consolidated what gets logged
+  // we can refactor this later
   format,
   insertedData,
   optionalKey = undefined,
