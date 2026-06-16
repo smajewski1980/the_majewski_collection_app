@@ -154,7 +154,11 @@ export async function handleCdCompsForm(e) {
 
         // add item data to the session list
         data.id = `id: ${res}`;
-        addToSessionStore("", [data, "cd-comp-color"], "currAdded");
+        addToSessionStore(
+          "",
+          [data, "cd-comp-color", currForm.id],
+          "currAdded",
+        );
       } else {
         data["title_id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateCdComp("updateCdComp", data);
@@ -170,9 +174,6 @@ export async function handleCdCompsForm(e) {
 
         toasty("item successfully updated", "green");
         resetUpdateForm();
-
-        const sessionListStr = `id: ${data.title_id} ${data.title} was updated in Cd Comps`;
-        addToSessionStore("", [sessionListStr, "update-color"], "currAdded");
       }
 
       cdCompsForm.reset();
@@ -263,7 +264,11 @@ export async function handleCdSinglesForm(e) {
 
         // add item data to the session list
         data.id = `id: ${res}`;
-        addToSessionStore("", [data, "cd-single-color"], "currAdded");
+        addToSessionStore(
+          "",
+          [data, "cd-single-color", currForm.id],
+          "currAdded",
+        );
       } else {
         data["single_id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateCdSingle("updateCdSingle", data);
@@ -280,9 +285,6 @@ export async function handleCdSinglesForm(e) {
 
         toasty("item successfully updated", "green");
         resetUpdateForm();
-
-        const sessionListStr = `id: ${data.single_id} ${data.artist} - ${data.title} was updated in cd singles.`;
-        addToSessionStore("", [sessionListStr, "update-color"], "currAdded");
       }
 
       cdSinglesForm.reset();
@@ -352,7 +354,11 @@ export async function handleCdsMainForm(e) {
 
         // add item data to the session list
         data.id = `id: ${res}`;
-        addToSessionStore("", [data, "cds-main-color"], "currAdded");
+        addToSessionStore(
+          "",
+          [data, "cds-main-color", currForm.id],
+          "currAdded",
+        );
       } else {
         data["id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateCdMain("updateCdMain", trimDataFields(data));
@@ -369,9 +375,6 @@ export async function handleCdsMainForm(e) {
 
         toasty("item successfully updated", "green");
         resetUpdateForm();
-
-        const sessionListStr = `id: ${data.id} ${data.artist} - ${data.title} was updated in cds main.`;
-        addToSessionStore("", [sessionListStr, "update-color"], "currAdded");
       }
 
       // if the form submits successfully, clear the form,
@@ -460,7 +463,7 @@ export async function handleRecordsForm(e) {
 
         // add item data to the session list
         data.id = `id: ${res}`;
-        addToSessionStore("", [data, "record-color"], "currAdded");
+        addToSessionStore("", [data, "record-color", currForm.id], "currAdded");
       } else {
         data["id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateRecord("updateRecord", trimDataFields(data));
@@ -477,9 +480,6 @@ export async function handleRecordsForm(e) {
 
         toasty("item successfully updated", "green");
         resetUpdateForm();
-
-        const sessionListStr = `id: ${data.id} ${data.artist} - ${data.title} was updated in records.`;
-        addToSessionStore("", [sessionListStr, "update-color"], "currAdded");
       }
 
       // if the form submits successfully, clear the form,
@@ -560,7 +560,7 @@ export async function handleTapesForm(e) {
 
         // add item data to the session list
         data.id = `id: ${res}`;
-        addToSessionStore("", [data, "tape-color"], "currAdded");
+        addToSessionStore("", [data, "tape-color", currForm.id], "currAdded");
       } else {
         data["id"] = Number(document.getElementById("update-id").value);
         res = await updates.updateTape("updateTape", trimDataFields(data));
@@ -577,9 +577,6 @@ export async function handleTapesForm(e) {
 
         toasty("item successfully updated", "green");
         resetUpdateForm();
-
-        const sessionListStr = `id: ${data.id} ${data.artist} - ${data.title} was updated in tapes.`;
-        addToSessionStore("", [sessionListStr, "update-color"], "currAdded");
       }
 
       // if the form submits successfully, clear the form,
@@ -631,7 +628,20 @@ if (document.title === "The Majewski Collection Add Items") {
   btnLoadLast.addEventListener("click", async (e) => {
     e.preventDefault();
     const activeForm = document.querySelector(".active-form");
-    const lastEntry = await getLastEntry(activeForm.id);
+
+    const currSessionList = await sessionStore.sessionGet(
+      "sessionGet",
+      "currAdded",
+    );
+    // if there isnt anything in the list yet, return
+    if (!currSessionList.length) {
+      return;
+    }
+
+    const lastEntryForm = currSessionList[0][2];
+    const lastEntry = currSessionList[0][0];
+    // if the last entry was a different format, return
+    if (currentForm !== lastEntryForm) return;
 
     populateFormWithLastEntry(activeForm, lastEntry);
   });
