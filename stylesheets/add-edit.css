@@ -1,5 +1,7 @@
 #add-body,
 #update-body {
+  --gradient-start: white;
+  --gradient-opacity: 0.5;
   color: light-dark(var(--clr-font-main));
   background: var(--body-bg);
   font-family: var(--reg-font);
@@ -15,12 +17,28 @@
     padding: 0.5rem 1rem 0.6rem;
     border-radius: 10px;
     border: none;
-    outline: 3px solid currentColor;
+    outline: 1px solid currentColor;
     box-shadow: 0px 2px 8px currentColor;
+    position: relative;
 
     &:hover {
       scale: 1.05;
       box-shadow: 0px 1px 6px currentColor;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0.2rem 0.15rem 0;
+      border-radius: 50px;
+      corner-shape: squircle;
+      background: linear-gradient(
+        to bottom,
+        rgb(
+          from var(--gradient-start) r g b / calc(var(--gradient-opacity) - 0.2)
+        ),
+        transparent 10%
+      );
     }
   }
 
@@ -89,8 +107,8 @@
     }
   }
   datalist option:hover {
-    --gradient-start: white;
-    --gradient-opacity: 0.5;
+    /* --gradient-start: white;
+    --gradient-opacity: 0.5; */
     background-color: var(--accent-purple) !important;
     color: var(--outline-purple);
   }
