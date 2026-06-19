@@ -478,6 +478,7 @@ export async function handleRecordsForm(e) {
           );
         }
 
+        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
         toasty("item successfully updated", "green");
         resetUpdateForm();
       }

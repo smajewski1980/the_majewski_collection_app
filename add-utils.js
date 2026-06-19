@@ -164,7 +164,7 @@ export async function updateUiSessionList() {
     const li = document.createElement("li");
 
     // if its an update than just put the given string through
-    if (item[1] === "update-color" || item[1] === "delete-color") {
+    if (item[1] === "delete-color") {
       li.textContent = item[0];
       li.classList.add(item[1]);
       sessionList.append(li);
