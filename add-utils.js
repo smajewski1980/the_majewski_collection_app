@@ -163,7 +163,7 @@ export async function updateUiSessionList() {
   currSessionList.forEach((item) => {
     const li = document.createElement("li");
 
-    // if its an update than just put the given string through
+    // if its a delete than just put the given string through
     if (item[1] === "delete-color") {
       li.textContent = item[0];
       li.classList.add(item[1]);
@@ -171,11 +171,13 @@ export async function updateUiSessionList() {
       return;
     }
 
-    // if its a new item that was added
+    // if its a new item that was added or one was updated
     for (const i in item[0]) {
       if (i !== "tracks") {
         // format and add the non track item info
-        li.textContent += item[0][`${i}`] + " , ";
+        if (i !== "title_id" && i !== "single_id") {
+          li.textContent += item[0][`${i}`] + " , ";
+        }
         li.classList.add(item[1]);
         sessionList.append(li);
       } else {

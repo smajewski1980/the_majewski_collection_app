@@ -126,6 +126,7 @@ export async function handleCdCompsForm(e) {
     title: formData.get("title"),
     year: Number(formData.get("year")),
     location: formData.get("location"),
+    title_id: "id will go here",
     tracks: formatCdCompsTracks(tracksFull, currForm),
   };
 
@@ -160,7 +161,10 @@ export async function handleCdCompsForm(e) {
           "currAdded",
         );
       } else {
-        data["title_id"] = Number(document.getElementById("update-id").value);
+        // data["title_id"] = Number(document.getElementById("update-id").value);
+        const updatedId = Number(document.getElementById("update-id").value);
+        data.id = `id: ${updatedId}`;
+        data["title_id"] = updatedId;
         res = await updates.updateCdComp("updateCdComp", data);
 
         if (typeof res !== "number") {
@@ -171,7 +175,8 @@ export async function handleCdCompsForm(e) {
             "Please check your fields, no rows have been updated.",
           );
         }
-
+        console.log(data);
+        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
         toasty("item successfully updated", "green");
         resetUpdateForm();
       }
@@ -229,6 +234,7 @@ export async function handleCdSinglesForm(e) {
     title: formData.get("title"),
     year: Number(formData.get("year")),
     caseType: formData.get("caseType"),
+    single_id: "id will go here",
     tracks: trimTracks(trackList),
   };
 
@@ -270,7 +276,9 @@ export async function handleCdSinglesForm(e) {
           "currAdded",
         );
       } else {
-        data["single_id"] = Number(document.getElementById("update-id").value);
+        const updatedId = Number(document.getElementById("update-id").value);
+        data.id = `id: ${updatedId}`;
+        data["single_id"] = updatedId;
         res = await updates.updateCdSingle("updateCdSingle", data);
 
         if (typeof res !== "number") {
@@ -283,6 +291,7 @@ export async function handleCdSinglesForm(e) {
           );
         }
 
+        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
         toasty("item successfully updated", "green");
         resetUpdateForm();
       }
@@ -360,7 +369,8 @@ export async function handleCdsMainForm(e) {
           "currAdded",
         );
       } else {
-        data["id"] = Number(document.getElementById("update-id").value);
+        const updatedId = Number(document.getElementById("update-id").value);
+        data["id"] = updatedId;
         res = await updates.updateCdMain("updateCdMain", trimDataFields(data));
 
         if (typeof res !== "number") {
@@ -373,6 +383,8 @@ export async function handleCdsMainForm(e) {
           );
         }
 
+        data.id = `id: ${updatedId}`;
+        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
         toasty("item successfully updated", "green");
         resetUpdateForm();
       }
@@ -465,7 +477,8 @@ export async function handleRecordsForm(e) {
         data.id = `id: ${res}`;
         addToSessionStore("", [data, "record-color", currForm.id], "currAdded");
       } else {
-        data["id"] = Number(document.getElementById("update-id").value);
+        const updatedId = Number(document.getElementById("update-id").value);
+        data["id"] = updatedId;
         res = await updates.updateRecord("updateRecord", trimDataFields(data));
 
         if (typeof res !== "number") {
@@ -478,6 +491,7 @@ export async function handleRecordsForm(e) {
           );
         }
 
+        data.id = `id: ${updatedId}`;
         addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
         toasty("item successfully updated", "green");
         resetUpdateForm();
@@ -563,7 +577,8 @@ export async function handleTapesForm(e) {
         data.id = `id: ${res}`;
         addToSessionStore("", [data, "tape-color", currForm.id], "currAdded");
       } else {
-        data["id"] = Number(document.getElementById("update-id").value);
+        const updatedId = Number(document.getElementById("update-id").value);
+        data["id"] = updatedId;
         res = await updates.updateTape("updateTape", trimDataFields(data));
 
         if (typeof res !== "number") {
@@ -576,6 +591,8 @@ export async function handleTapesForm(e) {
           );
         }
 
+        data.id = `id: ${updatedId}`;
+        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
         toasty("item successfully updated", "green");
         resetUpdateForm();
       }
