@@ -524,14 +524,41 @@
       corner-shape: scoop;
       border-radius: 20px;
       padding-inline: 1rem;
+      anchor-name: --session-list;
+
+      .session-list-decoration {
+        position: absolute;
+        position-anchor: --session-list;
+      }
+
+      .deco-one {
+        width: 2.5rem;
+        top: calc(anchor(top) - 1.75rem);
+        left: calc(anchor(left) - 1.75rem);
+      }
+      .deco-two {
+        width: 2.5rem;
+        top: calc(anchor(top) - 1.75rem);
+        right: calc(anchor(right) - 1.75rem);
+      }
+      .deco-three {
+        width: 2.5rem;
+        bottom: calc(anchor(bottom) - 1.75rem);
+        left: calc(anchor(left) - 1.75rem);
+      }
+      .deco-four {
+        width: 2.5rem;
+        bottom: calc(anchor(bottom) - 1.75rem);
+        right: calc(anchor(right) - 1.75rem);
+      }
 
       p#added-list-title {
         margin-block-end: 0.5rem;
       }
 
       ul {
-        max-height: 27rem;
-        min-height: 27rem;
+        max-height: 26rem;
+        min-height: 26rem;
         scrollbar-width: thin !important;
         overflow-y: auto;
         list-style-type: none;
