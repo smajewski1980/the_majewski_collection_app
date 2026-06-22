@@ -468,7 +468,7 @@
         justify-content: center;
         gap: 0.5rem;
         margin-block: 1rem 0.5rem;
-        border-top: 1px solid currentColor;
+        /* border-top: 1px solid currentColor; */
         /* border-bottom: 1px solid currentColor; */
         width: fit-content;
         margin-inline: auto;
@@ -597,6 +597,10 @@
   .delete-color {
     color: light-dark(var(--clr-delete));
   }
+}
+
+#add-body .increment-inner-wrapper {
+  border-top: 1px solid currentColor;
 }
 
 ::view-transition-group(form-transition) {
