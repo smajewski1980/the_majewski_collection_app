@@ -49,6 +49,8 @@ function changeElClass(el, cl_ss) {
   el.className = cl_ss;
 }
 
+const loadLastLabel = document.getElementById("load-last-label");
+
 /**
  * when a nav button is clicked, show the appropriate form
  * @param {Event} e
@@ -64,18 +66,23 @@ function handleNavBtnClick(e) {
 
   if (currentForm === "cd-comps-form") {
     changeElClass(addedItemsTitle, "cd-comp-color");
+    changeElClass(loadLastLabel, "cd-comp-color");
     changeElClass(btnLoadLast, "btn-load-last cd-comp-color");
   } else if (currentForm === "cd-singles-form") {
     changeElClass(addedItemsTitle, "cd-single-color");
+    changeElClass(loadLastLabel, "cd-single-color");
     changeElClass(btnLoadLast, "btn-load-last cd-single-color");
   } else if (currentForm === "cd-main-form") {
     changeElClass(addedItemsTitle, "cds-main-color");
+    changeElClass(loadLastLabel, "cds-main-color");
     changeElClass(btnLoadLast, "btn-load-last cds-main-color");
   } else if (currentForm === "records-form") {
     changeElClass(addedItemsTitle, "record-color");
+    changeElClass(loadLastLabel, "record-color");
     changeElClass(btnLoadLast, "btn-load-last record-color");
   } else {
     changeElClass(addedItemsTitle, "tape-color");
+    changeElClass(loadLastLabel, "tape-color");
     changeElClass(btnLoadLast, "btn-load-last tape-color");
   }
 
