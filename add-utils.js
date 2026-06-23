@@ -108,9 +108,7 @@ export function toasty(msg, color) {
         msgEl.innerText = "";
         msgEl.classList.remove("msg-animation-undo");
         isToastShowing = false;
-        if (color === "green") {
-          msgEl.style.setProperty("--msg-clr", "var(--error-color)");
-        }
+        msgEl.style.setProperty("--msg-clr", "var(--error-color)");
       }, 500);
     }, 5000);
   }

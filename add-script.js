@@ -149,66 +149,59 @@ export async function handleCdCompsForm(e) {
     return;
   }
 
-  if (
-    noEmptyFields(data, true) &&
-    (await isLocValValid(data.location, validCdCompsLocs))
-  ) {
-    try {
-      let res;
-      if (currPage !== "The Majewski Collection Update Items") {
-        res = await inserts.insertCdComps("insertCdComps", data);
+  if (!(await isLocValValid(data.location, validCdCompsLocs))) {
+    // the toast is thrown in isLocValValid
+    utils.makeInert(currForm, false);
+    return;
+  }
 
-        toasty("item successfully added", "green");
+  try {
+    let res;
+    if (currPage !== "The Majewski Collection Update Items") {
+      res = await inserts.insertCdComps("insertCdComps", data);
 
-        // add item data to the session list
-        data.id = `id: ${res}`;
-        addToSessionStore(
-          "",
-          [data, "cd-comp-color", currForm.id],
-          "currAdded",
-        );
-      } else {
-        // data["title_id"] = Number(document.getElementById("update-id").value);
-        const updatedId = Number(document.getElementById("update-id").value);
-        data.id = `id: ${updatedId}`;
-        data["title_id"] = updatedId;
-        res = await updates.updateCdComp("updateCdComp", data);
+      toasty("item successfully added", "green");
 
-        if (typeof res !== "number") {
-          throw new Error(res);
-        }
-        if (res < 1) {
-          throw new Error(
-            "Please check your fields, no rows have been updated.",
-          );
-        }
-        console.log(data);
-        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-        toasty("item successfully updated", "green");
-        resetUpdateForm();
+      // add item data to the session list
+      data.id = `id: ${res}`;
+      addToSessionStore("", [data, "cd-comp-color", currForm.id], "currAdded");
+    } else {
+      // data["title_id"] = Number(document.getElementById("update-id").value);
+      const updatedId = Number(document.getElementById("update-id").value);
+      data.id = `id: ${updatedId}`;
+      data["title_id"] = updatedId;
+      res = await updates.updateCdComp("updateCdComp", data);
+
+      if (typeof res !== "number") {
+        throw new Error(res);
       }
-
-      cdCompsForm.reset();
-      document.querySelector(".comps-line-ctr").textContent = "s";
-      handleIncrementReset();
-      utils.makeInert(currForm, false);
-
-      if (incrementFlag) {
-        getLocations();
-        toggleIncFlag();
+      if (res < 1) {
+        throw new Error("Please check your fields, no rows have been updated.");
       }
-
-      updateUiSessionList();
-
-      focusFirstField(cdCompsForm);
-      window.scrollTo(0, 0);
-    } catch (error) {
-      console.log(error);
-      toasty(error);
-    } finally {
-      utils.makeInert(currForm, false);
+      console.log(data);
+      addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
+      toasty("item successfully updated", "green");
+      resetUpdateForm();
     }
-  } else {
+
+    cdCompsForm.reset();
+    document.querySelector(".comps-line-ctr").textContent = "s";
+    handleIncrementReset();
+    utils.makeInert(currForm, false);
+
+    if (incrementFlag) {
+      getLocations();
+      toggleIncFlag();
+    }
+
+    updateUiSessionList();
+
+    focusFirstField(cdCompsForm);
+    window.scrollTo(0, 0);
+  } catch (error) {
+    console.log(error);
+    toasty(error);
+  } finally {
     utils.makeInert(currForm, false);
   }
 }
@@ -264,60 +257,59 @@ export async function handleCdSinglesForm(e) {
     return;
   }
 
-  if (
-    noEmptyFields(data, true) &&
-    isLocValValid(data.caseType, validCdSingleLocs)
-  ) {
-    try {
-      let res;
-      if (currPage !== "The Majewski Collection Update Items") {
-        res = await inserts.insertCdSingles("insertCdSingles", data);
+  if (!(await isLocValValid(data.caseType, validCdSingleLocs))) {
+    // the toast is thrown in isLocValValid
+    utils.makeInert(currForm, false);
+    return;
+  }
 
-        toasty("item successfully added", "green");
+  try {
+    let res;
+    if (currPage !== "The Majewski Collection Update Items") {
+      res = await inserts.insertCdSingles("insertCdSingles", data);
 
-        // add item data to the session list
-        data.id = `id: ${res}`;
-        addToSessionStore(
-          "",
-          [data, "cd-single-color", currForm.id],
-          "currAdded",
-        );
-      } else {
-        const updatedId = Number(document.getElementById("update-id").value);
-        data.id = `id: ${updatedId}`;
-        data["single_id"] = updatedId;
-        res = await updates.updateCdSingle("updateCdSingle", data);
+      toasty("item successfully added", "green");
 
-        if (typeof res !== "number") {
-          toasty(res);
-          throw new Error(res);
-        }
-        if (res < 1) {
-          throw new Error(
-            "Please check your fields, no rows have been updated.",
-          );
-        }
+      // add item data to the session list
+      data.id = `id: ${res}`;
+      addToSessionStore(
+        "",
+        [data, "cd-single-color", currForm.id],
+        "currAdded",
+      );
+    } else {
+      const updatedId = Number(document.getElementById("update-id").value);
+      data.id = `id: ${updatedId}`;
+      data["single_id"] = updatedId;
+      res = await updates.updateCdSingle("updateCdSingle", data);
 
-        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-        toasty("item successfully updated", "green");
-        resetUpdateForm();
+      if (typeof res !== "number") {
+        toasty(res);
+        throw new Error(res);
+      }
+      if (res < 1) {
+        throw new Error("Please check your fields, no rows have been updated.");
       }
 
-      cdSinglesForm.reset();
-      document.querySelector(".sing-line-ctr").textContent = "s";
-      handleIncrementReset();
-      utils.makeInert(currForm, false);
-      focusFirstField(cdSinglesForm);
-
-      window.scrollTo(0, 0);
-
-      updateUiSessionList();
-    } catch (error) {
-      console.log(error);
-      toasty(error);
-    } finally {
-      utils.makeInert(currForm, false);
+      addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
+      toasty("item successfully updated", "green");
+      resetUpdateForm();
     }
+
+    cdSinglesForm.reset();
+    document.querySelector(".sing-line-ctr").textContent = "s";
+    handleIncrementReset();
+    utils.makeInert(currForm, false);
+    focusFirstField(cdSinglesForm);
+
+    window.scrollTo(0, 0);
+
+    updateUiSessionList();
+  } catch (error) {
+    console.log(error);
+    toasty(error);
+  } finally {
+    utils.makeInert(currForm, false);
   }
 }
 
@@ -357,65 +349,60 @@ export async function handleCdsMainForm(e) {
     return;
   }
 
-  if (isLocValValid(data.location, validCdsMainLocs)) {
-    try {
-      let res;
-      if (currPage !== "The Majewski Collection Update Items") {
-        res = await inserts.insertCdsMain(
-          "insertCdsMain",
-          trimDataFields(data),
-        );
+  if (!(await isLocValValid(data.location, validCdsMainLocs))) {
+    // the toast is thrown in isLocValValid
+    utils.makeInert(currForm, false);
+    return;
+  }
 
-        toasty("item successfully added", "green");
+  try {
+    let res;
+    if (currPage !== "The Majewski Collection Update Items") {
+      res = await inserts.insertCdsMain("insertCdsMain", trimDataFields(data));
 
-        // add item data to the session list
-        data.id = `id: ${res}`;
-        addToSessionStore(
-          "",
-          [data, "cds-main-color", currForm.id],
-          "currAdded",
-        );
-      } else {
-        const updatedId = Number(document.getElementById("update-id").value);
-        data["id"] = updatedId;
-        res = await updates.updateCdMain("updateCdMain", trimDataFields(data));
+      toasty("item successfully added", "green");
 
-        if (typeof res !== "number") {
-          throw new Error(res);
-        }
+      // add item data to the session list
+      data.id = `id: ${res}`;
+      addToSessionStore("", [data, "cds-main-color", currForm.id], "currAdded");
+    } else {
+      const updatedId = Number(document.getElementById("update-id").value);
+      data["id"] = updatedId;
+      res = await updates.updateCdMain("updateCdMain", trimDataFields(data));
 
-        if (res < 1) {
-          throw new Error(
-            "Please check your fields, no rows have been updated.",
-          );
-        }
-
-        data.id = `id: ${updatedId}`;
-        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-        toasty("item successfully updated", "green");
-        resetUpdateForm();
+      if (typeof res !== "number") {
+        throw new Error(res);
       }
 
-      // if the form submits successfully, clear the form,
-      // focus the first field, scroll window to top
-      cdsMainForm.reset();
-      handleIncrementReset();
-      utils.makeInert(currForm, false);
-      focusFirstField(cdsMainForm);
-      window.scrollTo(0, 0);
-
-      if (incrementFlag) {
-        getLocations();
-        toggleIncFlag();
+      if (res < 1) {
+        throw new Error("Please check your fields, no rows have been updated.");
       }
 
-      updateUiSessionList();
-      // }
-    } catch (error) {
-      toasty(error, "red");
-    } finally {
-      utils.makeInert(currForm, false);
+      data.id = `id: ${updatedId}`;
+      addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
+      toasty("item successfully updated", "green");
+      resetUpdateForm();
     }
+
+    // if the form submits successfully, clear the form,
+    // focus the first field, scroll window to top
+    cdsMainForm.reset();
+    handleIncrementReset();
+    utils.makeInert(currForm, false);
+    focusFirstField(cdsMainForm);
+    window.scrollTo(0, 0);
+
+    if (incrementFlag) {
+      getLocations();
+      toggleIncFlag();
+    }
+
+    updateUiSessionList();
+    // }
+  } catch (error) {
+    toasty(error, "red");
+  } finally {
+    utils.makeInert(currForm, false);
   }
 }
 
@@ -466,62 +453,58 @@ export async function handleRecordsForm(e) {
     return;
   }
 
-  if (
-    noEmptyFields(data, false) &&
-    isLocValValid(data.location, validRecordsLocs)
-  ) {
-    try {
-      let res;
-      if (currPage !== "The Majewski Collection Update Items") {
-        res = await inserts.insertRecords(
-          "insertRecords",
-          trimDataFields(data),
-        );
+  if (!(await isLocValValid(data.location, validRecordsLocs))) {
+    // the toast is thrown in isLocValValid
+    utils.makeInert(currForm, false);
+    return;
+  }
 
-        toasty("item successfully added", "green");
+  try {
+    let res;
+    if (currPage !== "The Majewski Collection Update Items") {
+      res = await inserts.insertRecords("insertRecords", trimDataFields(data));
 
-        // add item data to the session list
-        data.id = `id: ${res}`;
-        addToSessionStore("", [data, "record-color", currForm.id], "currAdded");
-      } else {
-        const updatedId = Number(document.getElementById("update-id").value);
-        data["id"] = updatedId;
-        res = await updates.updateRecord("updateRecord", trimDataFields(data));
+      toasty("item successfully added", "green");
 
-        if (typeof res !== "number") {
-          throw new Error(res);
-        }
+      // add item data to the session list
+      data.id = `id: ${res}`;
+      addToSessionStore("", [data, "record-color", currForm.id], "currAdded");
+    } else {
+      const updatedId = Number(document.getElementById("update-id").value);
+      data["id"] = updatedId;
+      res = await updates.updateRecord("updateRecord", trimDataFields(data));
 
-        if (res < 1) {
-          throw new Error(
-            "Please check your fields, no rows have been updated.",
-          );
-        }
-
-        data.id = `id: ${updatedId}`;
-        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-        toasty("item successfully updated", "green");
-        resetUpdateForm();
+      if (typeof res !== "number") {
+        throw new Error(res);
       }
 
-      // if the form submits successfully, clear the form,
-      // focus the first field, scroll window to top
-      recordsForm.reset();
-      handleIncrementReset();
-      utils.makeInert(currForm, false);
-      focusFirstField(recordsForm);
-
-      if (incrementFlag) {
-        getLocations();
-        toggleIncFlag();
+      if (res < 1) {
+        throw new Error("Please check your fields, no rows have been updated.");
       }
-      window.scrollTo(0, 0);
 
-      updateUiSessionList();
-    } catch (error) {
-      console.log(error);
-      toasty(error);
+      data.id = `id: ${updatedId}`;
+      addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
+      toasty("item successfully updated", "green");
+      resetUpdateForm();
     }
+
+    // if the form submits successfully, clear the form,
+    // focus the first field, scroll window to top
+    recordsForm.reset();
+    handleIncrementReset();
+    utils.makeInert(currForm, false);
+    focusFirstField(recordsForm);
+
+    if (incrementFlag) {
+      getLocations();
+      toggleIncFlag();
+    }
+    window.scrollTo(0, 0);
+
+    updateUiSessionList();
+  } catch (error) {
+    console.log(error);
+    toasty(error);
   }
 }
 
@@ -569,59 +552,59 @@ export async function handleTapesForm(e) {
     utils.makeInert(currForm, false);
     return;
   }
-  if (
-    noEmptyFields(data, false) &&
-    isLocValValid(data.location, validTapesLocs)
-  ) {
-    try {
-      let res;
-      if (currPage !== "The Majewski Collection Update Items") {
-        res = await inserts.insertTapes("insertTapes", trimDataFields(data));
 
-        toasty("item successfully added", "green");
+  if (!(await isLocValValid(data.location, validTapesLocs))) {
+    // the toast is thrown in isLocValValid
+    utils.makeInert(currForm, false);
+    return;
+  }
 
-        // add item data to the session list
-        data.id = `id: ${res}`;
-        addToSessionStore("", [data, "tape-color", currForm.id], "currAdded");
-      } else {
-        const updatedId = Number(document.getElementById("update-id").value);
-        data["id"] = updatedId;
-        res = await updates.updateTape("updateTape", trimDataFields(data));
+  try {
+    let res;
+    if (currPage !== "The Majewski Collection Update Items") {
+      res = await inserts.insertTapes("insertTapes", trimDataFields(data));
 
-        if (typeof res !== "number") {
-          throw new Error(res);
-        }
+      toasty("item successfully added", "green");
 
-        if (res < 1) {
-          throw new Error(
-            "Please check your fields, no rows have been updated.",
-          );
-        }
+      // add item data to the session list
+      data.id = `id: ${res}`;
+      addToSessionStore("", [data, "tape-color", currForm.id], "currAdded");
+    } else {
+      const updatedId = Number(document.getElementById("update-id").value);
+      data["id"] = updatedId;
+      res = await updates.updateTape("updateTape", trimDataFields(data));
 
-        data.id = `id: ${updatedId}`;
-        addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-        toasty("item successfully updated", "green");
-        resetUpdateForm();
+      if (typeof res !== "number") {
+        throw new Error(res);
       }
 
-      // if the form submits successfully, clear the form,
-      // focus the first field, scroll window to top
-      tapesForm.reset();
-      handleIncrementReset();
-      utils.makeInert(currForm, false);
-      focusFirstField(tapesForm);
-
-      if (incrementFlag) {
-        getLocations();
-        toggleIncFlag();
+      if (res < 1) {
+        throw new Error("Please check your fields, no rows have been updated.");
       }
-      window.scrollTo(0, 0);
 
-      updateUiSessionList();
-    } catch (error) {
-      console.log(error);
-      toasty(error);
+      data.id = `id: ${updatedId}`;
+      addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
+      toasty("item successfully updated", "green");
+      resetUpdateForm();
     }
+
+    // if the form submits successfully, clear the form,
+    // focus the first field, scroll window to top
+    tapesForm.reset();
+    handleIncrementReset();
+    utils.makeInert(currForm, false);
+    focusFirstField(tapesForm);
+
+    if (incrementFlag) {
+      getLocations();
+      toggleIncFlag();
+    }
+    window.scrollTo(0, 0);
+
+    updateUiSessionList();
+  } catch (error) {
+    console.log(error);
+    toasty(error);
   }
 }
 
