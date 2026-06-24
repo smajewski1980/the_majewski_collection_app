@@ -36,7 +36,9 @@ const createWindow = () => {
   win.maximize();
 
   if (!app.isPackaged) {
-    win.webContents.openDevTools();
+    win.webContents.once("dom-ready", () => {
+      win.webContents.openDevTools();
+    });
   }
 };
 

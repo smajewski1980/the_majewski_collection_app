@@ -2,3 +2,15 @@
 .env
 notes.txt
 /dist
+
+# Playwright test artifacts & coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Local browser installations
+/.local-browsers/
+
+# Auth states (sensitive cookies/tokens)
+playwright/.auth/
