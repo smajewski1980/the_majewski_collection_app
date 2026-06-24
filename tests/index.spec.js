@@ -1,16 +1,27 @@
 import { test, expect, _electron as electron } from "@playwright/test";
 
-test("Application launches and loads UI", async () => {
-  // Launch the Electron application pointing to your main entry file (e.g., main.js)
-  const electronApp = await electron.launch({ args: ["./main.js"] });
+test.describe("HOMEPAGE", () => {
+  test("Application launches and loads UI", async () => {
+    // Launch the Electron application pointing to your main entry file (e.g., main.js)
+    const electronApp = await electron.launch({ args: ["./main.js"] });
 
-  // Wait for the first BrowserWindow to open
-  const window = await electronApp.firstWindow();
+    // Wait for the first BrowserWindow to open
+    const page = await electronApp.firstWindow();
 
-  const title = await window.title();
+    const button = page.getByRole("button", { name: "UPDATE WEB CATALOG" });
+    const lookupLink = page.getByRole("link", { name: "LOOKUP" });
+    const addLink = page.getByRole("link", { name: "ADD ITEMS" });
+    const updateLink = page.getByRole("link", { name: "UPDATE ITEMS" });
 
-  expect(title).toBe("The Majewski Collection App");
+    await expect(page).toHaveTitle("The Majewski Collection App");
+    await expect(button).toBeVisible();
+    await expect(lookupLink).toBeVisible();
+    await expect(addLink).toBeVisible();
+    await expect(updateLink).toBeVisible();
 
-  // Close the app at the end of the test
-  await electronApp.close();
+    await lookupLink.click();
+    await expect(page).toHaveTitle("The Majewski Collection Lookup");
+    // Close the app at the end of the test
+    await electronApp.close();
+  });
 });
