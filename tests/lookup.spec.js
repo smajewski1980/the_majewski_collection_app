@@ -7,6 +7,8 @@ test.describe("LOOKUP", () => {
   let fieldSelect;
   let searchInput;
   let searchButton;
+  const numValidationMsg =
+    "Please enter a valid number to search by that field.";
 
   test.beforeAll(async () => {
     // Launch the Electron application pointing to your main entry file (e.g., main.js)
@@ -18,12 +20,10 @@ test.describe("LOOKUP", () => {
       },
     });
 
-    // the below was only to check that reseting the DB_NAME above worked,
-    // left it in case i want it again
     // Catch anything Electron tries to log to the terminal and route it to Playwright's terminal
-    // electronApp.process().stdout.on("data", (data) => {
-    //   console.log(`Electron Main STDOUT: ${data.toString()}`);
-    // });
+    electronApp.process().stdout.on("data", (data) => {
+      console.log(`Electron Main STDOUT: ${data.toString()}`);
+    });
 
     // Wait for the first BrowserWindow to open
     page = await electronApp.firstWindow();
@@ -138,9 +138,63 @@ test.describe("LOOKUP", () => {
     await expect(options).toHaveText(["", "ARTIST"]);
   });
 
-  test.skip("Displays error msg if no field is selected and search btn clicked.", async () => {});
-  test.skip("When field is year or any id type, search input shows error msg if given non number value.", async () => {});
-  test.skip("When field is year, search input shows error msg if year < 1886 or year > current year.", async () => {});
+  test("When field is year, shows error msg if given non number value to search for.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("year");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(numValidationMsg);
+  });
+
+  test("When field is id, shows error msg if given non number value to search for.", async () => {
+    await formatSelect.selectOption("tapes");
+    await fieldSelect.selectOption("id");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(numValidationMsg);
+  });
+
+  test("When field is title id, shows error msg if given non number value to search for.", async () => {
+    await formatSelect.selectOption("cd-compilations");
+    await fieldSelect.selectOption("title_id");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(numValidationMsg);
+  });
+
+  test("When field is single id, shows error msg if given non number value to search for.", async () => {
+    await formatSelect.selectOption("cd-singles");
+    await fieldSelect.selectOption("single_id");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(numValidationMsg);
+  });
+
+  test("When field is track id, shows error msg if given non number value to search for.", async () => {
+    await formatSelect.selectOption("cd-singles");
+    await fieldSelect.selectOption("track_id");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(numValidationMsg);
+  });
+
+  test.skip("When field is year, search input shows error msg if year < 1886.", async () => {});
+  test.skip("When field is year, search input shows error msg if year > current year.", async () => {});
   test.skip("When field is sleeve or record condition, shows error msg if non * character is the value.", async () => {});
   test.skip("When field is needs_repair, shows error if search term is not 'y', 'yes', 'n' or 'no'.", async () => {});
 
@@ -150,5 +204,7 @@ test.describe("LOOKUP", () => {
 
   test.skip("The field input is disabled until a format is selected.", async () => {});
   test.skip("The search input is disabled until a field is selected.", async () => {});
+  test.skip("Displays error msg if no field is selected and search btn clicked.", async () => {});
+
   test.skip("WRITE MORE TESTS HERE.", async () => {});
 });
