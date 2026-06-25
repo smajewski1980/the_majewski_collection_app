@@ -113,6 +113,8 @@ app.whenReady().then(() => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+
+  console.log("Electron Main Process DB:", process.env.DB_NAME);
 });
 
 // quit the program when windows get closed
