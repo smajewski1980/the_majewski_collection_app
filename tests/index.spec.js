@@ -9,7 +9,6 @@ test.describe("HOMEPAGE", () => {
     electronApp = await electron.launch({ args: ["./main.js"] });
     // Wait for the first BrowserWindow to open
     page = await electronApp.firstWindow();
-    console.log(page.url());
   });
 
   test.afterAll(async () => {
