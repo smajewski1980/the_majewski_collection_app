@@ -7,6 +7,7 @@ test.describe("LOOKUP", () => {
   let fieldSelect;
   let searchInput;
   let searchButton;
+  let resultsDiv;
   const numValidationMsg =
     "Please enter a valid number to search by that field.";
   const yearRangeMsg =
@@ -47,6 +48,7 @@ test.describe("LOOKUP", () => {
     fieldSelect = page.getByRole("combobox", { name: "field" });
     searchInput = page.locator("#query-term");
     searchButton = page.locator("#btn-lookup");
+    resultsDiv = page.locator("#query-results");
   });
 
   test("the inputs get rendered to the page", async () => {
@@ -267,12 +269,77 @@ test.describe("LOOKUP", () => {
     await expect(error).toHaveText(noResultMsg);
   });
 
-  test.skip("Shows all items when no search term is entered and search btn is clicked.", async () => {});
-  test.skip("Shows items containing the search term.", async () => {});
+  test("Shows all items when records and artist are selected, but no search term is entered and search btn is clicked.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("artist");
+    await searchButton.click();
+
+    const resultsDivChildren = resultsDiv.locator("> *");
+
+    // Assert that the container now has at least 1 child element
+    await expect(resultsDivChildren).not.toHaveCount(0);
+  });
+
+  test("Shows all items when tapes and artist are selected, but no search term is entered and search btn is clicked.", async () => {
+    await formatSelect.selectOption("tapes");
+    await fieldSelect.selectOption("artist");
+    await searchButton.click();
+
+    const resultsDivChildren = resultsDiv.locator("> *");
+
+    // Assert that the container now has at least 1 child element
+    await expect(resultsDivChildren).not.toHaveCount(0);
+  });
+
+  test("Shows all items when cds and artist are selected, but no search term is entered and search btn is clicked.", async () => {
+    await formatSelect.selectOption("cds");
+    await fieldSelect.selectOption("artist");
+    await searchButton.click();
+
+    const resultsDivChildren = resultsDiv.locator("> *");
+
+    // Assert that the container now has at least 1 child element
+    await expect(resultsDivChildren).not.toHaveCount(0);
+  });
+
+  test("Shows all items when cd comps and title are selected, but no search term is entered and search btn is clicked.", async () => {
+    await formatSelect.selectOption("cd-compilations");
+    await fieldSelect.selectOption("title");
+    await searchButton.click();
+
+    const resultsDivChildren = resultsDiv.locator("> *");
+
+    // Assert that the container now has at least 1 child element
+    await expect(resultsDivChildren).not.toHaveCount(0);
+  });
+
+  test("Shows all items when cd singles and artist are selected, but no search term is entered and search btn is clicked.", async () => {
+    await formatSelect.selectOption("cd-singles");
+    await fieldSelect.selectOption("artist");
+    await searchButton.click();
+
+    const resultsDivChildren = resultsDiv.locator("> *");
+
+    // Assert that the container now has at least 1 child element
+    await expect(resultsDivChildren).not.toHaveCount(0);
+  });
+
+  test("Shows all items when all formats and artist are selected, but no search term is entered and search btn is clicked.", async () => {
+    await formatSelect.selectOption("all-formats");
+    await fieldSelect.selectOption("ARTIST");
+    await searchButton.click();
+
+    const resultsDivChildren = resultsDiv.locator("> *");
+
+    // Assert that the container now has at least 1 child element
+    await expect(resultsDivChildren).not.toHaveCount(0);
+  });
 
   test.skip("The field input is disabled until a format is selected.", async () => {});
   test.skip("The search input is disabled until a field is selected.", async () => {});
   test.skip("Displays error msg if no field is selected and search btn clicked.", async () => {});
+
+  test.skip("Shows items containing the search term.", async () => {});
 
   test.skip("WRITE MORE TESTS HERE.", async () => {});
 });
