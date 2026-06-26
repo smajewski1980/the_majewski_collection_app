@@ -49,7 +49,9 @@ export const handleLookupBtn = async (e, format, field, term) => {
       (1885 > parsedYear || parsedYear > currentYear) &&
       parsedYear !== 1234
     ) {
-      utils.displayNotFound("Please enter a valid 4 digit year.");
+      utils.displayNotFound(
+        "Please enter a valid 4 digit year between 1885 and the current year.",
+      );
       return;
     }
   }

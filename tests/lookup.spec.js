@@ -9,6 +9,11 @@ test.describe("LOOKUP", () => {
   let searchButton;
   const numValidationMsg =
     "Please enter a valid number to search by that field.";
+  const yearRangeMsg =
+    "Please enter a valid 4 digit year between 1885 and the current year.";
+  const recCondValidationMsg = "Please enter 1-5 *'s to search by condition.";
+  const needsRepairValidationMsg =
+    "For that field, term must be yes(y) or no(n).";
 
   test.beforeAll(async () => {
     // Launch the Electron application pointing to your main entry file (e.g., main.js)
@@ -193,12 +198,75 @@ test.describe("LOOKUP", () => {
     await expect(error).toHaveText(numValidationMsg);
   });
 
-  test.skip("When field is year, search input shows error msg if year < 1886.", async () => {});
-  test.skip("When field is year, search input shows error msg if year > current year.", async () => {});
-  test.skip("When field is sleeve or record condition, shows error msg if non * character is the value.", async () => {});
-  test.skip("When field is needs_repair, shows error if search term is not 'y', 'yes', 'n' or 'no'.", async () => {});
+  test("When field is year, search input shows error msg if year < 1886.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("year");
+    await searchInput.fill("1847");
+    await searchButton.click();
 
-  test.skip("Shows error message if there are no results.", async () => {});
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(yearRangeMsg);
+  });
+
+  test("When field is year, search input shows error msg if year > current year.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("year");
+    await searchInput.fill("2100");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(yearRangeMsg);
+  });
+
+  test("When field is sleeve condition, shows error msg if non * character is the value.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("sleeve_condition");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(recCondValidationMsg);
+  });
+
+  test("When field is record condition, shows error msg if non * character is the value.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("record_condition");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(recCondValidationMsg);
+  });
+
+  test("When field is needs_repair, shows error if search term is not 'y', 'yes', 'n' or 'no'.", async () => {
+    await formatSelect.selectOption("tapes");
+    await fieldSelect.selectOption("needs_repair");
+    await searchInput.fill("Unicorn");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(needsRepairValidationMsg);
+  });
+
+  test("Shows error message if there are no results.", async () => {
+    const zeroResultTerm = "🦄🦄🦄🦄🦄";
+    const noResultMsg = `No matching results found for: ${zeroResultTerm}`;
+
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("artist");
+    await searchInput.fill(zeroResultTerm);
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(noResultMsg);
+  });
+
   test.skip("Shows all items when no search term is entered and search btn is clicked.", async () => {});
   test.skip("Shows items containing the search term.", async () => {});
 
