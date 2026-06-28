@@ -55,16 +55,6 @@ test.describe("LOOKUP", () => {
     "For that field, term must be yes(y) or no(n).";
   const noFieldMsg = "Please select a field to search.";
 
-  const testTapeObj = {
-    artist: "UNICORN TESTER TAPE",
-    id: "???", // enter these into test database and update this
-    location: "UNICORN TAPE BOX 47",
-    needs_repair: "No",
-    speed: "na",
-    title: "UNICORN TESTER TAPE TITLE",
-    year: "1980",
-  };
-
   const testCdObj = {
     artist: "UNICORN TESTER CD",
     id: "???", // enter these into test database and update this
@@ -550,13 +540,98 @@ test.describe("LOOKUP - RECORDS", () => {
 });
 
 test.describe("LOOKUP - TAPES", () => {
-  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
-  test.skip("Shows items containing the search term when the field is ID.", async () => {});
-  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
-  test.skip("Shows items containing the search term when the field is NEEDS REPAIR.", async () => {});
-  test.skip("Shows items containing the search term when the field is SPEED.", async () => {});
-  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
-  test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
+  const testTapeObj = {
+    artist: "UNICORN TESTER TAPE",
+    id: "274",
+    location: "Cassettes Box 13",
+    needs_repair: "No",
+    speed: "na",
+    title: "UNICORN TESTER TAPE TITLE",
+    year: "1980",
+  };
+
+  async function enterFormData(field) {
+    await formatSelect.selectOption("tapes");
+    await fieldSelect.selectOption(field);
+    await searchInput.fill(testTapeObj[`${field}`]);
+    await searchButton.click();
+  }
+
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    enterFormData("artist");
+
+    await expect(resultsDiv).toContainText(testTapeObj.id);
+    await expect(resultsDiv).toContainText(testTapeObj.artist);
+    await expect(resultsDiv).toContainText(testTapeObj.title);
+    await expect(resultsDiv).toContainText(testTapeObj.location);
+  });
+
+  test("Shows additional info popover when an item is clicked.", async () => {
+    enterFormData("artist");
+
+    const resultItem = page.locator(`.item-idx-${testTapeObj.id}`);
+    await resultItem.click();
+
+    expect(infoPopover).toContainText(testTapeObj.artist);
+    expect(infoPopover).toContainText(testTapeObj.title);
+    expect(infoPopover).toContainText(testTapeObj.year);
+    expect(infoPopover).toContainText(testTapeObj.needs_repair);
+    expect(infoPopover).toContainText(testTapeObj.speed);
+  });
+
+  test("Shows items containing the search term when the field is ID.", async () => {
+    enterFormData("id");
+
+    await expect(resultsDiv).toContainText(testTapeObj.id);
+    await expect(resultsDiv).toContainText(testTapeObj.artist);
+    await expect(resultsDiv).toContainText(testTapeObj.title);
+    await expect(resultsDiv).toContainText(testTapeObj.location);
+  });
+
+  test("Shows items containing the search term when the field is LOCATION.", async () => {
+    enterFormData("location");
+
+    await expect(resultsDiv).toContainText(testTapeObj.id);
+    await expect(resultsDiv).toContainText(testTapeObj.artist);
+    await expect(resultsDiv).toContainText(testTapeObj.title);
+    await expect(resultsDiv).toContainText(testTapeObj.location);
+  });
+
+  test("Shows items containing the search term when the field is NEEDS REPAIR.", async () => {
+    enterFormData("needs_repair");
+
+    await expect(resultsDiv).toContainText(testTapeObj.id);
+    await expect(resultsDiv).toContainText(testTapeObj.artist);
+    await expect(resultsDiv).toContainText(testTapeObj.title);
+    await expect(resultsDiv).toContainText(testTapeObj.location);
+  });
+
+  test("Shows items containing the search term when the field is SPEED.", async () => {
+    enterFormData("speed");
+
+    await expect(resultsDiv).toContainText(testTapeObj.id);
+    await expect(resultsDiv).toContainText(testTapeObj.artist);
+    await expect(resultsDiv).toContainText(testTapeObj.title);
+    await expect(resultsDiv).toContainText(testTapeObj.location);
+  });
+
+  test("Shows items containing the search term when the field is TITLE.", async () => {
+    enterFormData("title");
+
+    await expect(resultsDiv).toContainText(testTapeObj.id);
+    await expect(resultsDiv).toContainText(testTapeObj.artist);
+    await expect(resultsDiv).toContainText(testTapeObj.title);
+    await expect(resultsDiv).toContainText(testTapeObj.location);
+  });
+
+  test("Shows items containing the search term when the field is YEAR.", async () => {
+    enterFormData("year");
+
+    await expect(resultsDiv).toContainText(testTapeObj.id);
+    await expect(resultsDiv).toContainText(testTapeObj.artist);
+    await expect(resultsDiv).toContainText(testTapeObj.title);
+    await expect(resultsDiv).toContainText(testTapeObj.location);
+  });
 });
 
 test.describe("LOOKUP - CDS", () => {
@@ -567,17 +642,19 @@ test.describe("LOOKUP - CDS", () => {
 });
 
 test.describe("LOOKUP - CD COMPS", () => {
-  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
-  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
   test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+  test.skip("Shows additional info popover when an item is clicked.", async () => {});
+  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
   test.skip("Shows items containing the search term when the field is TITLE ID.", async () => {});
   test.skip("Shows items containing the search term when the field is TRACK ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
   test.skip("Shows items containing the search term when the field is TRACK NAME.", async () => {});
   test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
 });
 
 test.describe("LOOKUP - CD SINGLES", () => {
   test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
+  test.skip("Shows additional info popover when an item is clicked.", async () => {});
   test.skip("Shows items containing the search term when the field is CASE TYPE.", async () => {});
   test.skip("Shows items containing the search term when the field is SINGLE ID.", async () => {});
   test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
