@@ -406,11 +406,15 @@ test.describe("LOOKUP - RECORDS", () => {
     year: "1980",
   };
 
-  test("Shows items containing the search term when the field is ARTIST.", async () => {
+  async function enterFormData(field) {
     await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("artist");
-    await searchInput.fill(testRecordObj.artist);
+    await fieldSelect.selectOption(field);
+    await searchInput.fill(testRecordObj[`${field}`]);
     await searchButton.click();
+  }
+
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    enterFormData("artist");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -419,10 +423,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows additional info popover when an item is clicked.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("artist");
-    await searchInput.fill(testRecordObj.artist);
-    await searchButton.click();
+    enterFormData("artist");
 
     const resultItem = page.locator(`.item-idx-${testRecordObj.id}`);
     await resultItem.click();
@@ -436,10 +437,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows items containing the search term when the field is DIAMETER.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("diameter");
-    await searchInput.fill(testRecordObj.diameter);
-    await searchButton.click();
+    enterFormData("diameter");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -448,10 +446,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows item containing the search term when the field is ID.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("id");
-    await searchInput.fill(testRecordObj.id);
-    await searchButton.click();
+    enterFormData("id");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -460,10 +455,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows items containing the search term when the field is LABEL.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("label");
-    await searchInput.fill(testRecordObj.label);
-    await searchButton.click();
+    enterFormData("label");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -472,10 +464,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows items containing the search term when the field is LOCATION.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("location");
-    await searchInput.fill(testRecordObj.location);
-    await searchButton.click();
+    enterFormData("location");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -484,10 +473,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows items containing the search term when the field is RECORD CONDITION.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("record_condition");
-    await searchInput.fill(testRecordObj.record_condition);
-    await searchButton.click();
+    enterFormData("record_condition");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -496,10 +482,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows items containing the search term when the field is SLEEVE CONDITION.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("sleeve_condition");
-    await searchInput.fill(testRecordObj.sleeve_condition);
-    await searchButton.click();
+    enterFormData("sleeve_condition");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -508,10 +491,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows items containing the search term when the field is TITLE.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("title");
-    await searchInput.fill(testRecordObj.title);
-    await searchButton.click();
+    enterFormData("title");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -520,10 +500,7 @@ test.describe("LOOKUP - RECORDS", () => {
   });
 
   test("Shows items containing the search term when the field is YEAR.", async () => {
-    await formatSelect.selectOption("records");
-    await fieldSelect.selectOption("year");
-    await searchInput.fill(testRecordObj.year);
-    await searchButton.click();
+    enterFormData("year");
 
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
