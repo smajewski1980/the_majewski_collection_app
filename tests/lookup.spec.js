@@ -7,6 +7,7 @@ let fieldSelect;
 let searchInput;
 let searchButton;
 let resultsDiv;
+let infoPopover;
 
 test.beforeAll(async () => {
   // Launch the Electron application pointing to your main entry file (e.g., main.js)
@@ -41,6 +42,7 @@ test.beforeEach(async () => {
   searchInput = page.locator("#query-term");
   searchButton = page.locator("#btn-lookup");
   resultsDiv = page.locator("#query-results");
+  infoPopover = page.locator("#info-popover");
 });
 
 test.describe("LOOKUP", () => {
@@ -412,23 +414,139 @@ test.describe("LOOKUP - RECORDS", () => {
   const testRecordObj = {
     artist: "UNICORN TESTER RECORD",
     diameter: "12 inch",
-    id: "???", // enter these into test database and update this
+    id: "807",
     label: "UNICORN RECORDS",
-    location: "UNICORN RECORD BOX 47",
+    location: "33s Jazz 3",
     record_condition: "***",
     sleeve_condition: "***",
     title: "UNICORN TESTER RECORD TITLE",
     year: "1980",
   };
-  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
-  test.skip("Shows items containing the search term when the field is DIAMETER.", async () => {});
-  test.skip("Shows item containing the search term when the field is ID.", async () => {});
-  test.skip("Shows items containing the search term when the field is LABEL.", async () => {});
-  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
-  test.skip("Shows items containing the search term when the field is RECORD CONDITION.", async () => {});
-  test.skip("Shows items containing the search term when the field is SLEEVE CONDITION.", async () => {});
-  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
-  test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
+
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("artist");
+    await searchInput.fill(testRecordObj.artist);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows additional info popover when an item is clicked.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("artist");
+    await searchInput.fill(testRecordObj.artist);
+    await searchButton.click();
+
+    const resultItem = page.locator(`.item-idx-${testRecordObj.id}`);
+    await resultItem.click();
+
+    expect(infoPopover).toContainText(testRecordObj.artist);
+    expect(infoPopover).toContainText(testRecordObj.title);
+    expect(infoPopover).toContainText(testRecordObj.label);
+    expect(infoPopover).toContainText(testRecordObj.record_condition);
+    expect(infoPopover).toContainText(testRecordObj.sleeve_condition);
+    expect(infoPopover).toContainText(testRecordObj.year);
+  });
+
+  test("Shows items containing the search term when the field is DIAMETER.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("diameter");
+    await searchInput.fill(testRecordObj.diameter);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows item containing the search term when the field is ID.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("id");
+    await searchInput.fill(testRecordObj.id);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows items containing the search term when the field is LABEL.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("label");
+    await searchInput.fill(testRecordObj.label);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows items containing the search term when the field is LOCATION.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("location");
+    await searchInput.fill(testRecordObj.location);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows items containing the search term when the field is RECORD CONDITION.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("record_condition");
+    await searchInput.fill(testRecordObj.record_condition);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows items containing the search term when the field is SLEEVE CONDITION.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("sleeve_condition");
+    await searchInput.fill(testRecordObj.sleeve_condition);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows items containing the search term when the field is TITLE.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("title");
+    await searchInput.fill(testRecordObj.title);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
+
+  test("Shows items containing the search term when the field is YEAR.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("year");
+    await searchInput.fill(testRecordObj.year);
+    await searchButton.click();
+
+    await expect(resultsDiv).toContainText(testRecordObj.id);
+    await expect(resultsDiv).toContainText(testRecordObj.artist);
+    await expect(resultsDiv).toContainText(testRecordObj.title);
+    await expect(resultsDiv).toContainText(testRecordObj.location);
+  });
 });
 
 test.describe("LOOKUP - TAPES", () => {
