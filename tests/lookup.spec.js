@@ -1,13 +1,49 @@
 import { test, expect, _electron as electron } from "@playwright/test";
 
+let electronApp;
+let page;
+let formatSelect;
+let fieldSelect;
+let searchInput;
+let searchButton;
+let resultsDiv;
+
+test.beforeAll(async () => {
+  // Launch the Electron application pointing to your main entry file (e.g., main.js)
+  electronApp = await electron.launch({
+    args: ["./main.js"],
+    env: {
+      ...process.env,
+      DB_NAME: "test_music_catalog",
+    },
+  });
+
+  // Catch anything Electron tries to log to the terminal and route it to Playwright's terminal
+  electronApp.process().stdout.on("data", (data) => {
+    console.log(`Electron Main STDOUT: ${data.toString()}`);
+  });
+
+  // Wait for the first BrowserWindow to open
+  page = await electronApp.firstWindow();
+  await page.getByRole("link", { name: "LOOKUP" }).click();
+});
+
+test.afterAll(async () => {
+  // Close the app at the end of the test
+  await electronApp.close();
+});
+
+test.beforeEach(async () => {
+  await page.reload();
+
+  formatSelect = page.getByRole("combobox", { name: "format" });
+  fieldSelect = page.getByRole("combobox", { name: "field" });
+  searchInput = page.locator("#query-term");
+  searchButton = page.locator("#btn-lookup");
+  resultsDiv = page.locator("#query-results");
+});
+
 test.describe("LOOKUP", () => {
-  let electronApp;
-  let page;
-  let formatSelect;
-  let fieldSelect;
-  let searchInput;
-  let searchButton;
-  let resultsDiv;
   const numValidationMsg =
     "Please enter a valid number to search by that field.";
   const yearRangeMsg =
@@ -15,41 +51,47 @@ test.describe("LOOKUP", () => {
   const recCondValidationMsg = "Please enter 1-5 *'s to search by condition.";
   const needsRepairValidationMsg =
     "For that field, term must be yes(y) or no(n).";
+  const noFieldMsg = "Please select a field to search.";
 
-  test.beforeAll(async () => {
-    // Launch the Electron application pointing to your main entry file (e.g., main.js)
-    electronApp = await electron.launch({
-      args: ["./main.js"],
-      env: {
-        ...process.env,
-        DB_NAME: "test_music_catalog",
-      },
-    });
+  const testTapeObj = {
+    artist: "UNICORN TESTER TAPE",
+    id: "???", // enter these into test database and update this
+    location: "UNICORN TAPE BOX 47",
+    needs_repair: "No",
+    speed: "na",
+    title: "UNICORN TESTER TAPE TITLE",
+    year: "1980",
+  };
 
-    // Catch anything Electron tries to log to the terminal and route it to Playwright's terminal
-    electronApp.process().stdout.on("data", (data) => {
-      console.log(`Electron Main STDOUT: ${data.toString()}`);
-    });
+  const testCdObj = {
+    artist: "UNICORN TESTER CD",
+    id: "???", // enter these into test database and update this
+    location: "UNICORN CD BOX 47",
+    title: "UNICORN TESTER CD TITLE",
+  };
 
-    // Wait for the first BrowserWindow to open
-    page = await electronApp.firstWindow();
-    await page.getByRole("link", { name: "LOOKUP" }).click();
-  });
+  const testCdCompObj = {
+    location: "UNICORN CD COMP BOX 47",
+    title: "UNICORN TESTER CD COMP TITLE",
+    title_id: "???", // enter these into test database and update this
+    tracks: [
+      ["Unicorn Artist 1", "Unicorn Track 1"],
+      ["Unicorn Artist 2", "Unicorn Track 2"],
+      ["Unicorn Artist 3", "Unicorn Track 3"],
+      ["Unicorn Artist 4", "Unicorn Track 4"],
+      ["Unicorn Artist 5", "Unicorn Track 5"],
+    ],
+    year: 1980,
+  };
 
-  test.afterAll(async () => {
-    // Close the app at the end of the test
-    await electronApp.close();
-  });
-
-  test.beforeEach(async () => {
-    await page.reload();
-
-    formatSelect = page.getByRole("combobox", { name: "format" });
-    fieldSelect = page.getByRole("combobox", { name: "field" });
-    searchInput = page.locator("#query-term");
-    searchButton = page.locator("#btn-lookup");
-    resultsDiv = page.locator("#query-results");
-  });
+  const testCdSingleObj = {
+    case_type: "UNICORN CASE",
+    artist: "UNICORN TESTER CD SINGLE",
+    title: "UNICORN TESTER CD SINGLE TITLE",
+    single_id: "???", // enter these into test database and update this
+    tracks: ["Unicorn Track 1", "Unicorn Track 2", "Unicorn Track 3"],
+    year: 1980,
+  };
 
   test("the inputs get rendered to the page", async () => {
     await expect(formatSelect).toBeVisible();
@@ -335,11 +377,97 @@ test.describe("LOOKUP", () => {
     await expect(resultsDivChildren).not.toHaveCount(0);
   });
 
-  test.skip("The field input is disabled until a format is selected.", async () => {});
-  test.skip("The search input is disabled until a field is selected.", async () => {});
-  test.skip("Displays error msg if no field is selected and search btn clicked.", async () => {});
+  test("The field input is disabled until a format is selected.", async () => {
+    await expect(fieldSelect).toHaveAttribute("inert");
 
-  test.skip("Shows items containing the search term.", async () => {});
+    await formatSelect.selectOption("records");
 
-  test.skip("WRITE MORE TESTS HERE.", async () => {});
+    await expect(fieldSelect).not.toHaveAttribute("inert");
+  });
+
+  test("The search input and button is disabled until a field is selected.", async () => {
+    await expect(searchInput).toHaveAttribute("inert");
+    await expect(searchButton).toHaveAttribute("inert");
+
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("artist");
+
+    await expect(searchInput).not.toHaveAttribute("inert");
+    await expect(searchButton).not.toHaveAttribute("inert");
+  });
+
+  test("Displays error msg if no field is selected and search btn clicked.", async () => {
+    await formatSelect.selectOption("records");
+    await fieldSelect.selectOption("artist");
+    await fieldSelect.selectOption("");
+    await searchButton.click();
+
+    const error = page.locator("#message");
+
+    await expect(error).toHaveText(noFieldMsg);
+  });
+});
+
+test.describe("LOOKUP - RECORDS", () => {
+  const testRecordObj = {
+    artist: "UNICORN TESTER RECORD",
+    diameter: "12 inch",
+    id: "???", // enter these into test database and update this
+    label: "UNICORN RECORDS",
+    location: "UNICORN RECORD BOX 47",
+    record_condition: "***",
+    sleeve_condition: "***",
+    title: "UNICORN TESTER RECORD TITLE",
+    year: "1980",
+  };
+  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
+  test.skip("Shows items containing the search term when the field is DIAMETER.", async () => {});
+  test.skip("Shows item containing the search term when the field is ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is LABEL.", async () => {});
+  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
+  test.skip("Shows items containing the search term when the field is RECORD CONDITION.", async () => {});
+  test.skip("Shows items containing the search term when the field is SLEEVE CONDITION.", async () => {});
+  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+  test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
+});
+
+test.describe("LOOKUP - TAPES", () => {
+  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
+  test.skip("Shows items containing the search term when the field is ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
+  test.skip("Shows items containing the search term when the field is NEEDS REPAIR.", async () => {});
+  test.skip("Shows items containing the search term when the field is SPEED.", async () => {});
+  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+  test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
+});
+
+test.describe("LOOKUP - CDS", () => {
+  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
+  test.skip("Shows items containing the search term when the field is ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
+  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+});
+
+test.describe("LOOKUP - CD COMPS", () => {
+  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
+  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
+  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+  test.skip("Shows items containing the search term when the field is TITLE ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is TRACK ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is TRACK NAME.", async () => {});
+  test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
+});
+
+test.describe("LOOKUP - CD SINGLES", () => {
+  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
+  test.skip("Shows items containing the search term when the field is CASE TYPE.", async () => {});
+  test.skip("Shows items containing the search term when the field is SINGLE ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+  test.skip("Shows items containing the search term when the field is TRACK ID.", async () => {});
+  test.skip("Shows items containing the search term when the field is TRACK NAME.", async () => {});
+  test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
+});
+
+test.describe("LOOKUP - ALL FORMATS", () => {
+  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
 });
