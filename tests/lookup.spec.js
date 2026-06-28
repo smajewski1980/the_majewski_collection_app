@@ -394,6 +394,7 @@ test.describe("LOOKUP", () => {
 });
 
 test.describe("LOOKUP - RECORDS", () => {
+  // the setup test object
   const testRecordObj = {
     artist: "UNICORN TESTER RECORD",
     diameter: "12 inch",
@@ -406,6 +407,7 @@ test.describe("LOOKUP - RECORDS", () => {
     year: "1980",
   };
 
+  // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("records");
     await fieldSelect.selectOption(field);
@@ -413,6 +415,7 @@ test.describe("LOOKUP - RECORDS", () => {
     await searchButton.click();
   }
 
+  // helper function to assert the data
   async function assertRecordData() {
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
@@ -421,66 +424,42 @@ test.describe("LOOKUP - RECORDS", () => {
   }
 
   test("Shows additional info popover when an item is clicked.", async () => {
-    enterFormData("artist");
+    await enterFormData("artist");
 
     const resultItem = page.locator(`.item-idx-${testRecordObj.id}`);
     await resultItem.click();
 
-    expect(infoPopover).toContainText(testRecordObj.artist);
-    expect(infoPopover).toContainText(testRecordObj.title);
-    expect(infoPopover).toContainText(testRecordObj.label);
-    expect(infoPopover).toContainText(testRecordObj.record_condition);
-    expect(infoPopover).toContainText(testRecordObj.sleeve_condition);
-    expect(infoPopover).toContainText(testRecordObj.year);
+    await expect(infoPopover).toContainText(testRecordObj.artist);
+    await expect(infoPopover).toContainText(testRecordObj.title);
+    await expect(infoPopover).toContainText(testRecordObj.label);
+    await expect(infoPopover).toContainText(testRecordObj.record_condition);
+    await expect(infoPopover).toContainText(testRecordObj.sleeve_condition);
+    await expect(infoPopover).toContainText(testRecordObj.year);
   });
 
-  test("Shows items containing the search term when the field is ARTIST.", async () => {
-    await enterFormData("artist");
-    await assertRecordData();
-  });
+  // Data-driven loop collapses 9 identical test blocks into 1 clean container
+  const searchFields = [
+    { field: "artist", label: "ARTIST" },
+    { field: "diameter", label: "DIAMETER" },
+    { field: "id", label: "ID" },
+    { field: "label", label: "LABEL" },
+    { field: "location", label: "LOCATION" },
+    { field: "record_condition", label: "RECORD CONDITION" },
+    { field: "sleeve_condition", label: "SLEEVE CONDITION" },
+    { field: "title", label: "TITLE" },
+    { field: "year", label: "YEAR" },
+  ];
 
-  test("Shows items containing the search term when the field is DIAMETER.", async () => {
-    await enterFormData("diameter");
-    await assertRecordData();
-  });
-
-  test("Shows item containing the search term when the field is ID.", async () => {
-    await enterFormData("id");
-    await assertRecordData();
-  });
-
-  test("Shows items containing the search term when the field is LABEL.", async () => {
-    await enterFormData("label");
-    await assertRecordData();
-  });
-
-  test("Shows items containing the search term when the field is LOCATION.", async () => {
-    await enterFormData("location");
-    await assertRecordData();
-  });
-
-  test("Shows items containing the search term when the field is RECORD CONDITION.", async () => {
-    await enterFormData("record_condition");
-    await assertRecordData();
-  });
-
-  test("Shows items containing the search term when the field is SLEEVE CONDITION.", async () => {
-    await enterFormData("sleeve_condition");
-    await assertRecordData();
-  });
-
-  test("Shows items containing the search term when the field is TITLE.", async () => {
-    await enterFormData("title");
-    await assertRecordData();
-  });
-
-  test("Shows items containing the search term when the field is YEAR.", async () => {
-    await enterFormData("year");
-    await assertRecordData();
-  });
+  for (const { field, label } of searchFields) {
+    test(`Shows items containing the search term when the field is ${label}.`, async () => {
+      await enterFormData(field);
+      await assertRecordData();
+    });
+  }
 });
 
 test.describe("LOOKUP - TAPES", () => {
+  // the setup test object
   const testTapeObj = {
     artist: "UNICORN TESTER TAPE",
     id: "274",
@@ -491,6 +470,7 @@ test.describe("LOOKUP - TAPES", () => {
     year: "1980",
   };
 
+  // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("tapes");
     await fieldSelect.selectOption(field);
@@ -498,6 +478,7 @@ test.describe("LOOKUP - TAPES", () => {
     await searchButton.click();
   }
 
+  // helper function to assert the data
   async function assertTapeData() {
     await expect(resultsDiv).toContainText(testTapeObj.id);
     await expect(resultsDiv).toContainText(testTapeObj.artist);
@@ -518,43 +499,27 @@ test.describe("LOOKUP - TAPES", () => {
     expect(infoPopover).toContainText(testTapeObj.speed);
   });
 
-  test("Shows items containing the search term when the field is ARTIST.", async () => {
-    await enterFormData("artist");
-    await assertTapeData();
-  });
+  // Data-driven loop collapses 7 identical test blocks into 1 clean container
+  const searchFields = [
+    { field: "artist", label: "ARTIST" },
+    { field: "id", label: "ID" },
+    { field: "location", label: "LOCATION" },
+    { field: "needs_repair", label: "NEEDS REPAIR" },
+    { field: "speed", label: "SPEED" },
+    { field: "title", label: "TITLE" },
+    { field: "year", label: "YEAR" },
+  ];
 
-  test("Shows items containing the search term when the field is ID.", async () => {
-    await enterFormData("id");
-    await assertTapeData();
-  });
-
-  test("Shows items containing the search term when the field is LOCATION.", async () => {
-    await enterFormData("location");
-    await assertTapeData();
-  });
-
-  test("Shows items containing the search term when the field is NEEDS REPAIR.", async () => {
-    await enterFormData("needs_repair");
-    await assertTapeData();
-  });
-
-  test("Shows items containing the search term when the field is SPEED.", async () => {
-    await enterFormData("speed");
-    await assertTapeData();
-  });
-
-  test("Shows items containing the search term when the field is TITLE.", async () => {
-    await enterFormData("title");
-    await assertTapeData();
-  });
-
-  test("Shows items containing the search term when the field is YEAR.", async () => {
-    await enterFormData("year");
-    await assertTapeData();
-  });
+  for (const { field, label } of searchFields) {
+    test(`Shows items containing the search term when the field is ${label}.`, async () => {
+      await enterFormData(field);
+      await assertTapeData();
+    });
+  }
 });
 
 test.describe("LOOKUP - CDS", () => {
+  // the setup test object
   const testCdObj = {
     artist: "UNICORN TESTER CD",
     id: "544",
@@ -562,6 +527,7 @@ test.describe("LOOKUP - CDS", () => {
     title: "UNICORN TESTER CD TITLE",
   };
 
+  // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("cds");
     await fieldSelect.selectOption(field);
@@ -569,6 +535,7 @@ test.describe("LOOKUP - CDS", () => {
     await searchButton.click();
   }
 
+  // helper function to assert the data
   async function assertCdData() {
     await expect(resultsDiv).toContainText(testCdObj.id);
     await expect(resultsDiv).toContainText(testCdObj.artist);
@@ -576,25 +543,20 @@ test.describe("LOOKUP - CDS", () => {
     await expect(resultsDiv).toContainText(testCdObj.location);
   }
 
-  test("Shows items containing the search term when the field is ARTIST.", async () => {
-    await enterFormData("artist");
-    await assertCdData();
-  });
+  // Data-driven loop collapses 4 identical test blocks into 1 clean container
+  const searchFields = [
+    { field: "artist", label: "ARTIST" },
+    { field: "id", label: "ID" },
+    { field: "location", label: "LOCATION" },
+    { field: "title", label: "TITLE" },
+  ];
 
-  test("Shows items containing the search term when the field is ID.", async () => {
-    await enterFormData("id");
-    await assertCdData();
-  });
-
-  test("Shows items containing the search term when the field is LOCATION.", async () => {
-    await enterFormData("location");
-    await assertCdData();
-  });
-
-  test("Shows items containing the search term when the field is TITLE.", async () => {
-    await enterFormData("title");
-    await assertCdData();
-  });
+  for (const { field, label } of searchFields) {
+    test(`Shows items containing the search term when the field is ${label}.`, async () => {
+      await enterFormData(field);
+      await assertCdData();
+    });
+  }
 });
 
 test.describe("LOOKUP - CD COMPS", () => {
