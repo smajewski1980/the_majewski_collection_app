@@ -413,14 +413,12 @@ test.describe("LOOKUP - RECORDS", () => {
     await searchButton.click();
   }
 
-  test("Shows items containing the search term when the field is ARTIST.", async () => {
-    enterFormData("artist");
-
+  async function assertRecordData() {
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
     await expect(resultsDiv).toContainText(testRecordObj.title);
     await expect(resultsDiv).toContainText(testRecordObj.location);
-  });
+  }
 
   test("Shows additional info popover when an item is clicked.", async () => {
     enterFormData("artist");
@@ -436,76 +434,49 @@ test.describe("LOOKUP - RECORDS", () => {
     expect(infoPopover).toContainText(testRecordObj.year);
   });
 
-  test("Shows items containing the search term when the field is DIAMETER.", async () => {
-    enterFormData("diameter");
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    await enterFormData("artist");
+    await assertRecordData();
+  });
 
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+  test("Shows items containing the search term when the field is DIAMETER.", async () => {
+    await enterFormData("diameter");
+    await assertRecordData();
   });
 
   test("Shows item containing the search term when the field is ID.", async () => {
-    enterFormData("id");
-
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+    await enterFormData("id");
+    await assertRecordData();
   });
 
   test("Shows items containing the search term when the field is LABEL.", async () => {
-    enterFormData("label");
-
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+    await enterFormData("label");
+    await assertRecordData();
   });
 
   test("Shows items containing the search term when the field is LOCATION.", async () => {
-    enterFormData("location");
-
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+    await enterFormData("location");
+    await assertRecordData();
   });
 
   test("Shows items containing the search term when the field is RECORD CONDITION.", async () => {
-    enterFormData("record_condition");
-
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+    await enterFormData("record_condition");
+    await assertRecordData();
   });
 
   test("Shows items containing the search term when the field is SLEEVE CONDITION.", async () => {
-    enterFormData("sleeve_condition");
-
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+    await enterFormData("sleeve_condition");
+    await assertRecordData();
   });
 
   test("Shows items containing the search term when the field is TITLE.", async () => {
-    enterFormData("title");
-
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+    await enterFormData("title");
+    await assertRecordData();
   });
 
   test("Shows items containing the search term when the field is YEAR.", async () => {
-    enterFormData("year");
-
-    await expect(resultsDiv).toContainText(testRecordObj.id);
-    await expect(resultsDiv).toContainText(testRecordObj.artist);
-    await expect(resultsDiv).toContainText(testRecordObj.title);
-    await expect(resultsDiv).toContainText(testRecordObj.location);
+    await enterFormData("year");
+    await assertRecordData();
   });
 });
 
@@ -527,14 +498,12 @@ test.describe("LOOKUP - TAPES", () => {
     await searchButton.click();
   }
 
-  test("Shows items containing the search term when the field is ARTIST.", async () => {
-    enterFormData("artist");
-
+  async function assertTapeData() {
     await expect(resultsDiv).toContainText(testTapeObj.id);
     await expect(resultsDiv).toContainText(testTapeObj.artist);
     await expect(resultsDiv).toContainText(testTapeObj.title);
     await expect(resultsDiv).toContainText(testTapeObj.location);
-  });
+  }
 
   test("Shows additional info popover when an item is clicked.", async () => {
     enterFormData("artist");
@@ -549,58 +518,39 @@ test.describe("LOOKUP - TAPES", () => {
     expect(infoPopover).toContainText(testTapeObj.speed);
   });
 
-  test("Shows items containing the search term when the field is ID.", async () => {
-    enterFormData("id");
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    await enterFormData("artist");
+    await assertTapeData();
+  });
 
-    await expect(resultsDiv).toContainText(testTapeObj.id);
-    await expect(resultsDiv).toContainText(testTapeObj.artist);
-    await expect(resultsDiv).toContainText(testTapeObj.title);
-    await expect(resultsDiv).toContainText(testTapeObj.location);
+  test("Shows items containing the search term when the field is ID.", async () => {
+    await enterFormData("id");
+    await assertTapeData();
   });
 
   test("Shows items containing the search term when the field is LOCATION.", async () => {
-    enterFormData("location");
-
-    await expect(resultsDiv).toContainText(testTapeObj.id);
-    await expect(resultsDiv).toContainText(testTapeObj.artist);
-    await expect(resultsDiv).toContainText(testTapeObj.title);
-    await expect(resultsDiv).toContainText(testTapeObj.location);
+    await enterFormData("location");
+    await assertTapeData();
   });
 
   test("Shows items containing the search term when the field is NEEDS REPAIR.", async () => {
-    enterFormData("needs_repair");
-
-    await expect(resultsDiv).toContainText(testTapeObj.id);
-    await expect(resultsDiv).toContainText(testTapeObj.artist);
-    await expect(resultsDiv).toContainText(testTapeObj.title);
-    await expect(resultsDiv).toContainText(testTapeObj.location);
+    await enterFormData("needs_repair");
+    await assertTapeData();
   });
 
   test("Shows items containing the search term when the field is SPEED.", async () => {
-    enterFormData("speed");
-
-    await expect(resultsDiv).toContainText(testTapeObj.id);
-    await expect(resultsDiv).toContainText(testTapeObj.artist);
-    await expect(resultsDiv).toContainText(testTapeObj.title);
-    await expect(resultsDiv).toContainText(testTapeObj.location);
+    await enterFormData("speed");
+    await assertTapeData();
   });
 
   test("Shows items containing the search term when the field is TITLE.", async () => {
-    enterFormData("title");
-
-    await expect(resultsDiv).toContainText(testTapeObj.id);
-    await expect(resultsDiv).toContainText(testTapeObj.artist);
-    await expect(resultsDiv).toContainText(testTapeObj.title);
-    await expect(resultsDiv).toContainText(testTapeObj.location);
+    await enterFormData("title");
+    await assertTapeData();
   });
 
   test("Shows items containing the search term when the field is YEAR.", async () => {
-    enterFormData("year");
-
-    await expect(resultsDiv).toContainText(testTapeObj.id);
-    await expect(resultsDiv).toContainText(testTapeObj.artist);
-    await expect(resultsDiv).toContainText(testTapeObj.title);
-    await expect(resultsDiv).toContainText(testTapeObj.location);
+    await enterFormData("year");
+    await assertTapeData();
   });
 });
 
@@ -619,40 +569,31 @@ test.describe("LOOKUP - CDS", () => {
     await searchButton.click();
   }
 
-  test("Shows items containing the search term when the field is ARTIST.", async () => {
-    enterFormData("artist");
-
+  async function assertCdData() {
     await expect(resultsDiv).toContainText(testCdObj.id);
     await expect(resultsDiv).toContainText(testCdObj.artist);
     await expect(resultsDiv).toContainText(testCdObj.title);
     await expect(resultsDiv).toContainText(testCdObj.location);
+  }
+
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    await enterFormData("artist");
+    await assertCdData();
   });
 
   test("Shows items containing the search term when the field is ID.", async () => {
-    enterFormData("id");
-
-    await expect(resultsDiv).toContainText(testCdObj.id);
-    await expect(resultsDiv).toContainText(testCdObj.artist);
-    await expect(resultsDiv).toContainText(testCdObj.title);
-    await expect(resultsDiv).toContainText(testCdObj.location);
+    await enterFormData("id");
+    await assertCdData();
   });
 
   test("Shows items containing the search term when the field is LOCATION.", async () => {
-    enterFormData("location");
-
-    await expect(resultsDiv).toContainText(testCdObj.id);
-    await expect(resultsDiv).toContainText(testCdObj.artist);
-    await expect(resultsDiv).toContainText(testCdObj.title);
-    await expect(resultsDiv).toContainText(testCdObj.location);
+    await enterFormData("location");
+    await assertCdData();
   });
 
   test("Shows items containing the search term when the field is TITLE.", async () => {
-    enterFormData("title");
-
-    await expect(resultsDiv).toContainText(testCdObj.id);
-    await expect(resultsDiv).toContainText(testCdObj.artist);
-    await expect(resultsDiv).toContainText(testCdObj.title);
-    await expect(resultsDiv).toContainText(testCdObj.location);
+    await enterFormData("title");
+    await assertCdData();
   });
 });
 
