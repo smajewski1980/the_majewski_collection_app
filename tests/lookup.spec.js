@@ -55,13 +55,6 @@ test.describe("LOOKUP", () => {
     "For that field, term must be yes(y) or no(n).";
   const noFieldMsg = "Please select a field to search.";
 
-  const testCdObj = {
-    artist: "UNICORN TESTER CD",
-    id: "???", // enter these into test database and update this
-    location: "UNICORN CD BOX 47",
-    title: "UNICORN TESTER CD TITLE",
-  };
-
   const testCdCompObj = {
     location: "UNICORN CD COMP BOX 47",
     title: "UNICORN TESTER CD COMP TITLE",
@@ -635,10 +628,55 @@ test.describe("LOOKUP - TAPES", () => {
 });
 
 test.describe("LOOKUP - CDS", () => {
-  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
-  test.skip("Shows items containing the search term when the field is ID.", async () => {});
-  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
-  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+  const testCdObj = {
+    artist: "UNICORN TESTER CD",
+    id: "544",
+    location: "Jazz 12",
+    title: "UNICORN TESTER CD TITLE",
+  };
+
+  async function enterFormData(field) {
+    await formatSelect.selectOption("cds");
+    await fieldSelect.selectOption(field);
+    await searchInput.fill(testCdObj[`${field}`]);
+    await searchButton.click();
+  }
+
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    enterFormData("artist");
+
+    await expect(resultsDiv).toContainText(testCdObj.id);
+    await expect(resultsDiv).toContainText(testCdObj.artist);
+    await expect(resultsDiv).toContainText(testCdObj.title);
+    await expect(resultsDiv).toContainText(testCdObj.location);
+  });
+
+  test("Shows items containing the search term when the field is ID.", async () => {
+    enterFormData("id");
+
+    await expect(resultsDiv).toContainText(testCdObj.id);
+    await expect(resultsDiv).toContainText(testCdObj.artist);
+    await expect(resultsDiv).toContainText(testCdObj.title);
+    await expect(resultsDiv).toContainText(testCdObj.location);
+  });
+
+  test("Shows items containing the search term when the field is LOCATION.", async () => {
+    enterFormData("location");
+
+    await expect(resultsDiv).toContainText(testCdObj.id);
+    await expect(resultsDiv).toContainText(testCdObj.artist);
+    await expect(resultsDiv).toContainText(testCdObj.title);
+    await expect(resultsDiv).toContainText(testCdObj.location);
+  });
+
+  test("Shows items containing the search term when the field is TITLE.", async () => {
+    enterFormData("title");
+
+    await expect(resultsDiv).toContainText(testCdObj.id);
+    await expect(resultsDiv).toContainText(testCdObj.artist);
+    await expect(resultsDiv).toContainText(testCdObj.title);
+    await expect(resultsDiv).toContainText(testCdObj.location);
+  });
 });
 
 test.describe("LOOKUP - CD COMPS", () => {
