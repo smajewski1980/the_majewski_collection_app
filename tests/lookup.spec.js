@@ -55,20 +55,6 @@ test.describe("LOOKUP", () => {
     "For that field, term must be yes(y) or no(n).";
   const noFieldMsg = "Please select a field to search.";
 
-  const testCdCompObj = {
-    location: "UNICORN CD COMP BOX 47",
-    title: "UNICORN TESTER CD COMP TITLE",
-    title_id: "???", // enter these into test database and update this
-    tracks: [
-      ["Unicorn Artist 1", "Unicorn Track 1"],
-      ["Unicorn Artist 2", "Unicorn Track 2"],
-      ["Unicorn Artist 3", "Unicorn Track 3"],
-      ["Unicorn Artist 4", "Unicorn Track 4"],
-      ["Unicorn Artist 5", "Unicorn Track 5"],
-    ],
-    year: 1980,
-  };
-
   const testCdSingleObj = {
     case_type: "UNICORN CASE",
     artist: "UNICORN TESTER CD SINGLE",
@@ -560,14 +546,58 @@ test.describe("LOOKUP - CDS", () => {
 });
 
 test.describe("LOOKUP - CD COMPS", () => {
-  test.skip("Shows items containing the search term when the field is TITLE.", async () => {});
+  // the setup test object
+  const testCdCompObj = {
+    location: "Soundtrack 10",
+    title: "UNICORN TESTER CD COMP TITLE",
+    title_id: "738",
+    tracks: {
+      1313: { artist: "Unicorn Artist 1", track_name: "Unicorn Track 1" },
+      1314: { artist: "Unicorn Artist 2", track_name: "Unicorn Track 2" },
+      1315: { artist: "Unicorn Artist 3", track_name: "Unicorn Track 3" },
+      1316: { artist: "Unicorn Artist 4", track_name: "Unicorn Track 4" },
+      1317: { artist: "Unicorn Artist 5", track_name: "Unicorn Track 5" },
+    },
+    year: "1980",
+  };
+
+  // helper function to enter the data into the inputs
+  async function enterFormData(field) {
+    await formatSelect.selectOption("cd-compilations");
+    await fieldSelect.selectOption(field);
+    await searchInput.fill(testCdCompObj[`${field}`]);
+    await searchButton.click();
+  }
+
+  // helper function to assert the data
+  async function assertCdCompData() {
+    await expect(resultsDiv).toContainText(testCdCompObj.title);
+    await expect(resultsDiv).toContainText(testCdCompObj.title_id);
+    await expect(resultsDiv).toContainText(testCdCompObj.location);
+    await expect(resultsDiv).toContainText(testCdCompObj.year);
+  }
+
+  // Data-driven loop collapses 4 identical test blocks into 1 clean container
+  const searchFields = [
+    { field: "title", label: "TITLE" },
+    { field: "location", label: "LOCATION" },
+    { field: "title_id", label: "TITLE ID" },
+    { field: "year", label: "YEAR" },
+  ];
+
+  for (const { field, label } of searchFields) {
+    test(`Shows items containing the search term when the field is ${label}.`, async () => {
+      await enterFormData(field);
+      await assertCdCompData();
+    });
+  }
+
+  test.skip("Shows items containing the search term when the field is TRACK ID, artist, track name.", async () => {
+    // { field: "track_id", label: "TRACK ID" },
+    // { field: "artist", label: "ARTIST" },
+    // { field: "track_name", label: "TRACK NAME" },
+  });
   test.skip("Shows additional info popover when an item is clicked.", async () => {});
-  test.skip("Shows items containing the search term when the field is LOCATION.", async () => {});
-  test.skip("Shows items containing the search term when the field is TITLE ID.", async () => {});
-  test.skip("Shows items containing the search term when the field is TRACK ID.", async () => {});
-  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
-  test.skip("Shows items containing the search term when the field is TRACK NAME.", async () => {});
-  test.skip("Shows items containing the search term when the field is YEAR.", async () => {});
 });
 
 test.describe("LOOKUP - CD SINGLES", () => {
