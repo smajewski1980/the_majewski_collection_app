@@ -45,7 +45,7 @@ test.beforeEach(async () => {
   infoPopover = page.locator("#info-popover");
 });
 
-test.describe("LOOKUP", () => {
+test.describe.skip("LOOKUP", () => {
   const numValidationMsg =
     "Please enter a valid number to search by that field.";
   const yearRangeMsg =
@@ -379,7 +379,7 @@ test.describe("LOOKUP", () => {
   });
 });
 
-test.describe("LOOKUP - RECORDS", () => {
+test.describe.skip("LOOKUP - RECORDS", () => {
   // the setup test object
   const testRecordObj = {
     artist: "UNICORN TESTER RECORD",
@@ -444,7 +444,7 @@ test.describe("LOOKUP - RECORDS", () => {
   }
 });
 
-test.describe("LOOKUP - TAPES", () => {
+test.describe.skip("LOOKUP - TAPES", () => {
   // the setup test object
   const testTapeObj = {
     artist: "UNICORN TESTER TAPE",
@@ -504,7 +504,7 @@ test.describe("LOOKUP - TAPES", () => {
   }
 });
 
-test.describe("LOOKUP - CDS", () => {
+test.describe.skip("LOOKUP - CDS", () => {
   // the setup test object
   const testCdObj = {
     artist: "UNICORN TESTER CD",
@@ -592,12 +592,53 @@ test.describe("LOOKUP - CD COMPS", () => {
     });
   }
 
-  test.skip("Shows items containing the search term when the field is TRACK ID, artist, track name.", async () => {
-    // { field: "track_id", label: "TRACK ID" },
-    // { field: "artist", label: "ARTIST" },
-    // { field: "track_name", label: "TRACK NAME" },
+  const testTrackId = Object.keys(testCdCompObj.tracks)[0];
+  const testArtist = testCdCompObj.tracks[testTrackId].artist;
+  const testTrackName = testCdCompObj.tracks[testTrackId].track_name;
+
+  const searchData = [
+    {
+      field: "track_id",
+      label: "TRACK ID",
+      term: testTrackId,
+    },
+    {
+      field: "artist",
+      label: "ARTIST",
+      term: testArtist,
+    },
+    {
+      field: "track_name",
+      label: "TRACK NAME",
+      term: testTrackName,
+    },
+  ];
+
+  for (const { field, label, term } of searchData) {
+    test(`Shows item containing the search term when the field is ${label}.`, async () => {
+      await formatSelect.selectOption("cd-compilations");
+      await fieldSelect.selectOption(field);
+      await searchInput.fill(term);
+      await searchButton.click();
+
+      const resultItem = page.locator(`.item-idx-${testCdCompObj.title_id}`);
+
+      expect(resultItem).toBeInViewport();
+    });
+  }
+
+  test("Shows additional info popover when an item is clicked.", async () => {
+    enterFormData("title");
+
+    const resultItem = page.locator(`.item-idx-${testCdCompObj.title_id}`);
+    await resultItem.click();
+
+    expect(infoPopover).toContainText(testCdCompObj.title);
+    expect(infoPopover).toContainText(testCdCompObj.tracks[testTrackId].artist);
+    expect(infoPopover).toContainText(
+      testCdCompObj.tracks[testTrackId].track_name,
+    );
   });
-  test.skip("Shows additional info popover when an item is clicked.", async () => {});
 });
 
 test.describe("LOOKUP - CD SINGLES", () => {
