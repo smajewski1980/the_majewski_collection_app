@@ -16,8 +16,8 @@ async function handleAllFormatQuery(e, data) {
       FROM tapes
       WHERE LOWER(artist) LIKE LOWER($1)
     ), filtered_cd_singles AS (
-      SELECT single_id as id, artist, title, case_type AS location
-      FROM cd_singles
+      SELECT single_id, artist, track_name, case_type
+      FROM cd_singles_for_all_format_query
       WHERE LOWER(artist) LIKE LOWER($1)
     ), filtered_cd_comps AS (
       SELECT title_id, artist, track_name, location
@@ -31,7 +31,7 @@ async function handleAllFormatQuery(e, data) {
       UNION ALL
       SELECT * FROM filtered_tapes
       UNION ALL
-      SELECT * FROM filtered_cd_singles
+      SELECT single_id as id, artist, track_name as title, case_type as location FROM filtered_cd_singles
       UNION ALL
       SELECT title_id as id, artist, track_name as title, location FROM filtered_cd_comps
 

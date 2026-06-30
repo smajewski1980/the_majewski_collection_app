@@ -16,9 +16,9 @@ const testCdSingleObj = {
   title: "UNICORN TESTER CD SINGLE TITLE",
   single_id: "392",
   tracks: {
-    1236: "Unicorn Track 1",
-    1237: "Unicorn Track 2",
-    1238: "Unicorn Track 3",
+    1236: "Unicorn Single Track 1",
+    1237: "Unicorn Single Track 2",
+    1238: "Unicorn Single Track 3",
   },
   year: "1980",
 };
@@ -730,7 +730,9 @@ test.describe("LOOKUP - ALL FORMATS", () => {
     const expectedStrings = [
       testCdSingleObj.single_id,
       testCdSingleObj.artist,
-      testCdSingleObj.title,
+      testCdSingleObj.tracks[Object.keys(testCdSingleObj.tracks)[0]],
+      testCdSingleObj.tracks[Object.keys(testCdSingleObj.tracks)[1]],
+      testCdSingleObj.tracks[Object.keys(testCdSingleObj.tracks)[2]],
       testCdSingleObj.case_type,
       testCdCompObj.title_id,
       testCdCompObj.tracks[Object.keys(testCdCompObj.tracks)[0]].artist,
