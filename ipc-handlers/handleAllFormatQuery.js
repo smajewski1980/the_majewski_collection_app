@@ -20,7 +20,7 @@ async function handleAllFormatQuery(e, data) {
       FROM cd_singles
       WHERE LOWER(artist) LIKE LOWER($1)
     ), filtered_cd_comps AS (
-      SELECT title_id, artist, title, location
+      SELECT title_id, artist, track_name, location
       FROM cd_comps_for_all_format_query
       WHERE LOWER(artist) LIKE LOWER($1)
     )
@@ -33,9 +33,9 @@ async function handleAllFormatQuery(e, data) {
       UNION ALL
       SELECT * FROM filtered_cd_singles
       UNION ALL
-      SELECT DISTINCT ON (title) title_id as id, artist, title, location FROM filtered_cd_comps
+      SELECT title_id as id, artist, track_name as title, location FROM filtered_cd_comps
 
-      ORDER BY location;
+      ORDER BY location, title;
     `,
       [`%${data}%`],
     );
