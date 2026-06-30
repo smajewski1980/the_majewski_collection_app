@@ -9,6 +9,63 @@ let searchButton;
 let resultsDiv;
 let infoPopover;
 
+// the setup objects
+const testCdSingleObj = {
+  case_type: "Jewel Case",
+  artist: "UNICORN TESTER CD SINGLE",
+  title: "UNICORN TESTER CD SINGLE TITLE",
+  single_id: "392",
+  tracks: {
+    1236: "Unicorn Track 1",
+    1237: "Unicorn Track 2",
+    1238: "Unicorn Track 3",
+  },
+  year: "1980",
+};
+
+const testCdCompObj = {
+  location: "Soundtrack 10",
+  title: "UNICORN TESTER CD COMP TITLE",
+  title_id: "738",
+  tracks: {
+    1313: { artist: "Unicorn Artist 1", track_name: "Unicorn Track 1" },
+    1314: { artist: "Unicorn Artist 2", track_name: "Unicorn Track 2" },
+    1315: { artist: "Unicorn Artist 3", track_name: "Unicorn Track 3" },
+    1316: { artist: "Unicorn Artist 4", track_name: "Unicorn Track 4" },
+    1317: { artist: "Unicorn Artist 5", track_name: "Unicorn Track 5" },
+  },
+  year: "1980",
+};
+
+const testCdObj = {
+  artist: "UNICORN TESTER CD",
+  id: "544",
+  location: "Jazz 12",
+  title: "UNICORN TESTER CD TITLE",
+};
+
+const testTapeObj = {
+  artist: "UNICORN TESTER TAPE",
+  id: "274",
+  location: "Cassettes Box 13",
+  needs_repair: "No",
+  speed: "na",
+  title: "UNICORN TESTER TAPE TITLE",
+  year: "1980",
+};
+
+const testRecordObj = {
+  artist: "UNICORN TESTER RECORD",
+  diameter: "12 inch",
+  id: "807",
+  label: "UNICORN RECORDS",
+  location: "33s Jazz 3",
+  record_condition: "***",
+  sleeve_condition: "***",
+  title: "UNICORN TESTER RECORD TITLE",
+  year: "1980",
+};
+
 test.beforeAll(async () => {
   // Launch the Electron application pointing to your main entry file (e.g., main.js)
   electronApp = await electron.launch({
@@ -45,7 +102,7 @@ test.beforeEach(async () => {
   infoPopover = page.locator("#info-popover");
 });
 
-test.describe.skip("LOOKUP", () => {
+test.describe("LOOKUP", () => {
   const numValidationMsg =
     "Please enter a valid number to search by that field.";
   const yearRangeMsg =
@@ -370,20 +427,7 @@ test.describe.skip("LOOKUP", () => {
   });
 });
 
-test.describe.skip("LOOKUP - RECORDS", () => {
-  // the setup test object
-  const testRecordObj = {
-    artist: "UNICORN TESTER RECORD",
-    diameter: "12 inch",
-    id: "807",
-    label: "UNICORN RECORDS",
-    location: "33s Jazz 3",
-    record_condition: "***",
-    sleeve_condition: "***",
-    title: "UNICORN TESTER RECORD TITLE",
-    year: "1980",
-  };
-
+test.describe("LOOKUP - RECORDS", () => {
   // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("records");
@@ -435,18 +479,7 @@ test.describe.skip("LOOKUP - RECORDS", () => {
   }
 });
 
-test.describe.skip("LOOKUP - TAPES", () => {
-  // the setup test object
-  const testTapeObj = {
-    artist: "UNICORN TESTER TAPE",
-    id: "274",
-    location: "Cassettes Box 13",
-    needs_repair: "No",
-    speed: "na",
-    title: "UNICORN TESTER TAPE TITLE",
-    year: "1980",
-  };
-
+test.describe("LOOKUP - TAPES", () => {
   // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("tapes");
@@ -495,15 +528,7 @@ test.describe.skip("LOOKUP - TAPES", () => {
   }
 });
 
-test.describe.skip("LOOKUP - CDS", () => {
-  // the setup test object
-  const testCdObj = {
-    artist: "UNICORN TESTER CD",
-    id: "544",
-    location: "Jazz 12",
-    title: "UNICORN TESTER CD TITLE",
-  };
-
+test.describe("LOOKUP - CDS", () => {
   // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("cds");
@@ -537,21 +562,6 @@ test.describe.skip("LOOKUP - CDS", () => {
 });
 
 test.describe("LOOKUP - CD COMPS", () => {
-  // the setup test object
-  const testCdCompObj = {
-    location: "Soundtrack 10",
-    title: "UNICORN TESTER CD COMP TITLE",
-    title_id: "738",
-    tracks: {
-      1313: { artist: "Unicorn Artist 1", track_name: "Unicorn Track 1" },
-      1314: { artist: "Unicorn Artist 2", track_name: "Unicorn Track 2" },
-      1315: { artist: "Unicorn Artist 3", track_name: "Unicorn Track 3" },
-      1316: { artist: "Unicorn Artist 4", track_name: "Unicorn Track 4" },
-      1317: { artist: "Unicorn Artist 5", track_name: "Unicorn Track 5" },
-    },
-    year: "1980",
-  };
-
   // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("cd-compilations");
@@ -633,20 +643,6 @@ test.describe("LOOKUP - CD COMPS", () => {
 });
 
 test.describe("LOOKUP - CD SINGLES", () => {
-  // the setup test object
-  const testCdSingleObj = {
-    case_type: "Jewel Case",
-    artist: "UNICORN TESTER CD SINGLE",
-    title: "UNICORN TESTER CD SINGLE TITLE",
-    single_id: "392",
-    tracks: {
-      1236: "Unicorn Track 1",
-      1237: "Unicorn Track 2",
-      1238: "Unicorn Track 3",
-    },
-    year: "1980",
-  };
-
   // helper function to enter the data into the inputs
   async function enterFormData(field) {
     await formatSelect.selectOption("cd-singles");
@@ -730,5 +726,34 @@ test.describe("LOOKUP - CD SINGLES", () => {
 });
 
 test.describe("LOOKUP - ALL FORMATS", () => {
-  test.skip("Shows items containing the search term when the field is ARTIST.", async () => {});
+  test("Shows items containing the search term when the field is ARTIST.", async () => {
+    const expectedStrings = [
+      testCdSingleObj.single_id,
+      testCdSingleObj.artist,
+      testCdSingleObj.title,
+      testCdSingleObj.case_type,
+      testCdCompObj.title_id,
+      "Unicorn Artist",
+      testCdCompObj.title,
+      testCdCompObj.location,
+      ...Object.values(testCdObj),
+      testRecordObj.id,
+      testRecordObj.artist,
+      testRecordObj.title,
+      testRecordObj.location,
+      testTapeObj.id,
+      testTapeObj.artist,
+      testTapeObj.title,
+      testTapeObj.location,
+    ];
+
+    await formatSelect.selectOption("all-formats");
+    await fieldSelect.selectOption("ARTIST");
+    await searchInput.fill("UNICORN");
+    await searchButton.click();
+
+    expectedStrings.forEach(
+      async (str) => await expect(resultsDiv).toContainText(str),
+    );
+  });
 });
