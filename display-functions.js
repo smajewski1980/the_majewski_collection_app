@@ -25,8 +25,14 @@ export const displayAllFormats = (rows, term) => {
     const p = utils.makeP();
 
     Object.values(row).forEach((val, idx) => {
-      if (val === "unicorn47_flag") {
-        utils.resultsElement.append(document.createElement("hr"));
+      if (val === "unicorn47_flag" || !val) {
+        if (idx === 2) {
+          const span = document.createElement("span");
+          span.innerText = "* From here down, the title column is track name.";
+          p.append(span);
+          // p.innerText = "* From here down, the title column is track name.";
+          p.className = "list-flag";
+        }
       } else {
         p.append(utils.createLoadedSpan(val, idx));
       }
