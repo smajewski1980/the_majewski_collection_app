@@ -168,6 +168,22 @@
         }
       }
 
+      hr {
+        margin-block: 1rem 1.75rem;
+        border: none;
+        height: 1px;
+        background-color: var(--accent-purple);
+
+        &::after {
+          content: " * From here down, the title column is track name.";
+          font-family: var(--reg-font);
+          position: absolute;
+          color: var(--accent-purple);
+          margin-block-start: 0.3rem;
+          margin-inline-start: 0.5rem;
+        }
+      }
+
       p.cd-comps {
         grid-template-columns: 10% auto 10% 15%;
         cursor: pointer;

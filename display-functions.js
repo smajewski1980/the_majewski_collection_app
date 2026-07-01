@@ -25,16 +25,17 @@ export const displayAllFormats = (rows, term) => {
     const p = utils.makeP();
 
     Object.values(row).forEach((val, idx) => {
-      p.append(utils.createLoadedSpan(val, idx));
+      if (val === "unicorn47_flag") {
+        utils.resultsElement.append(document.createElement("hr"));
+      } else {
+        p.append(utils.createLoadedSpan(val, idx));
+      }
     });
 
     utils.resultsElement.append(p);
   });
 
   utils.setArtistColWidths();
-
-  console.log(`for the term ${term}:`);
-  console.log(rows);
 };
 
 /**
