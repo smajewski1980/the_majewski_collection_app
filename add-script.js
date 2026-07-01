@@ -41,7 +41,7 @@ let initialLoad = true;
 let currentForm = null;
 const btnLoadLast = document.querySelector(".btn-load-last");
 const resetUpdateForm = () => document.getElementById("update-id-form").reset();
-const addedItemsTitle = document.getElementById("added-list-title");
+// const addedItemsTitle = document.getElementById("added-list-title");
 
 updateUiSessionList();
 
@@ -65,23 +65,23 @@ function handleNavBtnClick(e) {
   currentForm = e.target.dataset.form;
 
   if (currentForm === "cd-comps-form") {
-    changeElClass(addedItemsTitle, "cd-comp-color");
+    changeElClass(utils.addedItemsTitle, "cd-comp-color");
     changeElClass(loadLastLabel, "cd-comp-color");
     changeElClass(btnLoadLast, "btn-load-last cd-comp-color");
   } else if (currentForm === "cd-singles-form") {
-    changeElClass(addedItemsTitle, "cd-single-color");
+    changeElClass(utils.addedItemsTitle, "cd-single-color");
     changeElClass(loadLastLabel, "cd-single-color");
     changeElClass(btnLoadLast, "btn-load-last cd-single-color");
   } else if (currentForm === "cd-main-form") {
-    changeElClass(addedItemsTitle, "cds-main-color");
+    changeElClass(utils.addedItemsTitle, "cds-main-color");
     changeElClass(loadLastLabel, "cds-main-color");
     changeElClass(btnLoadLast, "btn-load-last cds-main-color");
   } else if (currentForm === "records-form") {
-    changeElClass(addedItemsTitle, "record-color");
+    changeElClass(utils.addedItemsTitle, "record-color");
     changeElClass(loadLastLabel, "record-color");
     changeElClass(btnLoadLast, "btn-load-last record-color");
   } else {
-    changeElClass(addedItemsTitle, "tape-color");
+    changeElClass(utils.addedItemsTitle, "tape-color");
     changeElClass(loadLastLabel, "tape-color");
     changeElClass(btnLoadLast, "btn-load-last tape-color");
   }

@@ -133,6 +133,7 @@ const utils = {
     return span;
   },
   resultsElement: document.getElementById("query-results"),
+  addedItemsTitle: document.getElementById("added-list-title"),
   messageDiv: document.getElementById("message"),
   resQtyEl: document.getElementById("result-qty"),
   makeSpan: () => document.createElement("span"),

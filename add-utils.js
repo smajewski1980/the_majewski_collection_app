@@ -151,13 +151,19 @@ export async function updateUiSessionList() {
     "sessionGet",
     "currAdded",
   );
+  const listLength = currSessionList.length;
+
+  sessionList.innerHTML = "";
+  utils.addedItemsTitle.innerText = listLength
+    ? `${listLength} items modified this session:`
+    : "Items modified this session:";
+
   // this gets refreshed when a page is loaded
   // if there isnt anything in the list yet return
-  if (!currSessionList.length) {
+  if (!listLength) {
     return;
   }
 
-  sessionList.innerHTML = "";
   currSessionList.forEach((item) => {
     const li = document.createElement("li");
 
