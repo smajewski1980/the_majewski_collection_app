@@ -42,48 +42,53 @@ test.describe("ADD ITEMS", () => {
       await page.reload();
     });
 
-    test("When the Cd-Compilations button is clicked, the Cd-Compilations form is displayed.", async () => {
+    test("When the Cd-Compilations button is clicked, the button gets active style and the Cd-Compilations form is displayed.", async () => {
       const compsNavBtn = page.getByRole("button", { name: "Cd-Compilations" });
       await compsNavBtn.click();
 
       const activeForm = await page.locator(".active-form");
 
+      await expect(compsNavBtn).toHaveClass(/active-nav-btn/);
       await expect(activeForm).toHaveId(CD_COMPS_FORM_ID);
     });
 
-    test("When the Cd-Singles button is clicked, the Cd-Singles form is displayed.", async () => {
+    test("When the Cd-Singles button is clicked, the button gets active style and the Cd-Singles form is displayed.", async () => {
       const singlesNavBtn = page.getByRole("button", { name: "Cd-Singles" });
       await singlesNavBtn.click();
 
       const activeForm = await page.locator(".active-form");
 
+      await expect(singlesNavBtn).toHaveClass(/active-nav-btn/);
       await expect(activeForm).toHaveId(CD_SINGLES_FORM_ID);
     });
 
-    test("When the Cd-Main Catalog button is clicked, the Cd-Main Catalog form is displayed.", async () => {
+    test("When the Cd-Main Catalog button is clicked, the button gets active style and the Cd-Main Catalog form is displayed.", async () => {
       const cdsNavBtn = page.getByRole("button", { name: "Cd-Main Catalog" });
       await cdsNavBtn.click();
 
       const activeForm = await page.locator(".active-form");
 
+      await expect(cdsNavBtn).toHaveClass(/active-nav-btn/);
       await expect(activeForm).toHaveId(CD_MAIN_FORM_ID);
     });
 
-    test("When the Records button is clicked, the Records form is displayed.", async () => {
+    test("When the Records button is clicked, the button gets active style and the Records form is displayed.", async () => {
       const recordsNavBtn = page.getByRole("button", { name: "Records" });
       await recordsNavBtn.click();
 
       const activeForm = await page.locator(".active-form");
 
+      await expect(recordsNavBtn).toHaveClass(/active-nav-btn/);
       await expect(activeForm).toHaveId(RECORDS_FORM_ID);
     });
 
-    test("When the Tapes button is clicked, the Tapes form is displayed.", async () => {
+    test("When the Tapes button is clicked, the button gets active style and the Tapes form is displayed.", async () => {
       const tapesNavBtn = page.getByRole("button", { name: "Tapes" });
       await tapesNavBtn.click();
 
       const activeForm = await page.locator(".active-form");
 
+      await expect(tapesNavBtn).toHaveClass(/active-nav-btn/);
       await expect(activeForm).toHaveId(TAPES_FORM_ID);
     });
   });
