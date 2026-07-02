@@ -40,6 +40,7 @@ const forms = [cdCompsForm, cdSinglesForm, cdsMainForm, recordsForm, tapesForm];
 const mainEl = document.querySelector("main");
 let initialLoad = true;
 let currentForm = null;
+const loadLastLabel = document.getElementById("load-last-label");
 const btnLoadLast = document.querySelector(".btn-load-last");
 const resetUpdateForm = () => document.getElementById("update-id-form").reset();
 
@@ -67,8 +68,6 @@ const updateLoadLastBtnState = async () => {
     await addToSessionStore("", false, "isFirstSessionAdd");
   }
 };
-
-const loadLastLabel = document.getElementById("load-last-label");
 
 /**
  * when a nav button is clicked, show the appropriate form
@@ -678,15 +677,16 @@ if (document.title === "The Majewski Collection Add Items") {
       "sessionGet",
       "currAdded",
     );
-    // if there isnt anything in the list yet, return
-    if (!currSessionList.length) {
-      return;
-    }
 
     const lastEntryForm = currSessionList[0][2];
     const lastEntry = currSessionList[0][0];
     // if the last entry was a different format, return
-    if (currentForm !== lastEntryForm) return;
+    if (currentForm !== lastEntryForm) {
+      return toasty(
+        "The active form does not match the format of the last entry.",
+        "red",
+      );
+    }
 
     populateFormWithLastEntry(activeForm, lastEntry);
   });
