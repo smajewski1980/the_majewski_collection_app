@@ -13,6 +13,7 @@ import {
   isLocValValid,
   addToSessionStore,
   formatCdCompsTracks,
+  enableLoadLastBtn,
 } from "./add-utils.js";
 import { populateFormWithLastEntry, getLastEntry } from "./last-entry.js";
 import utils from "./utils.js";
@@ -41,13 +42,31 @@ let initialLoad = true;
 let currentForm = null;
 const btnLoadLast = document.querySelector(".btn-load-last");
 const resetUpdateForm = () => document.getElementById("update-id-form").reset();
-// const addedItemsTitle = document.getElementById("added-list-title");
 
 updateUiSessionList();
+
+const isFirstSessionAdd = async () => {
+  return await sessionStore.sessionGet("sessionGet", "isFirstSessionAdd");
+};
+
+if (
+  document.title === "The Majewski Collection Add Items" &&
+  !(await isFirstSessionAdd())
+) {
+  enableLoadLastBtn();
+}
 
 function changeElClass(el, cl_ss) {
   el.className = cl_ss;
 }
+
+const updateLoadLastBtnState = async () => {
+  // if its the first item this session, enable the load last btn
+  if (await isFirstSessionAdd()) {
+    enableLoadLastBtn();
+    await addToSessionStore("", false, "isFirstSessionAdd");
+  }
+};
 
 const loadLastLabel = document.getElementById("load-last-label");
 
@@ -164,7 +183,13 @@ export async function handleCdCompsForm(e) {
 
       // add item data to the session list
       data.id = `id: ${res}`;
-      addToSessionStore("", [data, "cd-comp-color", currForm.id], "currAdded");
+      await addToSessionStore(
+        "",
+        [data, "cd-comp-color", currForm.id],
+        "currAdded",
+      );
+      // check if its the first add for the session and enable the load last btn
+      updateLoadLastBtnState();
     } else {
       // data["title_id"] = Number(document.getElementById("update-id").value);
       const updatedId = Number(document.getElementById("update-id").value);
@@ -277,6 +302,9 @@ export async function handleCdSinglesForm(e) {
         [data, "cd-single-color", currForm.id],
         "currAdded",
       );
+
+      // check if its the first add for the session and enable the load last btn
+      updateLoadLastBtnState();
     } else {
       const updatedId = Number(document.getElementById("update-id").value);
       data.id = `id: ${updatedId}`;
@@ -365,6 +393,9 @@ export async function handleCdsMainForm(e) {
       // add item data to the session list
       data.id = `id: ${res}`;
       addToSessionStore("", [data, "cds-main-color", currForm.id], "currAdded");
+
+      // check if its the first add for the session and enable the load last btn
+      updateLoadLastBtnState();
     } else {
       const updatedId = Number(document.getElementById("update-id").value);
       data["id"] = updatedId;
@@ -469,6 +500,9 @@ export async function handleRecordsForm(e) {
       // add item data to the session list
       data.id = `id: ${res}`;
       addToSessionStore("", [data, "record-color", currForm.id], "currAdded");
+
+      // check if its the first add for the session and enable the load last btn
+      updateLoadLastBtnState();
     } else {
       const updatedId = Number(document.getElementById("update-id").value);
       data["id"] = updatedId;
@@ -569,6 +603,9 @@ export async function handleTapesForm(e) {
       // add item data to the session list
       data.id = `id: ${res}`;
       addToSessionStore("", [data, "tape-color", currForm.id], "currAdded");
+
+      // check if its the first add for the session and enable the load last btn
+      updateLoadLastBtnState();
     } else {
       const updatedId = Number(document.getElementById("update-id").value);
       data["id"] = updatedId;

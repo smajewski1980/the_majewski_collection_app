@@ -118,6 +118,7 @@ test.describe("ADD ITEMS", () => {
   test.describe("The Right col items", () => {
     test.skip("PUSH ME button is inert until there is an item in the list", async () => {});
     test.skip("PUSH ME button loads the last entry when pressed", async () => {});
+    test.skip("PUSH ME button throws toast if selected nav btn doesn't amtch the current form", async () => {});
     test.skip("INCREMENT LOCATION checkbox increments the location of the cd comps form", async () => {});
     test.skip("INCREMENT LOCATION checkbox shows error toast for the cd-singles form", async () => {});
     test.skip("INCREMENT LOCATION checkbox increments the location of the cd-main form", async () => {});

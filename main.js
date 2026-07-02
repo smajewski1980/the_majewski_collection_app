@@ -50,6 +50,7 @@ const sessionStore = {
   recordsCurr: [],
   tapesCurr: [],
   currAdded: [],
+  isFirstSessionAdd: true,
 };
 
 // i switched on the experimental features flag so i could

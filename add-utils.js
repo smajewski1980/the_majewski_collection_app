@@ -347,3 +347,8 @@ export function formatCdCompsTracks(tracksArray, currForm) {
   });
   return tracksToSend;
 }
+
+export function enableLoadLastBtn() {
+  const btnLoadLastItem = document.querySelector(".btn-load-last");
+  utils.toggleInertEl(btnLoadLastItem, false);
+}
