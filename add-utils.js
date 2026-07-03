@@ -1,4 +1,5 @@
 import utils from "./utils.js";
+import constants from "./constants.js";
 const sessionList = document.getElementById("session-list");
 let isToastShowing = false;
 
@@ -65,7 +66,7 @@ export function noEmptyFields(data, tracksTrigger) {
   }
 
   if ("year" in data && Number.isNaN(data.year)) {
-    toasty("Year must be a number.", "red");
+    toasty(constants.toast.valErr.YEAR_TYPE, constants.color.ERROR);
     return;
   }
 
@@ -293,8 +294,8 @@ export function initialShowForm(mainEl) {
  * @returns {Boolean}
  */
 export async function isLocValValid(locVal, validArr) {
-  const addPage = "The Majewski Collection Add Items";
-  const updatePage = "The Majewski Collection Update Items";
+  const addPage = constants.pageTitle.ADD_PAGE_TITLE;
+  const updatePage = constants.pageTitle.UPDATE_PAGE_TITLE;
   const currPage = document.title;
   const res = await getCurrentLocations.getCurrentLocations(
     "getCurrentLocations",
@@ -305,7 +306,7 @@ export async function isLocValValid(locVal, validArr) {
   } else if (currPage === updatePage && res.includes(locVal)) {
     return true;
   } else {
-    toasty("Location field does not contain a valid value.", "red");
+    toasty(constants.toast.valErr.LOCATION_INVALID, constants.color.ERROR);
     return false;
   }
 }
@@ -322,27 +323,22 @@ export function formatCdCompsTracks(tracksArray, currForm) {
   tracksArray.forEach((tr) => {
     // i use the pipe to split on
     const track = tr.split("|");
-    if (track.length !== 2 || track[0].length === 0 || track[1].length === 0) {
-      toasty("Check your track data. Must be <artist>|<title>.", "red");
-      toasty(
+
+    if (track.length === 1 && track[0] === "") {
+      return toasty(constants.toast.valErr.TRACK_FORMAT, constants.color.ERROR);
+    } else if (!track[0] || !track[1]) {
+      return toasty(
         `${
           track[0] === ""
-            ? "All tracks must have an artist"
-            : "All tracks must have a track name"
+            ? constants.toast.valErr.NO_ARTIST
+            : constants.toast.valErr.NO_TRACKNAME
         }`,
-        "red",
+        constants.color.ERROR,
       );
-      utils.toggleInertEl(currForm, false);
-      return;
-    }
-    if (track.length === 2) {
+    } else {
       track[0] = track[0].trim();
       track[1] = track[1].trim();
       tracksToSend.push(track);
-    } else {
-      toasty("Check your track data. Must be <artist>|<title>.", "red");
-      utils.toggleInertEl(currForm, false);
-      return;
     }
   });
   return tracksToSend;

@@ -25,6 +25,7 @@ import {
   handleCheckbox,
 } from "./handle-loc-incr.js";
 import { getLocations } from "./get-current-locations.js";
+import constants from "./constants.js";
 const cdCompsForm = document.getElementById("cd-comps-form");
 const cdSinglesForm = document.getElementById("cd-singles-form");
 const cdsMainForm = document.getElementById("cd-main-form");
@@ -75,7 +76,7 @@ const updateLoadLastBtnState = async () => {
  * @returns {void}
  */
 function handleNavBtnClick(e) {
-  if (document.title === "The Majewski Collection Update Items") return;
+  if (document.title === constants.pageTitle.UPDATE_PAGE_TITLE) return;
   if (e.target.classList.contains("active-nav-btn")) {
     document.getElementById(`${e.target.dataset.form}`).reset();
     return;
@@ -156,13 +157,13 @@ export async function handleCdCompsForm(e) {
   };
 
   if (!noEmptyFields(data, true)) {
-    toasty("All fields must be filled out.", "red");
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
-    toasty("Year must be 4 digits.", "red");
+    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -175,10 +176,10 @@ export async function handleCdCompsForm(e) {
 
   try {
     let res;
-    if (currPage !== "The Majewski Collection Update Items") {
+    if (currPage !== constants.pageTitle.UPDATE_PAGE_TITLE) {
       res = await inserts.insertCdComps("insertCdComps", data);
 
-      toasty("item successfully added", "green");
+      toasty(constants.toast.ADD_SUCCESS_MSG, constants.color.SUCCESS);
 
       // add item data to the session list
       data.id = `id: ${res}`;
@@ -200,11 +201,11 @@ export async function handleCdCompsForm(e) {
         throw new Error(res);
       }
       if (res < 1) {
-        throw new Error("Please check your fields, no rows have been updated.");
+        throw new Error(constants.toast.UPDATE_DB_ERR);
       }
       console.log(data);
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-      toasty("item successfully updated", "green");
+      toasty(constants.toast.UPDATE_SUCCESS_MSG, constants.color.SUCCESS);
       resetUpdateForm();
     }
 
@@ -263,20 +264,20 @@ export async function handleCdSinglesForm(e) {
   };
 
   if (!noEmptyFields(data, true)) {
-    toasty("All fields must be filled out.", "red");
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
-    toasty("Year must be 4 digits", "red");
+    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   // if only the tracks are empty
   if (!trackList[0] && noEmptyFields(data, true)) {
-    toasty("Please add some tracks.", "red");
+    toasty(constants.toast.valErr.NO_TRACKS, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -289,10 +290,10 @@ export async function handleCdSinglesForm(e) {
 
   try {
     let res;
-    if (currPage !== "The Majewski Collection Update Items") {
+    if (currPage !== constants.pageTitle.UPDATE_PAGE_TITLE) {
       res = await inserts.insertCdSingles("insertCdSingles", data);
 
-      toasty("item successfully added", "green");
+      toasty(constants.toast.ADD_SUCCESS_MSG, constants.color.SUCCESS);
 
       // add item data to the session list
       data.id = `id: ${res}`;
@@ -315,11 +316,11 @@ export async function handleCdSinglesForm(e) {
         throw new Error(res);
       }
       if (res < 1) {
-        throw new Error("Please check your fields, no rows have been updated.");
+        throw new Error(constants.toast.UPDATE_DB_ERR);
       }
 
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-      toasty("item successfully updated", "green");
+      toasty(constants.toast.UPDATE_SUCCESS_MSG, constants.color.SUCCESS);
       resetUpdateForm();
     }
 
@@ -371,7 +372,7 @@ export async function handleCdsMainForm(e) {
   };
 
   if (!noEmptyFields(data, false)) {
-    toasty("All fields must be filled out.", "red");
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.Error);
     utils.makeInert(currForm, false);
     return;
   }
@@ -384,10 +385,10 @@ export async function handleCdsMainForm(e) {
 
   try {
     let res;
-    if (currPage !== "The Majewski Collection Update Items") {
+    if (currPage !== constants.pageTitle.UPDATE_PAGE_TITLE) {
       res = await inserts.insertCdsMain("insertCdsMain", trimDataFields(data));
 
-      toasty("item successfully added", "green");
+      toasty(constants.toast.ADD_SUCCESS_MSG, constants.color.SUCCESS);
 
       // add item data to the session list
       data.id = `id: ${res}`;
@@ -405,12 +406,12 @@ export async function handleCdsMainForm(e) {
       }
 
       if (res < 1) {
-        throw new Error("Please check your fields, no rows have been updated.");
+        throw new Error(constants.toast.UPDATE_DB_ERR);
       }
 
       data.id = `id: ${updatedId}`;
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-      toasty("item successfully updated", "green");
+      toasty(constants.toast.UPDATE_SUCCESS_MSG, constants.color.SUCCESS);
       resetUpdateForm();
     }
 
@@ -472,13 +473,13 @@ export async function handleRecordsForm(e) {
   };
 
   if (!noEmptyFields(data, false)) {
-    toasty("All fields must be filled out.", "red");
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
-    toasty("Year must be 4 digits", "red");
+    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -491,10 +492,10 @@ export async function handleRecordsForm(e) {
 
   try {
     let res;
-    if (currPage !== "The Majewski Collection Update Items") {
+    if (currPage !== constants.pageTitle.UPDATE_PAGE_TITLE) {
       res = await inserts.insertRecords("insertRecords", trimDataFields(data));
 
-      toasty("item successfully added", "green");
+      toasty(constants.toast.ADD_SUCCESS_MSG, constants.color.SUCCESS);
 
       // add item data to the session list
       data.id = `id: ${res}`;
@@ -512,12 +513,12 @@ export async function handleRecordsForm(e) {
       }
 
       if (res < 1) {
-        throw new Error("Please check your fields, no rows have been updated.");
+        throw new Error(constants.toast.UPDATE_DB_ERR);
       }
 
       data.id = `id: ${updatedId}`;
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-      toasty("item successfully updated", "green");
+      toasty(constants.toast.UPDATE_SUCCESS_MSG, constants.color.SUCCESS);
       resetUpdateForm();
     }
 
@@ -576,12 +577,12 @@ export async function handleTapesForm(e) {
 
   // input validation
   if (!noEmptyFields(data, false)) {
-    toasty("All fields must be filled out.", "red");
+    toasty(constants.toast.NO_EMPTY_FIELDS, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
   if (!yearFormatIsGood(data.year)) {
-    toasty("Year must be 4 digits", "red");
+    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -594,10 +595,10 @@ export async function handleTapesForm(e) {
 
   try {
     let res;
-    if (currPage !== "The Majewski Collection Update Items") {
+    if (currPage !== constants.pageTitle.UPDATE_PAGE_TITLE) {
       res = await inserts.insertTapes("insertTapes", trimDataFields(data));
 
-      toasty("item successfully added", "green");
+      toasty(constants.toast.ADD_SUCCESS_MSG, constants.color.SUCCESS);
 
       // add item data to the session list
       data.id = `id: ${res}`;
@@ -615,12 +616,12 @@ export async function handleTapesForm(e) {
       }
 
       if (res < 1) {
-        throw new Error("Please check your fields, no rows have been updated.");
+        throw new Error(constants.toast.UPDATE_DB_ERR);
       }
 
       data.id = `id: ${updatedId}`;
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
-      toasty("item successfully updated", "green");
+      toasty(constants.toast.UPDATE_SUCCESS_MSG, constants.color.SUCCESS);
       resetUpdateForm();
     }
 
@@ -660,7 +661,7 @@ incrementCheckbox.addEventListener("change", (e) => {
   e.preventDefault();
   if (currentForm === "cd-singles-form") {
     e.target.checked = false;
-    toasty("You can not increment the singles locations.", null);
+    toasty(constants.toast.valErr.NO_INCR_AVAIL, constants.color.ERROR);
     return;
   }
   if (!incrementFlag) {
@@ -668,12 +669,15 @@ incrementCheckbox.addEventListener("change", (e) => {
   }
 });
 
-if (document.title === "The Majewski Collection Add Items") {
+if (document.title === constants.pageTitle.ADD_PAGE_TITLE) {
   btnLoadLast.addEventListener("click", async (e) => {
     e.preventDefault();
 
     if (!currentForm) {
-      return toasty("Please load a format's entry form first.", "red");
+      return toasty(
+        constants.toast.valErr.NO_ACTIVE_FORM,
+        constants.color.ERROR,
+      );
     }
 
     const activeForm = document.querySelector(".active-form");
@@ -688,8 +692,8 @@ if (document.title === "The Majewski Collection Add Items") {
     // if the last entry was a different format, return
     if (currentForm !== lastEntryForm) {
       return toasty(
-        "The active form does not match the format of the last entry.",
-        "red",
+        constants.toast.valErr.FORM_MISMATCH,
+        constants.color.ERROR,
       );
     }
 
