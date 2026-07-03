@@ -147,3 +147,5 @@ app.on("will-quit", () => {
     console.log(error);
   }
 });
+
+global.sessionStore = sessionStore;

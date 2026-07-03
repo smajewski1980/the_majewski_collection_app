@@ -116,9 +116,60 @@ test.describe("ADD ITEMS", () => {
   });
 
   test.describe("The Right col items", () => {
-    test.skip("PUSH ME button is inert until there is an item in the list", async () => {});
-    test.skip("PUSH ME button loads the last entry when pressed", async () => {});
-    test.skip("PUSH ME button throws toast if selected nav btn doesn't amtch the current form", async () => {});
+    test.describe("The PUSH ME/load last button", () => {
+      test("PUSH ME button is inert when page loads", async () => {
+        const button = await page.getByRole("button", { name: "PUSH ME" });
+        await expect(button).toHaveAttribute("inert");
+      });
+
+      test("PUSH ME button is enabled when sessionStore.isFirstSessionAdd = false", async () => {
+        await electronApp.evaluate(async ({ global }) => {
+          globalThis.sessionStore.isFirstSessionAdd = false;
+        });
+        await page.reload();
+        const button = await page.getByRole("button", { name: "PUSH ME" });
+
+        await expect(button).not.toHaveAttribute("inert");
+      });
+
+      test("PUSH ME button loads the last entry to the form when pressed", async () => {
+        const mockCdData = {
+          id: "id: 4747",
+          artist: "MOCK CD MAIN ARTIST",
+          title: "MOCK CD MAIN TITLE",
+          location: "Jazz 1",
+        };
+        // add a mock object to the sessionstore
+        await electronApp.evaluate(async ({ global }, cdData) => {
+          const data = [cdData, "cds-main-color", "cd-main-form"];
+          globalThis.sessionStore.currAdded.push(data);
+        }, mockCdData);
+        // reload page
+        await page.reload();
+        // click the correct form select btn
+        const cdFormatBtn = await page.getByRole("button", {
+          name: "Cd-Main Catalog",
+        });
+        await cdFormatBtn.click();
+        // click the load last item btn
+        const button = await page.getByRole("button", { name: "PUSH ME" });
+        await button.click();
+        // assert the form vals are loaded
+        const activeForm = await page.locator(".active-form");
+        const artistInput = await activeForm.locator("#cds-main-artist");
+        const titleInput = await activeForm.locator("#cds-main-title");
+        const locationInput = await activeForm.locator("#cds-main-location");
+
+        await expect(activeForm).toHaveId("cd-main-form");
+        await expect(artistInput).toHaveValue(mockCdData.artist);
+        await expect(titleInput).toHaveValue(mockCdData.title);
+        await expect(locationInput).toHaveValue(mockCdData.location);
+      });
+
+      test.skip("PUSH ME button throws toast if selected nav btn doesn't match the active form", async () => {});
+      test.skip("PUSH ME button throws toast if clicked with no active form", async () => {});
+    });
+
     test.skip("INCREMENT LOCATION checkbox increments the location of the cd comps form", async () => {});
     test.skip("INCREMENT LOCATION checkbox shows error toast for the cd-singles form", async () => {});
     test.skip("INCREMENT LOCATION checkbox increments the location of the cd-main form", async () => {});
