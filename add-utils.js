@@ -320,14 +320,22 @@ export async function isLocValValid(locVal, validArr) {
 export function formatCdCompsTracks(tracksArray, currForm) {
   let tracksToSend = [];
   // break down each track to array of artist and title
-  tracksArray.forEach((tr) => {
+  for (let i = 0; i < tracksArray.length; i++) {
+    const tr = tracksArray[i];
     // i use the pipe to split on
     const track = tr.split("|");
 
+    if (tracksArray.length > 1 && track.length === 1 && track[0] === "") {
+      continue;
+    }
+
     if (track.length === 1 && track[0] === "") {
-      return toasty(constants.toast.valErr.TRACK_FORMAT, constants.color.ERROR);
-    } else if (!track[0] || !track[1]) {
-      return toasty(
+      toasty(constants.toast.valErr.TRACK_FORMAT, constants.color.ERROR);
+      return undefined;
+    }
+
+    if (!track[0] || !track[1]) {
+      toasty(
         `${
           track[0] === ""
             ? constants.toast.valErr.NO_ARTIST
@@ -335,12 +343,11 @@ export function formatCdCompsTracks(tracksArray, currForm) {
         }`,
         constants.color.ERROR,
       );
-    } else {
-      track[0] = track[0].trim();
-      track[1] = track[1].trim();
-      tracksToSend.push(track);
+      return undefined;
     }
-  });
+
+    tracksToSend.push([track[0].trim(), track[1].trim()]);
+  }
   return tracksToSend;
 }
 
