@@ -166,8 +166,36 @@ test.describe("ADD ITEMS", () => {
         await expect(locationInput).toHaveValue(mockCdData.location);
       });
 
-      test.skip("PUSH ME button throws toast if selected nav btn doesn't match the active form", async () => {});
-      test.skip("PUSH ME button throws toast if clicked with no active form", async () => {});
+      test("PUSH ME button throws toast if selected nav btn doesn't match the active form", async () => {
+        // the added cd is still in the sessionStore
+        // load form for a different format
+        const tapeFormatBtn = await page.getByRole("button", {
+          name: "Tapes",
+        });
+        await tapeFormatBtn.click();
+        // click the load last item btn
+        const button = await page.getByRole("button", { name: "PUSH ME" });
+        await button.click();
+
+        const toast = await page.locator(".page-message");
+
+        expect(toast).toHaveText(
+          "The active form does not match the format of the last entry.",
+        );
+      });
+
+      test("PUSH ME button throws toast if clicked with no active form", async () => {
+        // continuing with the cd in the session store so the push me btn will be enabled
+        await page.reload();
+
+        // click the load last item btn
+        const button = await page.getByRole("button", { name: "PUSH ME" });
+        await button.click();
+
+        const toast = await page.locator(".page-message");
+
+        expect(toast).toHaveText("Please load a format's entry form first.");
+      });
     });
 
     test.skip("INCREMENT LOCATION checkbox increments the location of the cd comps form", async () => {});

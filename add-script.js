@@ -671,6 +671,11 @@ incrementCheckbox.addEventListener("change", (e) => {
 if (document.title === "The Majewski Collection Add Items") {
   btnLoadLast.addEventListener("click", async (e) => {
     e.preventDefault();
+
+    if (!currentForm) {
+      return toasty("Please load a format's entry form first.", "red");
+    }
+
     const activeForm = document.querySelector(".active-form");
 
     const currSessionList = await sessionStore.sessionGet(
