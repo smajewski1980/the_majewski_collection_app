@@ -1,4 +1,5 @@
 import { toasty } from "./add-utils.js";
+import constants from "./constants.js";
 
 /**
  * queries and returns cd comp data when given a good cd comp id
@@ -15,7 +16,7 @@ export async function getCdCompsDataById(id) {
     );
 
     if (!res.length) {
-      throw new Error("No compilations found with that id.");
+      throw new Error(constants.toast.ERROR_NO_COMPS_MSG);
     }
 
     // get the data to the expected format for loading
@@ -46,7 +47,7 @@ export async function getCdSinglesDataById(id) {
     );
 
     if (!res.length) {
-      throw new Error("No singles found with that id.");
+      throw new Error(constants.toast.ERROR_NO_SINGLES_MSG);
     }
 
     // get the data to the expected format for loading
@@ -78,7 +79,7 @@ export async function getCdsMainDataById(id) {
     );
 
     if (!res.length) {
-      throw new Error("No cds found with that id.");
+      throw new Error(constants.toast.ERROR_NO_CDS_MSG);
     }
 
     return res[0];
@@ -102,7 +103,7 @@ export async function getRecordsDataById(id) {
     );
 
     if (!res.length) {
-      throw new Error("No records found with that id.");
+      throw new Error(constants.toast.ERROR_NO_RECORDS_MSG);
     }
 
     return res[0];
@@ -126,7 +127,7 @@ export async function getTapesDataById(id) {
     );
 
     if (!res.length) {
-      throw new Error("No tapes found with that id.");
+      throw new Error(constants.toast.ERROR_NO_TAPES_MSG);
     }
 
     return res[0];

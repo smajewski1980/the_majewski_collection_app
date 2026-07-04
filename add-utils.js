@@ -66,7 +66,7 @@ export function noEmptyFields(data, tracksTrigger) {
   }
 
   if ("year" in data && Number.isNaN(data.year)) {
-    toasty(constants.toast.valErr.YEAR_TYPE, constants.color.ERROR);
+    toasty(constants.toast.valErr.YEAR_TYPE_MSG, constants.color.ERROR);
     return;
   }
 
@@ -306,7 +306,7 @@ export async function isLocValValid(locVal, validArr) {
   } else if (currPage === updatePage && res.includes(locVal)) {
     return true;
   } else {
-    toasty(constants.toast.valErr.LOCATION_INVALID, constants.color.ERROR);
+    toasty(constants.toast.valErr.LOCATION_INVALID_MSG, constants.color.ERROR);
     return false;
   }
 }
@@ -325,29 +325,33 @@ export function formatCdCompsTracks(tracksArray, currForm) {
     // i use the pipe to split on
     const track = tr.split("|");
 
+    // if the line is blank, but not the first line
     if (tracksArray.length > 1 && track.length === 1 && track[0] === "") {
       continue;
     }
 
+    // if the textarea was empty
     if (track.length === 1 && track[0] === "") {
-      toasty(constants.toast.valErr.TRACK_FORMAT, constants.color.ERROR);
+      toasty(constants.toast.valErr.TRACK_FORMAT_MSG, constants.color.ERROR);
       return undefined;
     }
 
+    // if a line only has an artist OR a track
     if (!track[0] || !track[1]) {
       toasty(
         `${
           track[0] === ""
-            ? constants.toast.valErr.NO_ARTIST
-            : constants.toast.valErr.NO_TRACKNAME
+            ? constants.toast.valErr.NO_ARTIST_MSG
+            : constants.toast.valErr.NO_TRACKNAME_MSG
         }`,
         constants.color.ERROR,
       );
       return undefined;
     }
-
+    // if we made it here, it must be a good track
     tracksToSend.push([track[0].trim(), track[1].trim()]);
   }
+  // bring it on home
   return tracksToSend;
 }
 

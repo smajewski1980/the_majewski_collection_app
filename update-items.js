@@ -30,6 +30,7 @@ import {
   handleTapesForm,
 } from "./add-script.js";
 import utils from "./utils.js";
+import constants from "./constants.js";
 const mainEl = document.querySelector("main");
 let initialLoad = true;
 let currentForm = null;
@@ -73,12 +74,12 @@ async function handleUpdateIdSubmit(e) {
   e.preventDefault();
 
   if (!updateIdInput.value) {
-    toasty("Please enter an id to update.", "red");
+    toasty(constants.toast.valErr.UPDATE_NO_ID_MSG, constants.color.ERROR);
     return;
   }
 
   if (!currentForm) {
-    toasty("Please select a format to update an item.", "red");
+    toasty(constants.toast.valErr.UPDATE_NO_SEL_FORMAT_MSG, "red");
     return;
   }
 
@@ -107,7 +108,7 @@ btnDelete.addEventListener("click", handleIdDelete);
 async function handleIdDelete(e) {
   e.preventDefault();
   const confirmed = await deleteId.confirmDeleteId(
-    "Are you sure you want to delete this item?",
+    constants.toast.DELETE_CONFIRM_MSG,
   );
   let res;
   let format;
@@ -144,7 +145,7 @@ async function handleIdDelete(e) {
       return;
     } else {
       console.log("Delete aborted.");
-      toasty("Delete aborted.", "red");
+      toasty(constants.toast.DELETE_ABORT_MSG, constants.color.ERROR);
       return;
     }
   } catch (error) {

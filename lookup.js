@@ -7,6 +7,7 @@ import {
   displayTapes,
   displayAllFormats,
 } from "./display-functions.js";
+import constants from "./constants.js";
 
 /**
  * prob need to be adjusted later
@@ -21,7 +22,7 @@ export const handleLookupBtn = async (e, format, field, term) => {
   e.preventDefault();
   const vals = { format: format, field: field, term: term };
   if (!field) {
-    utils.displayNotFound("Please select a field to search.");
+    utils.displayNotFound(constants.toast.valErr.LOOKUP_NO_FIELD_MSG);
     return;
   }
 
@@ -34,9 +35,7 @@ export const handleLookupBtn = async (e, format, field, term) => {
       field === "single_id") &&
     !parseInt(term)
   ) {
-    utils.displayNotFound(
-      "Please enter a valid number to search by that field.",
-    );
+    utils.displayNotFound(constants.toast.valErr.LOOKUP_NOT_VALID_NUM_MSG);
     return;
   }
   // validate that the year is lower than the current year and higher than 1885
@@ -49,12 +48,12 @@ export const handleLookupBtn = async (e, format, field, term) => {
       (1885 > parsedYear || parsedYear > currentYear) &&
       parsedYear !== 1234
     ) {
-      utils.displayNotFound(
-        "Please enter a valid 4 digit year between 1885 and the current year.",
-      );
+      utils.displayNotFound(constants.toast.valErr.LOOKUP_YEAR_RANGE_MSG);
       return;
     }
   }
+
+  // this one should be unneeded now - cant enter anythinng else
   // check that the condition field only consists of 1-5 asterisks
   if (
     (field === "sleeve_condition" || field === "record_condition") &&
@@ -64,6 +63,7 @@ export const handleLookupBtn = async (e, format, field, term) => {
     return;
   }
 
+  // this one should be unneeded now - uses radio btns
   // the needs repair field should only be a yes or no search term
   const needs_repair_valid = ["y", "yes", "n", "no"];
   if (

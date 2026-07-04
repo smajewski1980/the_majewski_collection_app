@@ -110,6 +110,7 @@ function handleNavBtnClick(e) {
       removeActiveFormClass(forms);
       removeActiveClass(navButtons);
       handleIncrementReset();
+      if (incrementFlag) toggleIncFlag();
       // the first arg is the id of the form to show, second arg is the nav btn
       showForm(e.target.dataset.form, e.target);
     });
@@ -157,13 +158,13 @@ export async function handleCdCompsForm(e) {
   };
 
   if (!noEmptyFields(data, true)) {
-    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.ERROR);
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
-    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
+    toasty(constants.toast.valErr.YEAR_FORMAT_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -201,7 +202,7 @@ export async function handleCdCompsForm(e) {
         throw new Error(res);
       }
       if (res < 1) {
-        throw new Error(constants.toast.UPDATE_DB_ERR);
+        throw new Error(constants.toast.UPDATE_DB_ERR_MSG);
       }
       console.log(data);
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
@@ -264,20 +265,20 @@ export async function handleCdSinglesForm(e) {
   };
 
   if (!noEmptyFields(data, true)) {
-    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.ERROR);
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
-    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
+    toasty(constants.toast.valErr.YEAR_FORMAT_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   // if only the tracks are empty
   if (!trackList[0] && noEmptyFields(data, true)) {
-    toasty(constants.toast.valErr.NO_TRACKS, constants.color.ERROR);
+    toasty(constants.toast.valErr.NO_TRACKS_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -316,7 +317,7 @@ export async function handleCdSinglesForm(e) {
         throw new Error(res);
       }
       if (res < 1) {
-        throw new Error(constants.toast.UPDATE_DB_ERR);
+        throw new Error(constants.toast.UPDATE_DB_ERR_MSG);
       }
 
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
@@ -372,7 +373,7 @@ export async function handleCdsMainForm(e) {
   };
 
   if (!noEmptyFields(data, false)) {
-    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.Error);
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS_MSG, constants.color.Error);
     utils.makeInert(currForm, false);
     return;
   }
@@ -406,7 +407,7 @@ export async function handleCdsMainForm(e) {
       }
 
       if (res < 1) {
-        throw new Error(constants.toast.UPDATE_DB_ERR);
+        throw new Error(constants.toast.UPDATE_DB_ERR_MSG);
       }
 
       data.id = `id: ${updatedId}`;
@@ -473,13 +474,13 @@ export async function handleRecordsForm(e) {
   };
 
   if (!noEmptyFields(data, false)) {
-    toasty(constants.toast.valErr.NO_EMPTY_FIELDS, constants.color.ERROR);
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
 
   if (!yearFormatIsGood(data.year)) {
-    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
+    toasty(constants.toast.valErr.YEAR_FORMAT_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -513,7 +514,7 @@ export async function handleRecordsForm(e) {
       }
 
       if (res < 1) {
-        throw new Error(constants.toast.UPDATE_DB_ERR);
+        throw new Error(constants.toast.UPDATE_DB_ERR_MSG);
       }
 
       data.id = `id: ${updatedId}`;
@@ -577,12 +578,12 @@ export async function handleTapesForm(e) {
 
   // input validation
   if (!noEmptyFields(data, false)) {
-    toasty(constants.toast.NO_EMPTY_FIELDS, constants.color.ERROR);
+    toasty(constants.toast.NO_EMPTY_FIELDS_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
   if (!yearFormatIsGood(data.year)) {
-    toasty(constants.toast.valErr.YEAR_FORMAT, constants.color.ERROR);
+    toasty(constants.toast.valErr.YEAR_FORMAT_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }
@@ -616,7 +617,7 @@ export async function handleTapesForm(e) {
       }
 
       if (res < 1) {
-        throw new Error(constants.toast.UPDATE_DB_ERR);
+        throw new Error(constants.toast.UPDATE_DB_ERR_MSG);
       }
 
       data.id = `id: ${updatedId}`;
@@ -659,13 +660,14 @@ tapesForm.addEventListener("submit", handleTapesForm);
 
 incrementCheckbox.addEventListener("change", (e) => {
   e.preventDefault();
+
   if (currentForm === "cd-singles-form") {
     e.target.checked = false;
-    toasty(constants.toast.valErr.NO_INCR_AVAIL, constants.color.ERROR);
+    toasty(constants.toast.valErr.NO_INCR_AVAIL_MSG, constants.color.ERROR);
     return;
-  }
-  if (!incrementFlag) {
+  } else {
     handleCheckbox(forms);
+    toggleIncFlag();
   }
 });
 
@@ -675,7 +677,7 @@ if (document.title === constants.pageTitle.ADD_PAGE_TITLE) {
 
     if (!currentForm) {
       return toasty(
-        constants.toast.valErr.NO_ACTIVE_FORM,
+        constants.toast.valErr.NO_ACTIVE_FORM_MSG,
         constants.color.ERROR,
       );
     }
@@ -692,7 +694,7 @@ if (document.title === constants.pageTitle.ADD_PAGE_TITLE) {
     // if the last entry was a different format, return
     if (currentForm !== lastEntryForm) {
       return toasty(
-        constants.toast.valErr.FORM_MISMATCH,
+        constants.toast.valErr.FORM_MISMATCH_MSG,
         constants.color.ERROR,
       );
     }

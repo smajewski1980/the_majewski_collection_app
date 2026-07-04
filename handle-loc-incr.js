@@ -1,3 +1,5 @@
+import constants from "./constants.js";
+import { toasty } from "./add-utils.js";
 const btnConfirm = document.querySelector(".btn-confirm-increment");
 export const incrementCheckbox = document.getElementById("increment-location");
 export let incrementFlag = false;
@@ -18,18 +20,19 @@ export function toggleIncFlag() {
  */
 function handleIncrementLocation(selectedOption, selectedInput) {
   // split the option value, last index will be the number portion of location
-  const splitOptionVal = selectedOption.value.split(" ");
-  let numVal = parseInt(splitOptionVal.at(-1));
+  const splitOptionVal = selectedOption?.value.split(" ");
+  const numVal = parseInt(splitOptionVal?.at(-1));
 
   // if one of the options without an ending number is selected, return
   if (Number.isNaN(numVal) || selectedInput.value === '33s 10"') {
     handleIncrementReset();
-    toasty("That location can not be incremented.", null);
+    selectedInput.value = "";
+    toasty(constants.toast.valErr.NO_INCR_AVAIL_MSG, constants.color.ERROR);
     return;
   }
 
   // increment num and reassemble string
-  const incrementedNumString = (numVal += 1).toString();
+  const incrementedNumString = (numVal + 1).toString();
   splitOptionVal[splitOptionVal.length - 1] = incrementedNumString;
   const reassembledString = splitOptionVal.join(" ");
 
@@ -37,6 +40,8 @@ function handleIncrementLocation(selectedOption, selectedInput) {
   selectedOption.innerText = reassembledString;
   selectedOption.value = reassembledString;
   selectedInput.value = reassembledString;
+  incrementFlag = true;
+  incrementCheckbox.checked = false;
 }
 
 /**
@@ -62,35 +67,48 @@ export async function handleCheckbox(arr) {
     form.classList.contains("active-form"),
   );
 
-  // grab the active location input and the datalist
-  const activeInput = activeForm[0].querySelector("input[name='location']");
-  const datalist = activeInput.nextElementSibling;
+  let activeInput = undefined;
 
-  // if a location was never selected
-  if (!activeInput.value) {
-    toasty("Select a location to increment first.", null);
+  try {
+    // grab the active location input and the datalist
+    activeInput = activeForm[0].querySelector("input[name='location']");
+
+    if (!activeInput.value) {
+      toasty(constants.toast.valErr.NO_LOC_SEL_INCR_MSG, constants.color.ERROR);
+      incrementCheckbox.checked = false;
+      incrementFlag = false;
+      return;
+    }
+
+    const datalist = activeInput.nextElementSibling;
+
+    // the window.confirm didnt work here in electron
+    // this button provides a confirm check
+    btnConfirm.style.display = "block";
+    btnConfirm.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        // get the current option element to increment
+        const optionEls = Array.from(datalist.querySelectorAll("option"));
+        const currOption = optionEls.filter(
+          (el) => el.textContent === activeInput.value,
+        );
+
+        handleIncrementLocation(currOption[0], activeInput);
+
+        // incrementFlag = true;
+        btnConfirm.style.display = "none";
+      },
+      { once: true },
+    );
+  } catch (error) {
+    console.log(error);
+
+    // if a location was never selected
+    toasty(constants.toast.valErr.NO_LOC_SEL_INCR_MSG, constants.color.ERROR);
     incrementCheckbox.checked = false;
     incrementFlag = false;
     return;
   }
-  // the window.confirm didnt work here in electron
-  // this button provides a confirm check
-  btnConfirm.style.display = "block";
-  btnConfirm.addEventListener(
-    "click",
-    (e) => {
-      e.preventDefault();
-      // get the current option element to increment
-      const optionEls = Array.from(datalist.querySelectorAll("option"));
-      const currOption = optionEls.filter(
-        (el) => el.textContent === activeInput.value,
-      );
-
-      handleIncrementLocation(currOption[0], activeInput);
-
-      incrementFlag = true;
-      btnConfirm.style.display = "none";
-    },
-    { once: true },
-  );
 }
