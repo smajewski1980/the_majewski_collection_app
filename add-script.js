@@ -661,6 +661,11 @@ tapesForm.addEventListener("submit", handleTapesForm);
 incrementCheckbox.addEventListener("change", (e) => {
   e.preventDefault();
 
+  if (!currentForm) {
+    toasty(constants.toast.valErr.NO_ACTIVE_FORM_MSG, constants.color.ERROR);
+    return;
+  }
+
   if (currentForm === "cd-singles-form") {
     e.target.checked = false;
     toasty(constants.toast.valErr.NO_INCR_AVAIL_MSG, constants.color.ERROR);

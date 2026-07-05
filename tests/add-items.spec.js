@@ -1,4 +1,5 @@
 import { test, expect, _electron as electron } from "@playwright/test";
+import constants from "../constants.js";
 
 // have to construct insert objects to test with
 
@@ -198,11 +199,73 @@ test.describe("ADD ITEMS", () => {
       });
     });
 
-    test.skip("INCREMENT LOCATION checkbox increments the location of the cd comps form", async () => {});
-    test.skip("INCREMENT LOCATION checkbox shows error toast for the cd-singles form", async () => {});
-    test.skip("INCREMENT LOCATION checkbox increments the location of the cd-main form", async () => {});
-    test.skip("INCREMENT LOCATION checkbox increments the location of the records form", async () => {});
-    test.skip("INCREMENT LOCATION checkbox increments the location of the tapes form", async () => {});
+    test.describe("INCREMENT LOCATION", () => {
+      let checkbox;
+      let toast;
+      let confirmBtn;
+
+      test.beforeEach(async () => {
+        await page.reload();
+
+        confirmBtn = page.getByRole("button", { name: "Are You Sure?" });
+        checkbox = await page.getByLabel("INCREMENT LOCATION");
+        toast = await page.locator(".page-message");
+      });
+
+      test("INCREMENT LOCATION checkbox shows toast if no form is loaded", async () => {
+        await checkbox.click();
+
+        await expect(toast).toHaveText(
+          constants.toast.valErr.NO_ACTIVE_FORM_MSG,
+        );
+      });
+
+      test("INCREMENT LOCATION checkbox shows toast if no location is selected", async () => {
+        const cdsNavBtn = await page.getByRole("button", {
+          name: "Cd-Main Catalog",
+        });
+
+        await cdsNavBtn.click();
+        await checkbox.click();
+
+        await expect(toast).toHaveText(
+          constants.toast.valErr.NO_LOC_SEL_INCR_MSG,
+        );
+      });
+
+      test("INCREMENT LOCATION checkbox shows toast if the selected location is invalid to increment", async () => {
+        const cdsNavBtn = await page.getByRole("button", {
+          name: "Cd-Main Catalog",
+        });
+        const locationField = await page.locator("#cds-main-location");
+
+        await cdsNavBtn.click();
+        await locationField.fill(constants.data.CDS_TEST_LOC_VAL_NO_NUM);
+        await checkbox.click();
+        await confirmBtn.click();
+
+        await expect(toast).toHaveText(
+          constants.toast.valErr.NO_INCR_AVAIL_MSG,
+        );
+      });
+
+      test("INCREMENT LOCATION checkbox increments the location of the active form", async () => {
+        const cdsNavBtn = await page.getByRole("button", {
+          name: "Cd-Main Catalog",
+        });
+        const locationField = await page.locator("#cds-main-location");
+
+        await cdsNavBtn.click();
+        await locationField.fill(constants.data.CDS_TEST_LOC_VAL_W_NUM);
+        await checkbox.click();
+        await confirmBtn.click();
+
+        await expect(locationField).toHaveValue(
+          constants.data.CDS_TEST_LOC_VAL_W_INCR_NUM,
+        );
+      });
+    });
+
     test.skip("cd-comps form added item gets added to the session list", async () => {});
     test.skip("cd-singles form added item gets added to the session list", async () => {});
     test.skip("cd-main form added item gets added to the session list", async () => {});

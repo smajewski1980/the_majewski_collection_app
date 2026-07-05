@@ -11,6 +11,7 @@ const constants = {
       YEAR_TYPE_MSG: "Year must be a number.",
       NO_TRACKS_MSG: "Please add some tracks.",
       LOCATION_INVALID_MSG: "Location field does not contain a valid value.",
+      NO_LOC_SEL_INCR_MSG: "Select a location to increment first.",
       NO_INCR_AVAIL_MSG: "That location can not be incremented.",
       NO_ACTIVE_FORM_MSG: "Please load a format's entry form first.",
       FORM_MISMATCH_MSG:
@@ -25,7 +26,6 @@ const constants = {
         "Please enter a valid number to search by that field.",
       LOOKUP_YEAR_RANGE_MSG:
         "Please enter a valid 4 digit year between 1885 and the current year.",
-      NO_LOC_SEL_INCR_MSG: "Select a location to increment first.",
     },
     ERROR_NO_COMPS_MSG: "No compilations found with that id.",
     ERROR_NO_SINGLES_MSG: "No singles found with that id.",
@@ -33,7 +33,11 @@ const constants = {
     ERROR_NO_RECORDS_MSG: "No records found with that id.",
     ERROR_NO_TAPES_MSG: "No tapes found with that id.",
   },
-  data: {},
+  data: {
+    CDS_TEST_LOC_VAL_NO_NUM: "test_location_no_num",
+    CDS_TEST_LOC_VAL_W_NUM: "test_location_w_num 1",
+    CDS_TEST_LOC_VAL_W_INCR_NUM: "test_location_w_num 2",
+  },
   pageTitle: {
     UPDATE_PAGE_TITLE: "The Majewski Collection Update Items",
     ADD_PAGE_TITLE: "The Majewski Collection Add Items",
