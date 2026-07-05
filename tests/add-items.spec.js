@@ -146,6 +146,7 @@ test.describe("ADD ITEMS", () => {
           let locationField;
           const navBtn = await page.getByRole("button", { name: `${type}` });
           await navBtn.click();
+
           const submitBtn = await page.locator(".active-form button");
           const artistField = await page.locator(
             '.active-form input[name="artist"]',
@@ -178,7 +179,7 @@ test.describe("ADD ITEMS", () => {
           await titleField.fill("test title");
 
           if (type !== "Cd-Main Catalog") {
-            await yearField.fill("1980");
+            await yearField.fill(constants.data.VALID_FORMAT_YEAR);
           }
 
           if (type === "Records") {
@@ -199,38 +200,185 @@ test.describe("ADD ITEMS", () => {
           );
         });
 
-        test.skip("Throws toast if submit with year that is not 4 digits.", async () => {});
-        test.skip("Throws toast if submit with year that is not a number.", async () => {});
+        if (type !== "Cd-Main Catalog") {
+          test(`Throws toast if ${type} form is submit with year that is not 4 digits in length.`, async () => {
+            let tracks;
+            let locationField;
+            const navBtn = await page.getByRole("button", { name: `${type}` });
+            await navBtn.click();
+
+            const submitBtn = await page.locator(".active-form button");
+            const artistField = await page.locator(
+              '.active-form input[name="artist"]',
+            );
+            const titleField = await page.locator(
+              '.active-form input[name="title"]',
+            );
+            const yearField = await page.locator(
+              '.active-form input[name="year"]',
+            );
+
+            if (type === "Cd-Singles") {
+              locationField = await page.locator("#cd-singles-case-type");
+              tracks = await page
+                .getByRole("textbox", { name: "tracks" })
+                .fill("track name");
+            } else {
+              locationField = await page.locator(
+                '.active-form input[name="location"]',
+              );
+            }
+
+            if (type === "Cd-Compilations") {
+              tracks = await page.getByRole("textbox", { name: "tracks" });
+              await tracks.fill("artist name|track name");
+            } else {
+              await artistField.fill("test artist");
+            }
+
+            if (type === "Records") {
+              await page
+                .getByRole("textbox", { name: "label" })
+                .fill("test record label");
+            }
+
+            if (type === "Tapes") {
+              await page.getByRole("radio", { name: "No" }).check();
+            }
+
+            await titleField.fill("test title");
+            await yearField.fill(constants.data.INVALID_FORMAT_YEAR);
+            await locationField.fill(constants.data.VALID_LOCATION);
+            await submitBtn.click();
+
+            await expect(toast).toHaveText(
+              constants.toast.valErr.YEAR_FORMAT_MSG,
+            );
+          });
+
+          test(`Throws toast if ${type} form is submit with year that is not a number.`, async () => {
+            let tracks;
+            let locationField;
+            const navBtn = await page.getByRole("button", { name: `${type}` });
+            await navBtn.click();
+
+            const submitBtn = await page.locator(".active-form button");
+            const artistField = await page.locator(
+              '.active-form input[name="artist"]',
+            );
+            const titleField = await page.locator(
+              '.active-form input[name="title"]',
+            );
+            const yearField = await page.locator(
+              '.active-form input[name="year"]',
+            );
+
+            if (type === "Cd-Singles") {
+              locationField = await page.locator("#cd-singles-case-type");
+              tracks = await page
+                .getByRole("textbox", { name: "tracks" })
+                .fill("track name");
+            } else {
+              locationField = await page.locator(
+                '.active-form input[name="location"]',
+              );
+            }
+
+            if (type === "Cd-Compilations") {
+              tracks = await page.getByRole("textbox", { name: "tracks" });
+              await tracks.fill("artist name|track name");
+            } else {
+              await artistField.fill("test artist");
+            }
+
+            if (type === "Records") {
+              await page
+                .getByRole("textbox", { name: "label" })
+                .fill("test record label");
+            }
+
+            if (type === "Tapes") {
+              await page.getByRole("radio", { name: "No" }).check();
+            }
+
+            await titleField.fill("test title");
+            await yearField.fill(constants.data.INVALID_TYPE_YEAR);
+            await locationField.fill(constants.data.VALID_LOCATION);
+            await submitBtn.click();
+
+            await expect(toast).toHaveText(
+              new RegExp(constants.toast.valErr.YEAR_TYPE_MSG),
+            );
+          });
+        }
+
+        test(`${type}: Throws success toast, resets form, focuses first field when a valid item is added.`, async () => {
+          let tracks;
+          let locationField;
+          const navBtn = await page.getByRole("button", { name: `${type}` });
+          await navBtn.click();
+
+          const submitBtn = await page.locator(".active-form button");
+          const artistField = await page.locator(
+            '.active-form input[name="artist"]',
+          );
+          const titleField = await page.locator(
+            '.active-form input[name="title"]',
+          );
+          const yearField = await page.locator(
+            '.active-form input[name="year"]',
+          );
+
+          if (type === "Cd-Singles") {
+            locationField = await page.locator("#cd-singles-case-type");
+            tracks = await page
+              .getByRole("textbox", { name: "tracks" })
+              .fill("track name");
+          } else {
+            locationField = await page.locator(
+              '.active-form input[name="location"]',
+            );
+          }
+
+          if (type === "Cd-Compilations") {
+            tracks = await page.getByRole("textbox", { name: "tracks" });
+            await tracks.fill("artist name|track name");
+          } else {
+            await artistField.fill("test artist");
+          }
+
+          if (type === "Records") {
+            await page
+              .getByRole("textbox", { name: "label" })
+              .fill("test record label");
+          }
+
+          if (type === "Tapes") {
+            await page.getByRole("radio", { name: "No" }).check();
+          }
+
+          if (type !== "Cd-Main Catalog") {
+            await yearField.fill(constants.data.VALID_FORMAT_YEAR);
+          }
+
+          await titleField.fill("test title");
+          await locationField.fill(constants.data.VALID_LOCATION);
+          await submitBtn.click();
+
+          await expect(toast).toHaveText(constants.toast.ADD_SUCCESS_MSG);
+        });
       });
     });
+
+    // format specific tests
 
     test.describe("The cd-comps form", () => {
       test.skip("Throws toast if submit with a track with no artist.", async () => {});
       test.skip("Throws toast if submit with a track with no track name.", async () => {});
-      test.skip("Throws success toast when an item is added.", async () => {});
-      test.skip("The form gets reset after an item is added.", async () => {});
-      test.skip("The first form field has focus after an item is added.", async () => {});
     });
 
     test.describe("The cd-singles form", () => {
       test.skip("Throws no tracks toast if submit with no tracks.", async () => {});
-      test.skip("Throws success toast when an item is added.", async () => {});
-      test.skip("The form gets reset after an item is added.", async () => {});
-      test.skip("The first form field has focus after an item is added.", async () => {});
-    });
-
-    test.describe("The cd-main catalog form", () => {
-      test.skip("Throws success toast when an item is added.", async () => {});
-      test.skip("The form gets reset after an item is added.", async () => {});
-      test.skip("The first form field has focus after an item is added.", async () => {});
-    });
-
-    test.describe("The records form", () => {
-      test.skip("write records form tests", async () => {});
-    });
-
-    test.describe("The tapes form", () => {
-      test.skip("write tapes form tests", async () => {});
     });
   });
 

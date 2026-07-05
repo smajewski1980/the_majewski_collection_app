@@ -271,6 +271,7 @@ function getMostCurrentCdComps(locations) {
   const soundtracks = [];
   const va = [];
   const xmas = [];
+  const misc = [];
 
   locations.forEach((loc) => {
     if (loc.location.includes("Classical")) {
@@ -285,6 +286,9 @@ function getMostCurrentCdComps(locations) {
     if (loc.location.includes("X-mas")) {
       xmas.push(loc.location);
     }
+    if (loc.location.includes("Good Location")) {
+      misc.push(loc.location);
+    }
   });
 
   // get current sorted vals
@@ -298,6 +302,7 @@ function getMostCurrentCdComps(locations) {
     currSoundtracks.at(-1),
     currVarious.at(-1),
     currXmas.at(-1),
+    ...misc,
   ];
 }
 
@@ -405,6 +410,9 @@ function getMostCurrentRecordsLoc(locations) {
     if (loc.location.includes("78s ")) {
       rec78s.push(loc.location);
     }
+    if (loc.location.includes("Good Location")) {
+      misc.push(loc.location);
+    }
   });
 
   // sort the sortables and get currents
@@ -428,6 +436,7 @@ function getMostCurrentTapeLoc(locations) {
   const eightTracks = [];
   const reelToReel = [];
   const cassettes = [];
+  const misc = [];
 
   // distribute the values to the appropriate array
   locations.forEach((loc) => {
@@ -439,6 +448,9 @@ function getMostCurrentTapeLoc(locations) {
     }
     if (loc.location.includes("Cassette")) {
       cassettes.push(loc.location);
+    }
+    if (loc.location.includes("Good Location")) {
+      misc.push(loc.location);
     }
   });
 
@@ -452,7 +464,7 @@ function getMostCurrentTapeLoc(locations) {
   const currReelLoc = sortedReelToReel.at(-1);
   const currCassLoc = sortedCassettes.at(-1);
 
-  return [currEightLoc, currCassLoc, currReelLoc];
+  return [currEightLoc, currCassLoc, currReelLoc, ...misc];
 }
 
 /**
