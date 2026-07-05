@@ -52,7 +52,7 @@ const isFirstSessionAdd = async () => {
 };
 
 if (
-  document.title === "The Majewski Collection Add Items" &&
+  document.title === constants.pageTitle.ADD_PAGE_TITLE &&
   !(await isFirstSessionAdd())
 ) {
   enableLoadLastBtn();
@@ -578,7 +578,7 @@ export async function handleTapesForm(e) {
 
   // input validation
   if (!noEmptyFields(data, false)) {
-    toasty(constants.toast.NO_EMPTY_FIELDS_MSG, constants.color.ERROR);
+    toasty(constants.toast.valErr.NO_EMPTY_FIELDS_MSG, constants.color.ERROR);
     utils.makeInert(currForm, false);
     return;
   }

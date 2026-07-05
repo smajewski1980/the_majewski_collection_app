@@ -37,6 +37,7 @@ const constants = {
     CDS_TEST_LOC_VAL_NO_NUM: "test_location_no_num",
     CDS_TEST_LOC_VAL_W_NUM: "test_location_w_num 1",
     CDS_TEST_LOC_VAL_W_INCR_NUM: "test_location_w_num 2",
+    INVALID_LOCATION: "INVALID LOCATION NAME",
   },
   pageTitle: {
     UPDATE_PAGE_TITLE: "The Majewski Collection Update Items",

@@ -95,16 +95,134 @@ test.describe("ADD ITEMS", () => {
   });
 
   test.describe("The forms", () => {
+    test.describe("The shared form tests", () => {
+      let toast;
+
+      const dataArray = [
+        "Cd-Compilations",
+        "Cd-Singles",
+        "Cd-Main Catalog",
+        "Records",
+        "Tapes",
+      ];
+
+      test.beforeEach(async () => {
+        await page.reload();
+        toast = await page.locator(".page-message");
+      });
+
+      dataArray.forEach(async (type) => {
+        test(`The first form field has focus when the ${type} form is displayed.`, async () => {
+          const navBtn = await page.getByRole("button", { name: `${type}` });
+
+          await navBtn.click();
+
+          if (type === "Cd-Compilations") {
+            const firstInput = await page.getByRole("textbox", {
+              name: "title",
+            });
+            await expect(firstInput).toBeFocused();
+          } else {
+            const firstInput = await page.getByRole("textbox", {
+              name: "artist",
+            });
+            await expect(firstInput).toBeFocused();
+          }
+        });
+
+        test(`Throws toast if ${type} form is submit with at least one empty field.`, async () => {
+          const navBtn = await page.getByRole("button", { name: `${type}` });
+          await navBtn.click();
+          const submitBtn = await page.locator(".active-form button");
+          await submitBtn.click();
+
+          await expect(toast).toContainText(
+            constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+          );
+        });
+
+        test(`Throws toast if ${type} form submit with an invalid location.`, async () => {
+          let tracks;
+          let locationField;
+          const navBtn = await page.getByRole("button", { name: `${type}` });
+          await navBtn.click();
+          const submitBtn = await page.locator(".active-form button");
+          const artistField = await page.locator(
+            '.active-form input[name="artist"]',
+          );
+          const titleField = await page.locator(
+            '.active-form input[name="title"]',
+          );
+          const yearField = await page.locator(
+            '.active-form input[name="year"]',
+          );
+
+          if (type === "Cd-Singles") {
+            locationField = await page.locator("#cd-singles-case-type");
+            tracks = await page
+              .getByRole("textbox", { name: "tracks" })
+              .fill("track name");
+          } else {
+            locationField = await page.locator(
+              '.active-form input[name="location"]',
+            );
+          }
+
+          if (type === "Cd-Compilations") {
+            tracks = await page.getByRole("textbox", { name: "tracks" });
+            await tracks.fill("artist name|track name");
+          } else {
+            await artistField.fill("test artist");
+          }
+
+          await titleField.fill("test title");
+
+          if (type !== "Cd-Main Catalog") {
+            await yearField.fill("1980");
+          }
+
+          if (type === "Records") {
+            await page
+              .getByRole("textbox", { name: "label" })
+              .fill("test record label");
+          }
+
+          if (type === "Tapes") {
+            await page.getByRole("radio", { name: "No" }).check();
+          }
+
+          await locationField.fill(constants.data.INVALID_LOCATION);
+          await submitBtn.click();
+
+          await expect(toast).toHaveText(
+            constants.toast.valErr.LOCATION_INVALID_MSG,
+          );
+        });
+
+        test.skip("Throws toast if submit with year that is not 4 digits.", async () => {});
+        test.skip("Throws toast if submit with year that is not a number.", async () => {});
+      });
+    });
+
     test.describe("The cd-comps form", () => {
-      test.skip("write cd-comp form tests", async () => {});
+      test.skip("Throws toast if submit with a track with no artist.", async () => {});
+      test.skip("Throws toast if submit with a track with no track name.", async () => {});
+      test.skip("Throws success toast when an item is added.", async () => {});
+      test.skip("The form gets reset after an item is added.", async () => {});
+      test.skip("The first form field has focus after an item is added.", async () => {});
     });
 
     test.describe("The cd-singles form", () => {
-      test.skip("write cd-singles form tests", async () => {});
+      test.skip("Throws no tracks toast if submit with no tracks.", async () => {});
+      test.skip("Throws success toast when an item is added.", async () => {});
+      test.skip("The form gets reset after an item is added.", async () => {});
+      test.skip("The first form field has focus after an item is added.", async () => {});
     });
 
     test.describe("The cd-main catalog form", () => {
-      test.skip("write cd-main catalog form tests", async () => {});
+      test.skip("Throws success toast when an item is added.", async () => {});
+      test.skip("The form gets reset after an item is added.", async () => {});
+      test.skip("The first form field has focus after an item is added.", async () => {});
     });
 
     test.describe("The records form", () => {
