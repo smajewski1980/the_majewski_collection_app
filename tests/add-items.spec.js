@@ -399,12 +399,66 @@ test.describe("ADD ITEMS", () => {
     });
 
     test.describe("The cd-comps form", () => {
-      test.skip("Throws toast if submit with a track with no artist.", async () => {});
-      test.skip("Throws toast if submit with a track with no track name.", async () => {});
+      let tracks, submitBtn, toast;
+
+      test.beforeEach(async () => {
+        await page.reload();
+
+        // load the form
+        const navBtn = await page.getByRole("button", {
+          name: "Cd-Compilations",
+        });
+        await navBtn.click();
+        // the needed elements
+        toast = await page.locator(".page-message");
+        submitBtn = await page.locator(".active-form button");
+        const titleField = await page.locator(
+          '.active-form input[name="title"]',
+        );
+        const yearField = await page.locator('.active-form input[name="year"]');
+        const locationField = await page.locator(
+          '.active-form input[name="location"]',
+        );
+        tracks = await page.getByRole("textbox", { name: "tracks" });
+
+        // before each test, populate all the fields with good data except tracks
+        await titleField.fill("test title");
+        await yearField.fill(constants.data.VALID_FORMAT_YEAR);
+        await locationField.fill(constants.data.VALID_LOCATION);
+      });
+
+      test("Throws toast if submit with empty tracks textfield.", async () => {
+        await tracks.fill("");
+        await submitBtn.click();
+
+        await expect(toast).toHaveText(
+          new RegExp(constants.toast.valErr.TRACK_FORMAT_MSG),
+        );
+      });
+
+      test("Throws toast if submit with a track with no artist.", async () => {
+        await tracks.fill("|track name");
+        await submitBtn.click();
+
+        await expect(toast).toHaveText(
+          new RegExp(constants.toast.valErr.NO_ARTIST_MSG),
+        );
+      });
+
+      test("Throws toast if submit with a track with no track name.", async () => {
+        await tracks.fill("artist name|");
+        await submitBtn.click();
+
+        await expect(toast).toHaveText(
+          new RegExp(constants.toast.valErr.NO_TRACKNAME_MSG),
+        );
+      });
     });
   });
 
   test.describe("The Right col items", () => {
+    // this resets the state for the next batch of tests
+    // eventually refactor to close the electron instance and start another
     test.beforeAll(async () => {
       await electronApp.evaluate(async ({ global }) => {
         globalThis.sessionStore.currAdded = [];
