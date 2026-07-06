@@ -371,18 +371,48 @@ test.describe("ADD ITEMS", () => {
     });
 
     // format specific tests
+    test.describe("The cd-singles form", () => {
+      test("Throws no tracks toast if submit with no tracks.", async () => {
+        await page.reload();
+        const toast = await page.locator(".page-message");
+        const navBtn = await page.getByRole("button", { name: "Cd-Singles" });
+        await navBtn.click();
+
+        const submitBtn = await page.locator(".active-form button");
+        const artistField = await page.locator(
+          '.active-form input[name="artist"]',
+        );
+        const titleField = await page.locator(
+          '.active-form input[name="title"]',
+        );
+        const yearField = await page.locator('.active-form input[name="year"]');
+        const locationField = await page.locator("#cd-singles-case-type");
+
+        await artistField.fill("test artist");
+        await titleField.fill("test title");
+        await yearField.fill(constants.data.VALID_FORMAT_YEAR);
+        await locationField.fill(constants.data.VALID_LOCATION);
+        await submitBtn.click();
+
+        await expect(toast).toHaveText(constants.toast.valErr.NO_TRACKS_MSG);
+      });
+    });
 
     test.describe("The cd-comps form", () => {
       test.skip("Throws toast if submit with a track with no artist.", async () => {});
       test.skip("Throws toast if submit with a track with no track name.", async () => {});
     });
-
-    test.describe("The cd-singles form", () => {
-      test.skip("Throws no tracks toast if submit with no tracks.", async () => {});
-    });
   });
 
   test.describe("The Right col items", () => {
+    test.beforeAll(async () => {
+      await electronApp.evaluate(async ({ global }) => {
+        globalThis.sessionStore.currAdded = [];
+        globalThis.sessionStore.isFirstSessionAdd = true;
+      });
+      await page.reload();
+    });
+
     test.describe("The PUSH ME/load last button", () => {
       test("PUSH ME button is inert when page loads", async () => {
         const button = await page.getByRole("button", { name: "PUSH ME" });
