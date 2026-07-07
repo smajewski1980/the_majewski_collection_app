@@ -42,6 +42,17 @@ const constants = {
     INVALID_FORMAT_YEAR: "19805",
     INVALID_TYPE_YEAR: "Unicorn",
     VALID_FORMAT_YEAR: "1980",
+    VALID_ARTIST: "Test Artist",
+    VALID_TITLE: "Test Title",
+    VALID_RECORD_LABEL: "Test Label",
+    VALID_COMP_TRACK: "artist name|track name",
+    VALID_SINGLES_TRACK: "trackname",
+    MOCK_CD_DATA: {
+      id: "id: 4747",
+      artist: "MOCK CD MAIN ARTIST",
+      title: "MOCK CD MAIN TITLE",
+      location: "Jazz 1",
+    },
   },
   pageTitle: {
     UPDATE_PAGE_TITLE: "The Majewski Collection Update Items",

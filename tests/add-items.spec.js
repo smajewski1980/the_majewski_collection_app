@@ -233,20 +233,20 @@ test.describe("ADD ITEMS", () => {
               tracks = await page.getByRole("textbox", { name: "tracks" });
               await tracks.fill("artist name|track name");
             } else {
-              await artistField.fill("test artist");
+              await artistField.fill(constants.data.VALID_ARTIST);
             }
 
             if (type === "Records") {
               await page
                 .getByRole("textbox", { name: "label" })
-                .fill("test record label");
+                .fill(constants.data.VALID_RECORD_LABEL);
             }
 
             if (type === "Tapes") {
               await page.getByRole("radio", { name: "No" }).check();
             }
 
-            await titleField.fill("test title");
+            await titleField.fill(constants.data.VALID_TITLE);
             await yearField.fill(constants.data.INVALID_FORMAT_YEAR);
             await locationField.fill(constants.data.VALID_LOCATION);
             await submitBtn.click();
@@ -277,7 +277,7 @@ test.describe("ADD ITEMS", () => {
               locationField = await page.locator("#cd-singles-case-type");
               tracks = await page
                 .getByRole("textbox", { name: "tracks" })
-                .fill("track name");
+                .fill(constants.data.VALID_SINGLES_TRACK);
             } else {
               locationField = await page.locator(
                 '.active-form input[name="location"]',
@@ -286,22 +286,22 @@ test.describe("ADD ITEMS", () => {
 
             if (type === "Cd-Compilations") {
               tracks = await page.getByRole("textbox", { name: "tracks" });
-              await tracks.fill("artist name|track name");
+              await tracks.fill(constants.data.VALID_COMP_TRACK);
             } else {
-              await artistField.fill("test artist");
+              await artistField.fill(constants.data.VALID_ARTIST);
             }
 
             if (type === "Records") {
               await page
                 .getByRole("textbox", { name: "label" })
-                .fill("test record label");
+                .fill(constants.data.VALID_RECORD_LABEL);
             }
 
             if (type === "Tapes") {
               await page.getByRole("radio", { name: "No" }).check();
             }
 
-            await titleField.fill("test title");
+            await titleField.fill(constants.data.VALID_TITLE);
             await yearField.fill(constants.data.INVALID_TYPE_YEAR);
             await locationField.fill(constants.data.VALID_LOCATION);
             await submitBtn.click();
@@ -333,7 +333,7 @@ test.describe("ADD ITEMS", () => {
             locationField = await page.locator("#cd-singles-case-type");
             tracks = await page
               .getByRole("textbox", { name: "tracks" })
-              .fill("track name");
+              .fill(constants.data.VALID_SINGLES_TRACK);
           } else {
             locationField = await page.locator(
               '.active-form input[name="location"]',
@@ -342,15 +342,15 @@ test.describe("ADD ITEMS", () => {
 
           if (type === "Cd-Compilations") {
             tracks = await page.getByRole("textbox", { name: "tracks" });
-            await tracks.fill("artist name|track name");
+            await tracks.fill(constants.data.VALID_COMP_TRACK);
           } else {
-            await artistField.fill("test artist");
+            await artistField.fill(constants.data.VALID_ARTIST);
           }
 
           if (type === "Records") {
             await page
               .getByRole("textbox", { name: "label" })
-              .fill("test record label");
+              .fill(constants.data.VALID_RECORD_LABEL);
           }
 
           if (type === "Tapes") {
@@ -361,7 +361,7 @@ test.describe("ADD ITEMS", () => {
             await yearField.fill(constants.data.VALID_FORMAT_YEAR);
           }
 
-          await titleField.fill("test title");
+          await titleField.fill(constants.data.VALID_TITLE);
           await locationField.fill(constants.data.VALID_LOCATION);
           await submitBtn.click();
 
@@ -388,8 +388,8 @@ test.describe("ADD ITEMS", () => {
         const yearField = await page.locator('.active-form input[name="year"]');
         const locationField = await page.locator("#cd-singles-case-type");
 
-        await artistField.fill("test artist");
-        await titleField.fill("test title");
+        await artistField.fill(constants.data.VALID_ARTIST);
+        await titleField.fill(constants.data.VALID_TITLE);
         await yearField.fill(constants.data.VALID_FORMAT_YEAR);
         await locationField.fill(constants.data.VALID_LOCATION);
         await submitBtn.click();
@@ -422,7 +422,7 @@ test.describe("ADD ITEMS", () => {
         tracks = await page.getByRole("textbox", { name: "tracks" });
 
         // before each test, populate all the fields with good data except tracks
-        await titleField.fill("test title");
+        await titleField.fill(constants.data.VALID_TITLE);
         await yearField.fill(constants.data.VALID_FORMAT_YEAR);
         await locationField.fill(constants.data.VALID_LOCATION);
       });
@@ -484,17 +484,11 @@ test.describe("ADD ITEMS", () => {
       });
 
       test("PUSH ME button loads the last entry to the form when pressed", async () => {
-        const mockCdData = {
-          id: "id: 4747",
-          artist: "MOCK CD MAIN ARTIST",
-          title: "MOCK CD MAIN TITLE",
-          location: "Jazz 1",
-        };
         // add a mock object to the sessionstore
         await electronApp.evaluate(async ({ global }, cdData) => {
           const data = [cdData, "cds-main-color", "cd-main-form"];
           globalThis.sessionStore.currAdded.push(data);
-        }, mockCdData);
+        }, constants.data.MOCK_CD_DATA);
         // reload page
         await page.reload();
         // click the correct form select btn
@@ -512,9 +506,13 @@ test.describe("ADD ITEMS", () => {
         const locationInput = await activeForm.locator("#cds-main-location");
 
         await expect(activeForm).toHaveId("cd-main-form");
-        await expect(artistInput).toHaveValue(mockCdData.artist);
-        await expect(titleInput).toHaveValue(mockCdData.title);
-        await expect(locationInput).toHaveValue(mockCdData.location);
+        await expect(artistInput).toHaveValue(
+          constants.data.MOCK_CD_DATA.artist,
+        );
+        await expect(titleInput).toHaveValue(constants.data.MOCK_CD_DATA.title);
+        await expect(locationInput).toHaveValue(
+          constants.data.MOCK_CD_DATA.location,
+        );
       });
 
       test("PUSH ME button throws toast if selected nav btn doesn't match the active form", async () => {
@@ -530,9 +528,7 @@ test.describe("ADD ITEMS", () => {
 
         const toast = await page.locator(".page-message");
 
-        expect(toast).toHaveText(
-          "The active form does not match the format of the last entry.",
-        );
+        expect(toast).toHaveText(constants.toast.valErr.FORM_MISMATCH_MSG);
       });
 
       test("PUSH ME button throws toast if clicked with no active form", async () => {
@@ -545,7 +541,7 @@ test.describe("ADD ITEMS", () => {
 
         const toast = await page.locator(".page-message");
 
-        expect(toast).toHaveText("Please load a format's entry form first.");
+        expect(toast).toHaveText(constants.toast.valErr.NO_ACTIVE_FORM_MSG);
       });
     });
 
@@ -616,10 +612,213 @@ test.describe("ADD ITEMS", () => {
       });
     });
 
-    test.skip("cd-comps form added item gets added to the session list", async () => {});
-    test.skip("cd-singles form added item gets added to the session list", async () => {});
-    test.skip("cd-main form added item gets added to the session list", async () => {});
-    test.skip("records form added item gets added to the session list", async () => {});
-    test.skip("tapes form added item gets added to the session list", async () => {});
+    test.describe("Good form submissions are represented in the current session list", () => {
+      let sessionList;
+
+      test.beforeEach(async () => {
+        sessionList = await page.locator("#session-list");
+        page.reload();
+      });
+
+      test("cd-comps form added item gets added to the session list", async () => {
+        const navBtn = await page.getByRole("button", {
+          name: "Cd-Compilations",
+        });
+        await navBtn.click();
+
+        const titleField = await page.locator(
+          '.active-form input[name="title"]',
+        );
+        const yearField = await page.locator('.active-form input[name="year"]');
+        const locationField = await page.locator(
+          '.active-form input[name="location"]',
+        );
+        const tracksField = await page.getByRole("textbox", { name: "tracks" });
+        const submitBtn = await page.locator(".active-form button");
+
+        await titleField.fill(constants.data.VALID_TITLE);
+        await yearField.fill(constants.data.VALID_FORMAT_YEAR);
+        await locationField.fill(constants.data.VALID_LOCATION);
+        await tracksField.fill(constants.data.VALID_COMP_TRACK);
+        await submitBtn.click();
+
+        await expect(sessionList).toHaveText(/id: \d+/);
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_TITLE),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_FORMAT_YEAR),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_LOCATION),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_COMP_TRACK.replace("|", " - ")),
+        );
+      });
+
+      test("cd-singles form added item gets added to the session list", async () => {
+        const navBtn = await page.getByRole("button", {
+          name: "Cd-Singles",
+        });
+        await navBtn.click();
+
+        const artistField = await page.locator(
+          '.active-form input[name="artist"]',
+        );
+        const titleField = await page.locator(
+          '.active-form input[name="title"]',
+        );
+        const yearField = await page.locator('.active-form input[name="year"]');
+        const locationField = await page.locator("#cd-singles-case-type");
+        const tracksField = await page.getByRole("textbox", { name: "tracks" });
+        const submitBtn = await page.locator(".active-form button");
+
+        await artistField.fill(constants.data.VALID_ARTIST);
+        await titleField.fill(constants.data.VALID_TITLE);
+        await locationField.fill(constants.data.VALID_LOCATION);
+        await yearField.fill(constants.data.VALID_FORMAT_YEAR);
+        await tracksField.fill(constants.data.VALID_SINGLES_TRACK);
+        await submitBtn.click();
+
+        await expect(sessionList).toHaveText(/id: \d+/);
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_ARTIST),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_TITLE),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_FORMAT_YEAR),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_LOCATION),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_SINGLES_TRACK),
+        );
+      });
+
+      test("cd-main form added item gets added to the session list", async () => {
+        const navBtn = await page.getByRole("button", {
+          name: "Cd-Main Catalog",
+        });
+        await navBtn.click();
+
+        const artistField = await page.locator(
+          '.active-form input[name="artist"]',
+        );
+        const titleField = await page.locator(
+          '.active-form input[name="title"]',
+        );
+        const locationField = await page.locator(
+          '.active-form input[name="location"]',
+        );
+        const submitBtn = await page.locator(".active-form button");
+
+        await artistField.fill(constants.data.VALID_ARTIST);
+        await titleField.fill(constants.data.VALID_TITLE);
+        await locationField.fill(constants.data.VALID_LOCATION);
+        await submitBtn.click();
+
+        await expect(sessionList).toHaveText(/id: \d+/);
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_ARTIST),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_TITLE),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_LOCATION),
+        );
+      });
+
+      test("records form added item gets added to the session list", async () => {
+        const navBtn = await page.getByRole("button", {
+          name: "Records",
+        });
+        await navBtn.click();
+
+        const artistField = await page.locator(
+          '.active-form input[name="artist"]',
+        );
+        const titleField = await page.locator(
+          '.active-form input[name="title"]',
+        );
+        const locationField = await page.locator(
+          '.active-form input[name="location"]',
+        );
+        const yearField = await page.locator('.active-form input[name="year"]');
+        const labelField = await page.getByRole("textbox", { name: "label" });
+        const submitBtn = await page.locator(".active-form button");
+
+        await artistField.fill(constants.data.VALID_ARTIST);
+        await titleField.fill(constants.data.VALID_TITLE);
+        await locationField.fill(constants.data.VALID_LOCATION);
+        await yearField.fill(constants.data.VALID_FORMAT_YEAR);
+        await labelField.fill(constants.data.VALID_RECORD_LABEL);
+        await submitBtn.click();
+
+        await expect(sessionList).toHaveText(/id: \d+/);
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_ARTIST),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_TITLE),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_LOCATION),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_FORMAT_YEAR),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_RECORD_LABEL),
+        );
+      });
+
+      test("tapes form added item gets added to the session list", async () => {
+        const navBtn = await page.getByRole("button", {
+          name: "Tapes",
+        });
+        await navBtn.click();
+
+        const artistField = await page.locator(
+          '.active-form input[name="artist"]',
+        );
+        const titleField = await page.locator(
+          '.active-form input[name="title"]',
+        );
+        const locationField = await page.locator(
+          '.active-form input[name="location"]',
+        );
+        const yearField = await page.locator('.active-form input[name="year"]');
+        const repairField = await page.getByRole("radio", { name: "No" });
+        const submitBtn = await page.locator(".active-form button");
+
+        await artistField.fill(constants.data.VALID_ARTIST);
+        await titleField.fill(constants.data.VALID_TITLE);
+        await locationField.fill(constants.data.VALID_LOCATION);
+        await yearField.fill(constants.data.VALID_FORMAT_YEAR);
+        await repairField.check();
+        await submitBtn.click();
+
+        await expect(sessionList).toHaveText(/id: \d+/);
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_ARTIST),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_TITLE),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_LOCATION),
+        );
+        await expect(sessionList).toHaveText(
+          new RegExp(constants.data.VALID_FORMAT_YEAR),
+        );
+        await expect(sessionList).toHaveText(/No/);
+        await expect(sessionList).toHaveText(/na/);
+      });
+    });
   });
 });
