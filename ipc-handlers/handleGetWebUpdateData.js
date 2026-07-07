@@ -15,6 +15,7 @@ const queryCdSinglesTracks =
 
 async function handleGetWebUpdateData() {
   try {
+    // fetch the individual queries
     const [
       cdsRaw,
       tapesRaw,
@@ -33,6 +34,7 @@ async function handleGetWebUpdateData() {
       pool.query(queryCdSinglesTracks),
     ]);
 
+    // convert to JSON
     const cdsJson = JSON.stringify(cdsRaw.rows);
     const tapesJson = JSON.stringify(tapesRaw.rows);
     const recordsJson = JSON.stringify(recordsRaw.rows);
@@ -41,61 +43,30 @@ async function handleGetWebUpdateData() {
     const cdCompsTracksJson = JSON.stringify(cdCompsTracksRaw.rows);
     const cdSinglesTracksJson = JSON.stringify(cdSinglesTracksRaw.rows);
 
-    const now = new Date(Date.now());
-    const filenameSuffix = now.toISOString().split(".")[0].replaceAll(":", "_");
-    const newDir = `${filenameSuffix}-update-files`;
+    // prepare the dir/file name data
+    const currWorkingPath = app.getAppPath();
+    const dirPath = path.join(
+      currWorkingPath,
+      "..",
+      "my_music_collection_v3",
+      "src",
+      "data",
+    );
 
-    const cdsFilepath = path.join(
-      app.getPath("userData"),
-      "web-updates",
-      newDir,
-      `CDS.json`,
-    );
-    const tapesFilepath = path.join(
-      app.getPath("userData"),
-      "web-updates",
-      newDir,
-      `TAPES.json`,
-    );
-    const recordsFilepath = path.join(
-      app.getPath("userData"),
-      "web-updates",
-      newDir,
-      `RECORDS.json`,
-    );
-    const cdCompsFilepath = path.join(
-      app.getPath("userData"),
-      "web-updates",
-      newDir,
-      `CD_COMPS.json`,
-    );
-    const cdSinglesFilepath = path.join(
-      app.getPath("userData"),
-      "web-updates",
-      newDir,
-      `CD_SINGLES.json`,
-    );
-    const cdCompsTracksFilepath = path.join(
-      app.getPath("userData"),
-      "web-updates",
-      newDir,
-      `CD_COMPS_TRACKS.json`,
-    );
+    // the individual final paths
+    const cdsFilepath = path.join(dirPath, "CDS.json");
+    const tapesFilepath = path.join(dirPath, "TAPES.json");
+    const recordsFilepath = path.join(dirPath, "RECORDS.json");
+    const cdCompsFilepath = path.join(dirPath, "CD_COMPS.json");
+    const cdSinglesFilepath = path.join(dirPath, "CD_SINGLES.json");
+    const cdCompsTracksFilepath = path.join(dirPath, "CD_COMPS_TRACKS.json");
     const cdSinglesTracksFilepath = path.join(
-      app.getPath("userData"),
-      "web-updates",
-      newDir,
-      `CD_SINGLES_TRACKS.json`,
+      dirPath,
+      "CD_SINGLES_TRACKS.json",
     );
 
     try {
-      fs.mkdirSync(path.join(app.getPath("userData"), "web-updates"), {
-        recursive: true,
-      });
-      fs.mkdirSync(path.join(app.getPath("userData"), "web-updates", newDir), {
-        recursive: true,
-      });
-
+      // write the data
       fs.writeFileSync(cdsFilepath, cdsJson);
       fs.writeFileSync(tapesFilepath, tapesJson);
       fs.writeFileSync(recordsFilepath, recordsJson);
@@ -103,22 +74,22 @@ async function handleGetWebUpdateData() {
       fs.writeFileSync(cdSinglesFilepath, cdSinglesJson);
       fs.writeFileSync(cdCompsTracksFilepath, cdCompsTracksJson);
       fs.writeFileSync(cdSinglesTracksFilepath, cdSinglesTracksJson);
-
-      // may want to loop through and delete old ones when we do this....
     } catch (error) {
       console.log(error);
     }
 
-    return "this will be success msg when we are done";
+    return "success";
   } catch (err) {
     console.log(err);
+    return err;
   }
 }
 
 module.exports = handleGetWebUpdateData;
 
-// need to query the 7 datasets
-// need to convert them to JSON
-// need to save them to the correct folder in the other project
+// need to query the 7 datasets - done
+// need to convert them to JSON - done
+// need to save them to the correct folder in the other project - done
+
 // finish the website and set up ci/cd
 // need to push the changes to git hub

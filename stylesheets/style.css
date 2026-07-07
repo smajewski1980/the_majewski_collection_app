@@ -242,6 +242,7 @@ body:not(#add-body):not(#update-body) {
   --msg-clr: var(--error-color);
   position: fixed;
   font-size: 1.5rem;
+  font-family: var(--reg-font);
   top: 8rem;
   left: -35rem;
   max-width: 30ch;
