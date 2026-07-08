@@ -45,13 +45,15 @@ async function handleGetWebUpdateData() {
 
     // prepare the directory path
 
-    const dirPath = path.join(
+    const productionDirPath = path.join(
       app.getPath("desktop"),
       "tmc",
       "my_music_collection_v3",
       "src",
       "data",
     );
+
+    const dirPath = process.env.TEST_OUTPUT_PATH || productionDirPath;
 
     // the individual final paths
     const cdsFilepath = path.join(dirPath, "CDS.json");

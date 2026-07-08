@@ -1,8 +1,13 @@
 import { test, expect, _electron as electron } from "@playwright/test";
+import * as fs from "fs";
+import * as path from "path";
+import constants from "../constants.js";
+// import handleGetWebUpdateData from "../ipc-handlers/handleGetWebUpdateData";
 
 test.describe("HOMEPAGE", () => {
   let electronApp;
   let page;
+  const testDataPath = path.join(__dirname, "testOutputFiles");
 
   test.beforeAll(async () => {
     // Launch the Electron application pointing to your main entry file (e.g., main.js)
@@ -11,6 +16,7 @@ test.describe("HOMEPAGE", () => {
       env: {
         ...process.env,
         DB_NAME: "test_music_catalog",
+        TEST_OUTPUT_PATH: testDataPath,
       },
     });
 
@@ -82,5 +88,97 @@ test.describe("HOMEPAGE", () => {
     await expect(dialog).toBeVisible();
   });
 
-  test.skip("test the output of the update web catalog button", async () => {});
+  test.describe("UPDATE WEB CATALOG", () => {
+    const filenames = [
+      "CD_COMPS.json",
+      "CD_COMPS_TRACKS.json",
+      "CD_SINGLES.json",
+      "CD_SINGLES_TRACKS.json",
+      "CDS.json",
+      "RECORDS.json",
+      "TAPES.json",
+    ];
+
+    test.afterEach(() => {
+      // cleanup
+      filenames.forEach((filename) => {
+        try {
+          fs.unlinkSync(path.join(testDataPath, filename));
+          console.log(filename, " was deleted.");
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    });
+
+    test("Success toast is thrown after the update web catalog process", async () => {
+      await page.reload();
+
+      const toast = await page.locator(".page-message");
+      const updateButton = await page.getByRole("button", {
+        name: "UPDATE WEB CATALOG",
+      });
+      await updateButton.click();
+      const confirmButton = await page.getByRole("button", {
+        name: "UPDATE",
+        exact: true,
+      });
+      await confirmButton.click();
+      await expect(toast).toHaveText(constants.toast.WEB_UPDATE_SUCCESS_MSG);
+    });
+
+    test("files are created during the update web catalog process", async () => {
+      await page.reload();
+
+      const toast = await page.locator(".page-message");
+      const updateButton = await page.getByRole("button", {
+        name: "UPDATE WEB CATALOG",
+      });
+      await updateButton.click();
+      const confirmButton = await page.getByRole("button", {
+        name: "UPDATE",
+        exact: true,
+      });
+      await confirmButton.click();
+
+      const cdCompsExists = fs.existsSync(
+        path.join(testDataPath, "CD_COMPS.json"),
+      );
+      const cdCompsTracksExists = fs.existsSync(
+        path.join(testDataPath, "CD_COMPS_TRACKS.json"),
+      );
+      const cdSinglesExists = fs.existsSync(
+        path.join(testDataPath, "CD_SINGLES.json"),
+      );
+      const cdSinglesTracksExists = fs.existsSync(
+        path.join(testDataPath, "CD_SINGLES_TRACKS.json"),
+      );
+      const cdsExists = fs.existsSync(path.join(testDataPath, "CDS.json"));
+      const recordsExists = fs.existsSync(
+        path.join(testDataPath, "RECORDS.json"),
+      );
+      const tapesExists = fs.existsSync(path.join(testDataPath, "TAPES.json"));
+
+      expect({
+        cdCompsExists,
+        cdCompsTracksExists,
+        cdSinglesExists,
+        cdSinglesTracksExists,
+        cdsExists,
+        recordsExists,
+        tapesExists,
+      }).toEqual({
+        cdCompsExists: true,
+        cdCompsTracksExists: true,
+        cdSinglesExists: true,
+        cdSinglesTracksExists: true,
+        cdsExists: true,
+        recordsExists: true,
+        tapesExists: true,
+      });
+    });
+
+    // test each one has the right keys
+    // test each one is the correct length
+  });
 });
