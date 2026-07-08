@@ -14,6 +14,7 @@ async function handleUpdateWeb(e) {
     }
   } catch (error) {
     console.log(error);
+    toasty(error, "red");
   }
 }
 

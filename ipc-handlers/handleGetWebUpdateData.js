@@ -43,11 +43,11 @@ async function handleGetWebUpdateData() {
     const cdCompsTracksJson = JSON.stringify(cdCompsTracksRaw.rows);
     const cdSinglesTracksJson = JSON.stringify(cdSinglesTracksRaw.rows);
 
-    // prepare the dir/file name data
-    const currWorkingPath = app.getAppPath();
+    // prepare the directory path
+
     const dirPath = path.join(
-      currWorkingPath,
-      "..",
+      app.getPath("desktop"),
+      "tmc",
       "my_music_collection_v3",
       "src",
       "data",
@@ -74,14 +74,14 @@ async function handleGetWebUpdateData() {
       fs.writeFileSync(cdSinglesFilepath, cdSinglesJson);
       fs.writeFileSync(cdCompsTracksFilepath, cdCompsTracksJson);
       fs.writeFileSync(cdSinglesTracksFilepath, cdSinglesTracksJson);
+      return "success";
     } catch (error) {
       console.log(error);
+      return error;
     }
-
-    return "success";
-  } catch (err) {
-    console.log(err);
-    return err;
+  } catch (error) {
+    console.log(error);
+    return error;
   }
 }
 
