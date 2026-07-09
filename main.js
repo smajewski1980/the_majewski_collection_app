@@ -20,7 +20,7 @@ const handleUpdateCdMain = require("./ipc-handlers/handleUpdateCdMain");
 const handleUpdateRecord = require("./ipc-handlers/handleUpdateRecord");
 const handleUpdateTape = require("./ipc-handlers/handleUpdateTape");
 const handleDelete = require("./ipc-handlers/handleDelete");
-const handleGetWebUpdateData = require("./ipc-handlers/handleGetWebUpdateData");
+const updateDataAndPushToWeb = require("./ipc-handlers/handleUpdateWeb");
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -88,7 +88,7 @@ app.whenReady().then(() => {
     return res.response === 0; // returns true if 'DELETE ID'
   });
   ipcMain.handle("deleteId", handleDelete);
-  ipcMain.handle("getWebUpdateData", handleGetWebUpdateData);
+  ipcMain.handle("getWebUpdateData", updateDataAndPushToWeb);
 
   ipcMain.on("sessionSet", (e, { key, value }) => {
     // add to the individual format current list for reloading
@@ -126,6 +126,7 @@ app.on("window-all-closed", () => {
 });
 
 // create backup logs of the session data before exit
+// still have to change to not log the test/dev sessions, only legit ones
 app.on("will-quit", () => {
   const now = new Date(Date.now());
   const newDir = "session-logs";
