@@ -22,7 +22,6 @@ const handleUpdateTape = require("./ipc-handlers/handleUpdateTape");
 const handleDelete = require("./ipc-handlers/handleDelete");
 const updateDataAndPushToWeb = require("./ipc-handlers/handleUpdateWeb");
 const { handleWebChangesGit } = require("./ipc-handlers/handleWebChangesGit");
-// const { ipcRenderer } = require("electron");
 
 let win;
 
