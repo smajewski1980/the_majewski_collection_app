@@ -99,8 +99,19 @@ test.describe("HOMEPAGE", () => {
       "TAPES.json",
     ];
 
+    // Clean BEFORE the test to guarantee a fresh state
+    test.beforeEach(() => {
+      filenames.forEach((filename) => {
+        try {
+          fs.unlinkSync(path.join(testDataPath, filename));
+        } catch (error) {
+          // Ignore errors if files don't exist yet
+        }
+      });
+    });
+
+    // Clean AFTER the test to leave a clean environment
     test.afterEach(() => {
-      // cleanup
       filenames.forEach((filename) => {
         try {
           fs.unlinkSync(path.join(testDataPath, filename));
@@ -130,7 +141,7 @@ test.describe("HOMEPAGE", () => {
     test("files are created during the update web catalog process", async () => {
       await page.reload();
 
-      const toast = await page.locator(".page-message");
+      // const toast = await page.locator(".page-message");
       const updateButton = await page.getByRole("button", {
         name: "UPDATE WEB CATALOG",
       });
@@ -141,41 +152,20 @@ test.describe("HOMEPAGE", () => {
       });
       await confirmButton.click();
 
-      const cdCompsExists = fs.existsSync(
-        path.join(testDataPath, "CD_COMPS.json"),
-      );
-      const cdCompsTracksExists = fs.existsSync(
-        path.join(testDataPath, "CD_COMPS_TRACKS.json"),
-      );
-      const cdSinglesExists = fs.existsSync(
-        path.join(testDataPath, "CD_SINGLES.json"),
-      );
-      const cdSinglesTracksExists = fs.existsSync(
-        path.join(testDataPath, "CD_SINGLES_TRACKS.json"),
-      );
-      const cdsExists = fs.existsSync(path.join(testDataPath, "CDS.json"));
-      const recordsExists = fs.existsSync(
-        path.join(testDataPath, "RECORDS.json"),
-      );
-      const tapesExists = fs.existsSync(path.join(testDataPath, "TAPES.json"));
-
-      expect({
-        cdCompsExists,
-        cdCompsTracksExists,
-        cdSinglesExists,
-        cdSinglesTracksExists,
-        cdsExists,
-        recordsExists,
-        tapesExists,
-      }).toEqual({
-        cdCompsExists: true,
-        cdCompsTracksExists: true,
-        cdSinglesExists: true,
-        cdSinglesTracksExists: true,
-        cdsExists: true,
-        recordsExists: true,
-        tapesExists: true,
-      });
+      // Polling assertion: Loops and waits up to 5 seconds for all files to return true
+      await expect
+        .poll(
+          () => {
+            return filenames.every((filename) =>
+              fs.existsSync(path.join(testDataPath, filename)),
+            );
+          },
+          {
+            message: "Timed out waiting for all catalog files to be created.",
+            timeout: 5000,
+          },
+        )
+        .toBe(true);
     });
 
     // test each one has the right keys

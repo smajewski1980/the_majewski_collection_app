@@ -21,7 +21,6 @@ const handleUpdateRecord = require("./ipc-handlers/handleUpdateRecord");
 const handleUpdateTape = require("./ipc-handlers/handleUpdateTape");
 const handleDelete = require("./ipc-handlers/handleDelete");
 const updateDataAndPushToWeb = require("./ipc-handlers/handleUpdateWeb");
-const { handleWebChangesGit } = require("./ipc-handlers/handleWebChangesGit");
 
 let win;
 
@@ -114,13 +113,6 @@ app.whenReady().then(() => {
   ipcMain.handle("sessionGet", (e, key) => {
     return sessionStore[key];
   });
-
-  // try server toast
-  // ipcMain.on("start-logging", (e) => {
-  // handleWebChangesGit(e);
-  //   console.log("Frontend real-time listener is mounted and ready.");
-  //   activeLoggingEvent = e; // 💡 Save the event reference so the background task can use it!
-  // });
 
   // when ready, open the window
   if (BrowserWindow.getAllWindows().length === 0) {

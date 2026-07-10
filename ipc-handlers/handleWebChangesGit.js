@@ -6,6 +6,19 @@ const util = require("util");
 const execFileAsync = util.promisify(execFile);
 
 async function handleWebChangesGit(e) {
+  // Helper function to send messages instantly
+  const sendLog = async (message) => {
+    console.log("From main js:", message);
+    e.sender.send("toast-message-received", message);
+    await flushIPC();
+  };
+
+  if (process.env.TEST_OUTPUT_PATH) {
+    console.log("THIS IS A TEST, NO GIT COMMANDS WERE RUN");
+    await sendLog("MESSAGE COMPLETE");
+    return;
+  }
+
   // Path to your neighbor Web App project folder
   const webAppFolder = path.resolve(
     app.getPath("desktop"),
@@ -20,13 +33,6 @@ async function handleWebChangesGit(e) {
     cwd: webAppFolder,
     encoding: "utf-8",
     env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
-  };
-
-  // Helper function to send messages instantly
-  const sendLog = async (message) => {
-    console.log("From main js:", message);
-    e.sender.send("toast-message-received", message);
-    await flushIPC();
   };
 
   try {
