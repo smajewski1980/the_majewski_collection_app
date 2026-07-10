@@ -1,26 +1,22 @@
 const handleGetWebUpdateData = require("./handleGetWebUpdateData");
-const handleWebChangesGit = require("./handleWebChangesGit");
+const { handleWebChangesGit } = require("./handleWebChangesGit");
 
-async function updateDataAndPushToWeb() {
+async function updateDataAndPushToWeb(e) {
   try {
     const updateDataResponse = await handleGetWebUpdateData();
 
     if (updateDataResponse === "success") {
-      try {
-        const isGitUpdated = handleWebChangesGit();
+      handleWebChangesGit(e).catch((error) => {
+        console.error("Background Git Sync Failed:", error);
+      });
 
-        let msg;
-        isGitUpdated === 1 ? (msg = "success") : (msg = isGitUpdated);
-
-        return msg;
-      } catch (error) {
-        console.log(error);
-      }
+      return "success";
     } else {
       throw new Error(updateDataResponse);
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error in updateDataAndPushToWeb orchestrator:", error);
+    return error.message || "Failed to update data";
   }
 }
 

@@ -49,3 +49,15 @@ contextBridge.exposeInMainWorld("deleteId", {
 contextBridge.exposeInMainWorld("updateWeb", {
   getWebUpdateData: (channel, data) => ipcRenderer.invoke(channel, data),
 });
+
+contextBridge.exposeInMainWorld("serverToast", {
+  startLogging: (channel, data) => ipcRenderer.send(channel, data),
+  onToastMessage: (callback) => {
+    const listener = (event, value) => callback(value);
+    ipcRenderer.on("toast-message-received", listener);
+
+    return () => {
+      ipcRenderer.removeListener("toast-message-received", listener);
+    };
+  },
+});

@@ -21,9 +21,13 @@ const handleUpdateRecord = require("./ipc-handlers/handleUpdateRecord");
 const handleUpdateTape = require("./ipc-handlers/handleUpdateTape");
 const handleDelete = require("./ipc-handlers/handleDelete");
 const updateDataAndPushToWeb = require("./ipc-handlers/handleUpdateWeb");
+const { handleWebChangesGit } = require("./ipc-handlers/handleWebChangesGit");
+// const { ipcRenderer } = require("electron");
+
+let win;
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     // fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -88,7 +92,9 @@ app.whenReady().then(() => {
     return res.response === 0; // returns true if 'DELETE ID'
   });
   ipcMain.handle("deleteId", handleDelete);
-  ipcMain.handle("getWebUpdateData", updateDataAndPushToWeb);
+  ipcMain.handle("getWebUpdateData", async (e) => {
+    return await updateDataAndPushToWeb(e);
+  });
 
   ipcMain.on("sessionSet", (e, { key, value }) => {
     // add to the individual format current list for reloading
@@ -109,6 +115,13 @@ app.whenReady().then(() => {
   ipcMain.handle("sessionGet", (e, key) => {
     return sessionStore[key];
   });
+
+  // try server toast
+  // ipcMain.on("start-logging", (e) => {
+  // handleWebChangesGit(e);
+  //   console.log("Frontend real-time listener is mounted and ready.");
+  //   activeLoggingEvent = e; // 💡 Save the event reference so the background task can use it!
+  // });
 
   // when ready, open the window
   if (BrowserWindow.getAllWindows().length === 0) {

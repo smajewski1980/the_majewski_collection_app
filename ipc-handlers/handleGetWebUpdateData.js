@@ -88,10 +88,3 @@ async function handleGetWebUpdateData() {
 }
 
 module.exports = handleGetWebUpdateData;
-
-// need to query the 7 datasets - done
-// need to convert them to JSON - done
-// need to save them to the correct folder in the other project - done
-
-// finish the website and set up ci/cd
-// need to push the changes to git hub

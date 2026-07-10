@@ -85,7 +85,7 @@ export function noEmptyFields(data, tracksTrigger) {
  * @param {String} color
  * @returns {void}
  */
-export function toasty(msg, color) {
+export function toasty(msg, color, duration = 5000) {
   const msgEl = document.querySelector(".page-message");
 
   if (color === "green") {
@@ -111,7 +111,7 @@ export function toasty(msg, color) {
         isToastShowing = false;
         msgEl.style.setProperty("--msg-clr", "var(--error-color)");
       }, 500);
-    }, 5000);
+    }, duration);
   }
 }
 
