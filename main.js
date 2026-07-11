@@ -21,8 +21,13 @@ const handleUpdateRecord = require("./ipc-handlers/handleUpdateRecord");
 const handleUpdateTape = require("./ipc-handlers/handleUpdateTape");
 const handleDelete = require("./ipc-handlers/handleDelete");
 const updateDataAndPushToWeb = require("./ipc-handlers/handleUpdateWeb");
+const pool = require("./dbconnect");
 
 let win;
+
+if (process.env.TEST_OUTPUT_PATH) {
+  global.dbPool = pool;
+}
 
 const createWindow = () => {
   win = new BrowserWindow({

@@ -1,8 +1,9 @@
 import { test, expect, _electron as electron } from "@playwright/test";
 import * as fs from "fs";
+import fsProm from "node:fs/promises";
 import * as path from "path";
 import constants from "../constants.js";
-// import handleGetWebUpdateData from "../ipc-handlers/handleGetWebUpdateData";
+// import pool from "../dbconnect.js";
 
 test.describe("HOMEPAGE", () => {
   let electronApp;
@@ -99,6 +100,12 @@ test.describe("HOMEPAGE", () => {
       "TAPES.json",
     ];
 
+    // helper func to get and click the two buttons
+    async function clickUpdateWebAndConfBtns() {
+      await page.getByRole("button", { name: "UPDATE WEB CATALOG" }).click();
+      await page.getByRole("button", { name: "UPDATE", exact: true }).click();
+    }
+
     // Clean BEFORE the test to guarantee a fresh state
     test.beforeEach(() => {
       filenames.forEach((filename) => {
@@ -126,31 +133,15 @@ test.describe("HOMEPAGE", () => {
       await page.reload();
 
       const toast = await page.locator(".page-message");
-      const updateButton = await page.getByRole("button", {
-        name: "UPDATE WEB CATALOG",
-      });
-      await updateButton.click();
-      const confirmButton = await page.getByRole("button", {
-        name: "UPDATE",
-        exact: true,
-      });
-      await confirmButton.click();
+      await clickUpdateWebAndConfBtns();
+
       await expect(toast).toHaveText(constants.toast.WEB_UPDATE_SUCCESS_MSG);
     });
 
-    test("files are created during the update web catalog process", async () => {
+    test("Files are created during the update web catalog process", async () => {
       await page.reload();
 
-      // const toast = await page.locator(".page-message");
-      const updateButton = await page.getByRole("button", {
-        name: "UPDATE WEB CATALOG",
-      });
-      await updateButton.click();
-      const confirmButton = await page.getByRole("button", {
-        name: "UPDATE",
-        exact: true,
-      });
-      await confirmButton.click();
+      await clickUpdateWebAndConfBtns();
 
       // Polling assertion: Loops and waits up to 5 seconds for all files to return true
       await expect
@@ -168,7 +159,72 @@ test.describe("HOMEPAGE", () => {
         .toBe(true);
     });
 
-    // test each one has the right keys
-    // test each one is the correct length
+    test("Files each have json objects with the appropriate keys", async () => {
+      await page.reload();
+      await clickUpdateWebAndConfBtns();
+
+      filenames.forEach(async (file) => {
+        try {
+          const jsonData = await fsProm.readFile(
+            path.join(testDataPath, file),
+            "utf8",
+          );
+          const data = await JSON.parse(jsonData);
+          const firstItem = await data[0];
+          const currKeys = Object.keys(firstItem).sort();
+          const format = file.split(".")[0];
+          const expectedKeys = constants.data[`WEB_DATA_KEYS_${format}`].sort();
+
+          await expect(currKeys).toEqual(expectedKeys);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    });
+
+    // helper for the final test
+    async function getCurrentDbRowQtys() {
+      // in order to use the pool, it has to be in the electron instance
+      const databaseResult = await electronApp.evaluate(async () => {
+        const res = await global.dbPool.query(
+          "SELECT * FROM current_table_qtys",
+        );
+        // get the values in an array as numbers for comparison
+        return res.rows.map((result) => parseInt(result.count));
+      });
+      return databaseResult;
+    }
+
+    // helper for the final test
+    async function getFileItemQtys() {
+      const fileItemQtys = [];
+
+      for (let i = 0; i < filenames.length; i++) {
+        try {
+          // open the file and push the len to the array
+          const jsonData = await fsProm.readFile(
+            path.join(testDataPath, filenames[i]),
+            "utf8",
+          );
+          const data = await JSON.parse(jsonData);
+          const length = await data.length;
+          fileItemQtys.push(length);
+        } catch (error) {
+          console.log(error);
+          return error;
+        }
+      }
+      return fileItemQtys;
+    }
+
+    test("Check each file contains the correct number of items", async () => {
+      await page.reload();
+      await clickUpdateWebAndConfBtns();
+
+      const dbQtys = await getCurrentDbRowQtys();
+      const fileItemQtys = await getFileItemQtys();
+
+      await expect(fileItemQtys.sort()).toEqual(dbQtys.sort());
+    });
   });
 });
