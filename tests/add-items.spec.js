@@ -1,10 +1,12 @@
 import { test, expect, _electron as electron } from "@playwright/test";
 import constants from "../constants.js";
+import * as path from "path";
 
 // have to construct insert objects to test with
 
 let electronApp;
 let page;
+const testDataPath = path.join(__dirname, "testOutputFiles");
 
 const CD_COMPS_FORM_ID = "cd-comps-form";
 const CD_SINGLES_FORM_ID = "cd-singles-form";
@@ -19,6 +21,7 @@ test.beforeAll(async () => {
     env: {
       ...process.env,
       DB_NAME: "test_music_catalog",
+      TEST_OUTPUT_PATH: testDataPath,
     },
   });
 
@@ -198,6 +201,44 @@ test.describe("ADD ITEMS", () => {
           await expect(toast).toHaveText(
             constants.toast.valErr.LOCATION_INVALID_MSG,
           );
+        });
+
+        test(`location dropdown contains the correct options for ${type}`, async () => {
+          // in order to use the pool, it has to be in the electron instance
+          const databaseResult = await electronApp.evaluate(
+            async ({ app }, format) => {
+              let currLocationsQuery;
+              let dbFriendlyFormat;
+
+              switch (format) {
+                case "Cd-Compilations":
+                  dbFriendlyFormat = "cd_compilations";
+                  break;
+                case "Cd-Main Catalog":
+                  dbFriendlyFormat = "cds";
+                  break;
+                case "Records":
+                  dbFriendlyFormat = "records";
+                  break;
+                case "Tapes":
+                  dbFriendlyFormat = "tapes";
+                  break;
+                default:
+                  break;
+              }
+
+              currLocationsQuery =
+                format === "Cd-Singles"
+                  ? "SELECT DISTINCT case_type FROM cd_singles"
+                  : (currLocationsQuery = `WITH prepped_items AS (SELECT location, CASE WHEN location !~ ' \\d+$' THEN location ELSE REGEXP_REPLACE(location, ' \\d+$', '') END AS base_location, CASE WHEN location !~ ' \\d+$' THEN NULL ELSE (REGEXP_MATCH(location, ' (\\d+)$'))[1]::INTEGER END AS location_number FROM ${dbFriendlyFormat}) SELECT CASE WHEN MAX(location_number) IS NULL THEN base_location ELSE base_location || ' ' || MAX(location_number) END AS highest_location FROM prepped_items GROUP BY base_location ORDER BY highest_location`);
+
+              const res = await global.dbPool.query(currLocationsQuery);
+              return res.rows;
+            },
+            type,
+          );
+
+          console.log(databaseResult);
         });
 
         if (type !== "Cd-Main Catalog") {
