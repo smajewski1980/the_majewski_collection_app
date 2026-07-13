@@ -203,9 +203,9 @@ test.describe("ADD ITEMS", () => {
           );
         });
 
-        test(`location dropdown contains the correct options for ${type}`, async () => {
+        test(`Location dropdown contains the correct options for ${type}`, async () => {
           // in order to use the pool, it has to be in the electron instance
-          const databaseResult = await electronApp.evaluate(
+          const databaseResultRaw = await electronApp.evaluate(
             async ({ app }, format) => {
               let currLocationsQuery;
               let dbFriendlyFormat;
@@ -233,12 +233,23 @@ test.describe("ADD ITEMS", () => {
                   : (currLocationsQuery = `WITH prepped_items AS (SELECT location, CASE WHEN location !~ ' \\d+$' THEN location ELSE REGEXP_REPLACE(location, ' \\d+$', '') END AS base_location, CASE WHEN location !~ ' \\d+$' THEN NULL ELSE (REGEXP_MATCH(location, ' (\\d+)$'))[1]::INTEGER END AS location_number FROM ${dbFriendlyFormat}) SELECT CASE WHEN MAX(location_number) IS NULL THEN base_location ELSE base_location || ' ' || MAX(location_number) END AS highest_location FROM prepped_items GROUP BY base_location ORDER BY highest_location`);
 
               const res = await global.dbPool.query(currLocationsQuery);
+
               return res.rows;
             },
             type,
           );
+          // click the nav btn to load the form
+          await page.getByRole("button", { name: `${type}` }).click();
+          // click the location field to load the location options
+          await page.getByRole("textbox", { name: "location" }).click();
+          // get all the options text into an array to compare against
+          const options = page.locator(".active-form datalist option");
+          const optionsText = await options.allInnerTexts();
+          const databaseResult = await databaseResultRaw.map(
+            (item) => item.case_type || item.highest_location,
+          );
 
-          console.log(databaseResult);
+          await expect(optionsText.sort()).toEqual(databaseResult.sort());
         });
 
         if (type !== "Cd-Main Catalog") {
