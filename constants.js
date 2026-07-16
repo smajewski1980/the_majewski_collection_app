@@ -48,6 +48,7 @@ const constants = {
     VALID_RECORD_LABEL: "Test Label",
     VALID_COMP_TRACK: "artist name|track name",
     VALID_SINGLES_TRACK: "trackname",
+    VALID_TRACKNAME: "Test Trackname",
     MOCK_CD_DATA: {
       id: "id: 4747",
       artist: "MOCK CD MAIN ARTIST",
@@ -90,6 +91,14 @@ const constants = {
       "track_id",
     ],
     WEB_DATA_KEYS_CD_COMPS: ["title_id", "title", "year", "location"],
+    FORM_ID_CD_COMPS: "cd-comps-form",
+    FORM_ID_CD_SINGLES: "cd-singles-form",
+    FORM_ID_CD_MAIN: "cd-main-form",
+    FORM_ID_RECORDS: "records-form",
+    FORM_ID_TAPES: "tapes-form",
+    UPDATE_TEST_TEXT_VAL_1: "TEST VALUE ONE",
+    UPDATE_TEST_TEXT_VAL_2: "TEST VALUE TWO",
+    UPDATE_TEST_ITEM_ID: 1e9 - 1,
   },
   pageTitle: {
     UPDATE_PAGE_TITLE: "The Majewski Collection Update Items",
@@ -101,4 +110,49 @@ const constants = {
   },
 };
 
+const updateFormVals = {
+  UPDATE_TEST_ITEM_CD_COMP: {
+    title_id: constants.data.UPDATE_TEST_ITEM_ID,
+    title: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    year: new Date().getFullYear().toString(),
+    location: constants.data.VALID_LOCATION,
+    tracks: [constants.data.VALID_ARTIST, constants.data.VALID_TRACKNAME],
+  },
+  UPDATE_TEST_ITEM_CD_SINGLE: {
+    single_id: constants.data.UPDATE_TEST_ITEM_ID,
+    artist: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    title: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    year: new Date().getFullYear().toString(),
+    case_type: "Digipack",
+    tracks: [constants.data.VALID_SINGLES_TRACK],
+  },
+  UPDATE_TEST_ITEM_CDS: {
+    id: constants.data.UPDATE_TEST_ITEM_ID,
+    artist: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    title: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    location: constants.data.VALID_LOCATION,
+  },
+  UPDATE_TEST_ITEM_RECORDS: {
+    id: constants.data.UPDATE_TEST_ITEM_ID,
+    artist: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    title: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    location: constants.data.VALID_LOCATION,
+    year: new Date().getFullYear().toString(),
+    diameter: "12 inch",
+    sleeve_condition: "***",
+    record_condition: "***",
+    label: constants.data.UPDATE_TEST_TEXT_VAL_1,
+  },
+  UPDATE_TEST_ITEM_TAPES: {
+    id: constants.data.UPDATE_TEST_ITEM_ID,
+    artist: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    title: constants.data.UPDATE_TEST_TEXT_VAL_1,
+    location: constants.data.VALID_LOCATION,
+    year: new Date().getFullYear().toString(),
+    needs_repair: "No",
+    speed: "na",
+  },
+};
+
+export { updateFormVals };
 export default constants;

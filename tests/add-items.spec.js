@@ -2,17 +2,9 @@ import { test, expect, _electron as electron } from "@playwright/test";
 import constants from "../constants.js";
 import * as path from "path";
 
-// have to construct insert objects to test with
-
 let electronApp;
 let page;
 const testDataPath = path.join(__dirname, "testOutputFiles");
-
-const CD_COMPS_FORM_ID = "cd-comps-form";
-const CD_SINGLES_FORM_ID = "cd-singles-form";
-const CD_MAIN_FORM_ID = "cd-main-form";
-const RECORDS_FORM_ID = "records-form";
-const TAPES_FORM_ID = "tapes-form";
 
 test.beforeAll(async () => {
   // Launch the Electron application pointing to your main entry file (e.g., main.js)
@@ -53,7 +45,7 @@ test.describe("ADD ITEMS", () => {
       const activeForm = await page.locator(".active-form");
 
       await expect(compsNavBtn).toHaveClass(/active-nav-btn/);
-      await expect(activeForm).toHaveId(CD_COMPS_FORM_ID);
+      await expect(activeForm).toHaveId(constants.data.FORM_ID_CD_COMPS);
     });
 
     test("When the Cd-Singles button is clicked, the button gets active style and the Cd-Singles form is displayed.", async () => {
@@ -63,7 +55,7 @@ test.describe("ADD ITEMS", () => {
       const activeForm = await page.locator(".active-form");
 
       await expect(singlesNavBtn).toHaveClass(/active-nav-btn/);
-      await expect(activeForm).toHaveId(CD_SINGLES_FORM_ID);
+      await expect(activeForm).toHaveId(constants.data.FORM_ID_CD_SINGLES);
     });
 
     test("When the Cd-Main Catalog button is clicked, the button gets active style and the Cd-Main Catalog form is displayed.", async () => {
@@ -73,7 +65,7 @@ test.describe("ADD ITEMS", () => {
       const activeForm = await page.locator(".active-form");
 
       await expect(cdsNavBtn).toHaveClass(/active-nav-btn/);
-      await expect(activeForm).toHaveId(CD_MAIN_FORM_ID);
+      await expect(activeForm).toHaveId(constants.data.FORM_ID_CD_MAIN);
     });
 
     test("When the Records button is clicked, the button gets active style and the Records form is displayed.", async () => {
@@ -83,7 +75,7 @@ test.describe("ADD ITEMS", () => {
       const activeForm = await page.locator(".active-form");
 
       await expect(recordsNavBtn).toHaveClass(/active-nav-btn/);
-      await expect(activeForm).toHaveId(RECORDS_FORM_ID);
+      await expect(activeForm).toHaveId(constants.data.FORM_ID_RECORDS);
     });
 
     test("When the Tapes button is clicked, the button gets active style and the Tapes form is displayed.", async () => {
@@ -93,7 +85,7 @@ test.describe("ADD ITEMS", () => {
       const activeForm = await page.locator(".active-form");
 
       await expect(tapesNavBtn).toHaveClass(/active-nav-btn/);
-      await expect(activeForm).toHaveId(TAPES_FORM_ID);
+      await expect(activeForm).toHaveId(constants.data.FORM_ID_TAPES);
     });
   });
 
