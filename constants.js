@@ -28,11 +28,11 @@ const constants = {
       LOOKUP_YEAR_RANGE_MSG:
         "Please enter a valid 4 digit year between 1885 and the current year.",
     },
-    ERROR_NO_COMPS_MSG: "No compilations found with that id.",
-    ERROR_NO_SINGLES_MSG: "No singles found with that id.",
-    ERROR_NO_CDS_MSG: "No cds found with that id.",
-    ERROR_NO_RECORDS_MSG: "No records found with that id.",
-    ERROR_NO_TAPES_MSG: "No tapes found with that id.",
+    ERROR_NO_COMPS_MSG: "No Cd-Compilations found with that id.",
+    ERROR_NO_SINGLES_MSG: "No Cd-Singles found with that id.",
+    ERROR_NO_CDS_MSG: "No Cds found with that id.",
+    ERROR_NO_RECORDS_MSG: "No Records found with that id.",
+    ERROR_NO_TAPES_MSG: "No Tapes found with that id.",
   },
   data: {
     CDS_TEST_LOC_VAL_NO_NUM: "test_location_no_num",
@@ -99,6 +99,7 @@ const constants = {
     UPDATE_TEST_TEXT_VAL_1: "TEST VALUE ONE",
     UPDATE_TEST_TEXT_VAL_2: "TEST VALUE TWO",
     UPDATE_TEST_ITEM_ID: 1e9 - 1,
+    UPDATE_ID_FORM_TEST_VALID_ID: "1",
   },
   pageTitle: {
     UPDATE_PAGE_TITLE: "The Majewski Collection Update Items",

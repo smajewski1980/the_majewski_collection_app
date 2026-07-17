@@ -72,7 +72,8 @@ async function handleUpdateCdComp(e, compData) {
 
       await client.query("COMMIT");
 
-      console.log("number of rows updated: ", tracksRes.rowCount);
+      console.log("number of title rows updated: ", titleRes.rowCount);
+      console.log("number of track rows updated: ", tracksRes.rowCount);
       return tracksRes.rowCount;
     } catch (error) {
       await client.query("ROLLBACK");

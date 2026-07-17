@@ -662,6 +662,7 @@ incrementCheckbox.addEventListener("change", (e) => {
   e.preventDefault();
 
   if (!currentForm) {
+    e.target.checked = false;
     toasty(constants.toast.valErr.NO_ACTIVE_FORM_MSG, constants.color.ERROR);
     return;
   }
