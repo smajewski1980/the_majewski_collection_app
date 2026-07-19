@@ -183,7 +183,6 @@ test.describe("UPDATE ITEMS", () => {
     // add an item to update
     test.beforeAll(async () => {
       const rowCount = await electronApp.evaluate(
-        // going to have to adjust this later when we get to being able to update tracks
         async ({ app }, updateFormVals) => {
           const res = await global.dbPool.query(
             "INSERT INTO cd_compilations VALUES($1, $2, $3, $4)",
@@ -194,18 +193,18 @@ test.describe("UPDATE ITEMS", () => {
               updateFormVals.UPDATE_TEST_ITEM_CD_COMP.location,
             ],
           );
-          if (res) console.log("test item successfully added");
+          if (res) console.log("test cd comp successfully added");
 
           const trackRes = await global.dbPool.query(
             "INSERT INTO cd_compilations_tracks(artist, track_name, title_id) VALUES ($1, $2, $3)",
             [
               updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[0],
-              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[0],
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[1],
               updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id,
             ],
           );
 
-          if (trackRes) console.log("test item track successfully added");
+          if (trackRes) console.log("test comp track successfully added");
 
           return trackRes.rowCount;
         },
@@ -226,7 +225,7 @@ test.describe("UPDATE ITEMS", () => {
           if (!rowCount) {
             throw new Error("something went wrong, no rows deleted");
           } else {
-            console.log("test item was successfully deleted from db");
+            console.log("test cd comp was successfully deleted from db");
           }
         },
         updateFormVals,
@@ -382,8 +381,98 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("CD SINGLES", () => {
-    test.skip("write some CD SINGLES tests", async () => {});
+    let toast;
+    let activeForm;
+    let submitUpdateBtn;
+
+    // add an item to update
+    test.beforeAll(async () => {
+      const rowCount = await electronApp.evaluate(
+        async ({ app }, updateFormVals) => {
+          const res = await global.dbPool.query(
+            "INSERT INTO cd_singles VALUES($1, $2, $3, $4, $5)",
+            [
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id,
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.artist,
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.title,
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.year,
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.case_type,
+            ],
+          );
+          if (res) console.log("test cd single successfully added");
+
+          const trackRes = await global.dbPool.query(
+            "INSERT INTO cd_singles_tracks(single_id, track_name) VALUES ($1, $2)",
+            [
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id,
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.tracks[0],
+            ],
+          );
+
+          if (trackRes) console.log("test singles track successfully added");
+
+          return trackRes.rowCount;
+        },
+        updateFormVals,
+      );
+      await expect(rowCount).toBe(1);
+    });
+
+    // delete the added item
+    test.afterAll(async () => {
+      await electronApp.evaluate(
+        // going to have to adjust this later when we get to being able to update tracks
+        async ({ app }, updateFormVals) => {
+          const { rowCount } = await global.dbPool.query(
+            "DELETE FROM cd_singles WHERE single_id = $1",
+            [updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id],
+          );
+
+          if (!rowCount) {
+            throw new Error("something went wrong, no rows deleted");
+          } else {
+            console.log("test cd single was successfully deleted from db");
+          }
+        },
+        updateFormVals,
+      );
+    });
+
+    test("throws success toast if a valid update is submitted", async () => {
+      await page.reload();
+      toast = await page.locator(".page-message");
+      // select the format
+      const navBtn = await page.getByRole("button", {
+        name: "Cd-Singles",
+      });
+      await navBtn.click();
+      // add the test id to the update id input
+      const idInput = await page.locator("#update-id");
+      await idInput.fill(
+        updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id.toString(),
+      );
+      // get and click the load data btn
+      const idSubmit = await page.getByRole("button", { name: "load data" });
+      await idSubmit.click();
+      // get the active form and assert its correct
+      activeForm = await page.locator(".active-form");
+      await expect(activeForm).toHaveId("cd-singles-form");
+    });
+    test.skip("session list reflects a valid item update", async () => {});
+    test.skip("throws error toast if empty artist field is submitted", async () => {});
+    test.skip("throws error toast if empty title field is submitted", async () => {});
+    test.skip("updates the item when an updated artist is entered", async () => {});
+    test.skip("updates the item when an updated title is entered", async () => {});
+    test.skip("updates the item when an updated year is entered", async () => {});
+    test.skip("updates the item when an updated valid case type is entered", async () => {});
+    test.skip("throws error toast if form submitted with empty year field", async () => {});
+    test.skip("throws error toast if form submitted with with year that is not 4 digits in length", async () => {});
+    test.skip("throws error toast if form submitted with with year that is not a number", async () => {});
+    test.skip("throws error toast when an updated invalid case type is entered", async () => {});
+    test.skip("throws error toast when no case type is entered", async () => {});
+    test.skip("resets the page after a valid update", async () => {});
   });
+
   test.describe("CDS MAIN", () => {
     test.skip("write some CDS MAIN tests", async () => {});
   });
