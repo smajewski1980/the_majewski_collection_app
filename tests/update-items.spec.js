@@ -381,9 +381,59 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("CD SINGLES", () => {
-    let toast;
-    let activeForm;
-    let submitUpdateBtn;
+    let toast,
+      activeForm,
+      titleInput,
+      submitUpdateBtn,
+      yearInput,
+      caseTypeInput,
+      sessionList,
+      artistInput;
+
+    async function setup() {
+      toast = await page.locator(".page-message");
+      // select the format
+      const navBtn = await page.getByRole("button", {
+        name: "Cd-Singles",
+      });
+      await navBtn.click();
+      // add the test id to the update id input
+      const idInput = await page.locator("#update-id");
+      await idInput.fill(
+        updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id.toString(),
+      );
+      // get and click the load data btn
+      const idSubmit = await page.getByRole("button", { name: "load data" });
+      await idSubmit.click();
+      // get the active form and assert its correct
+      activeForm = await page.locator(".active-form");
+      await expect(activeForm).toHaveId("cd-singles-form");
+      // assert a form field has correct value
+      titleInput = await page.locator("#cd-singles-title");
+      await expect(titleInput).toHaveValue(
+        new RegExp(
+          `${updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
+        ),
+      );
+      submitUpdateBtn = await activeForm.getByRole("button", {
+        name: "submit",
+      });
+      yearInput = await activeForm.getByRole("textbox", { name: "year" });
+      caseTypeInput = await page.locator("#cd-singles-case-type");
+      sessionList = await page.locator("#session-list");
+      artistInput = await activeForm.getByRole("textbox", {
+        name: "artist",
+      });
+    }
+
+    async function resetSessionList() {
+      await electronApp.evaluate(async ({ global }) => {
+        globalThis.sessionStore.currAdded = [];
+        globalThis.sessionStore.isFirstSessionAdd = true;
+      });
+      await page.reload();
+      await setup();
+    }
 
     // add an item to update
     test.beforeAll(async () => {
@@ -438,39 +488,101 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test("throws success toast if a valid update is submitted", async () => {
+    test.beforeEach(async () => {
       await page.reload();
-      toast = await page.locator(".page-message");
-      // select the format
-      const navBtn = await page.getByRole("button", {
-        name: "Cd-Singles",
-      });
-      await navBtn.click();
-      // add the test id to the update id input
-      const idInput = await page.locator("#update-id");
-      await idInput.fill(
-        updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id.toString(),
-      );
-      // get and click the load data btn
-      const idSubmit = await page.getByRole("button", { name: "load data" });
-      await idSubmit.click();
-      // get the active form and assert its correct
-      activeForm = await page.locator(".active-form");
-      await expect(activeForm).toHaveId("cd-singles-form");
+      await setup();
     });
-    test.skip("session list reflects a valid item update", async () => {});
-    test.skip("throws error toast if empty artist field is submitted", async () => {});
-    test.skip("throws error toast if empty title field is submitted", async () => {});
-    test.skip("updates the item when an updated artist is entered", async () => {});
+
+    test("throws success toast if a valid update is submitted", async () => {
+      // add an updated value to the input and submit
+      await titleInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test("session list reflects a valid item update", async () => {
+      await expect(sessionList).toHaveText(
+        new RegExp(
+          `id: ${updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id}`,
+        ),
+      );
+      await expect(sessionList).toHaveText(
+        new RegExp(`${constants.data.UPDATE_TEST_TEXT_VAL_2}`),
+      );
+    });
+
+    test("throws error toast if empty artist field is submitted", async () => {
+      await artistInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if empty title field is submitted", async () => {
+      await titleInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("updates the item when an updated artist is entered", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList();
+
+      await artistInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
     test.skip("updates the item when an updated title is entered", async () => {});
     test.skip("updates the item when an updated year is entered", async () => {});
     test.skip("updates the item when an updated valid case type is entered", async () => {});
-    test.skip("throws error toast if form submitted with empty year field", async () => {});
+
+    test("throws error toast if form submitted with empty year field", async () => {
+      await yearInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.NO_EMPTY_FIELDS_MSG),
+      );
+    });
+
     test.skip("throws error toast if form submitted with with year that is not 4 digits in length", async () => {});
     test.skip("throws error toast if form submitted with with year that is not a number", async () => {});
     test.skip("throws error toast when an updated invalid case type is entered", async () => {});
-    test.skip("throws error toast when no case type is entered", async () => {});
-    test.skip("resets the page after a valid update", async () => {});
+
+    test("throws error toast when no case type is entered", async () => {
+      await caseTypeInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.NO_EMPTY_FIELDS_MSG),
+      );
+    });
+
+    test("resets the page after a valid update", async () => {
+      // just submit with no changes
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+
+      // locate the items that should be reset and assert
+      const activeNavBtn = await page.locator(".active-nav-btn");
+      const idInput = await page.getByLabel("id to update");
+      const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
+      await expect(activeForm).not.toBeVisible();
+      await expect(activeNavBtn).toHaveCount(0);
+      await expect(idInput).toBeEmpty();
+      await expect(deleteBtn).toHaveAttribute("inert");
+    });
   });
 
   test.describe("CDS MAIN", () => {
