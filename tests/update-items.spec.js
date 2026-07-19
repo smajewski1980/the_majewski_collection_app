@@ -2,6 +2,7 @@ import { test, expect, _electron as electron } from "@playwright/test";
 import constants, { updateFormVals } from "../constants.js";
 import * as path from "path";
 import { listenerCount } from "process";
+import { session } from "electron";
 let electronApp;
 let page;
 const testDataPath = path.join(__dirname, "testOutputFiles");
@@ -50,8 +51,7 @@ test.describe("UPDATE ITEMS", () => {
     });
 
     test("delete button is inert when the page loads", async () => {
-      const deleteBtn = page.getByRole("button", { name: "DELETE ITEM" });
-      // once this is all up and running move this to top level of describe block
+      const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
       await expect(deleteBtn).toHaveAttribute("inert");
     });
 
@@ -176,62 +176,209 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("CD COMPS", () => {
+    let toast;
+    let titleInput;
+    let activeForm;
+    let submitUpdateBtn;
     // add an item to update
     test.beforeAll(async () => {
-      try {
-        const res = await electronApp.evaluate(
-          // going to have to adjust this later when we get to being able to update tracks
-          async ({ app }, updateFormVals) => {
-            const res = await global.dbPool.query(
-              "INSERT INTO cd_compilations VALUES($1, $2, $3, $4)",
-              [
-                updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id,
-                updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title,
-                updateFormVals.UPDATE_TEST_ITEM_CD_COMP.year,
-                updateFormVals.UPDATE_TEST_ITEM_CD_COMP.location,
-              ],
-            );
-            if (res) console.log("test item successfully added");
-            return res;
-          },
-          updateFormVals,
-        );
-        await expect(res.rowCount).toBe(1);
-      } catch (error) {
-        console.log(error);
-      }
+      const rowCount = await electronApp.evaluate(
+        // going to have to adjust this later when we get to being able to update tracks
+        async ({ app }, updateFormVals) => {
+          const res = await global.dbPool.query(
+            "INSERT INTO cd_compilations VALUES($1, $2, $3, $4)",
+            [
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id,
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title,
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.year,
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.location,
+            ],
+          );
+          if (res) console.log("test item successfully added");
+
+          const trackRes = await global.dbPool.query(
+            "INSERT INTO cd_compilations_tracks(artist, track_name, title_id) VALUES ($1, $2, $3)",
+            [
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[0],
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[0],
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id,
+            ],
+          );
+
+          if (trackRes) console.log("test item track successfully added");
+
+          return trackRes.rowCount;
+        },
+        updateFormVals,
+      );
+      await expect(rowCount).toBe(1);
     });
     // delete the added item
     test.afterAll(async () => {
-      try {
-        await electronApp.evaluate(
-          // going to have to adjust this later when we get to being able to update tracks
-          async ({ app }, constants) => {
-            const { rowCount } = await global.dbPool.query(
-              "DELETE FROM cd_compilations WHERE title_id = $1",
-              [constants.data.UPDATE_TEST_ITEM_ID],
-            );
+      await electronApp.evaluate(
+        // going to have to adjust this later when we get to being able to update tracks
+        async ({ app }, updateFormVals) => {
+          const { rowCount } = await global.dbPool.query(
+            "DELETE FROM cd_compilations WHERE title_id = $1",
+            [updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id],
+          );
 
-            if (!rowCount) {
-              throw new Error("something went wrong, no rows deleted");
-            } else {
-              console.log("test item was successfully deleted from db");
-            }
-          },
-          constants,
-        );
-      } catch (error) {
-        console.log(error);
-      }
+          if (!rowCount) {
+            throw new Error("something went wrong, no rows deleted");
+          } else {
+            console.log("test item was successfully deleted from db");
+          }
+        },
+        updateFormVals,
+      );
     });
 
-    test.skip("updates the item when an updated title is entered", async () => {});
-    test.skip("updates the item when an updated year is entered", async () => {});
-    test.skip("updates the item when an updated valid location is entered", async () => {});
-    test.skip("throws toast when an updated invalid location is entered", async () => {});
-    test.skip("throws toast when an updated invalid year is entered", async () => {});
-    test.skip("throws sucess toast when an item is updated", async () => {});
-    test.skip("session list reflects a valid item update", async () => {});
+    test.beforeEach(async () => {
+      await page.reload();
+      toast = await page.locator(".page-message");
+      // select the format
+      const navBtn = await page.getByRole("button", {
+        name: "Cd-Compilations",
+      });
+      await navBtn.click();
+      // add the test id to the update id input
+      const idInput = await page.locator("#update-id");
+      await idInput.fill(
+        updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id.toString(),
+      );
+      // get and click the load data btn
+      const idSubmit = await page.getByRole("button", { name: "load data" });
+      await idSubmit.click();
+      // get the active form and assert its correct
+      activeForm = await page.locator(".active-form");
+      await expect(activeForm).toHaveId("cd-comps-form");
+      // assert a form field has correct value
+      titleInput = await page.locator("#cd-comps-title");
+      await expect(titleInput).toHaveValue(
+        new RegExp(
+          `${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
+        ),
+      );
+      submitUpdateBtn = await activeForm.getByRole("button", {
+        name: "submit",
+      });
+    });
+
+    test("throws success toast if an updated title is submitted", async () => {
+      // add an updated value to the input and submit
+      await titleInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test("session list reflects a valid item update", async () => {
+      const sessionList = await page.locator("#session-list");
+      await expect(sessionList).toHaveText(
+        new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id}`),
+      );
+      await expect(sessionList).toHaveText(
+        new RegExp(`${constants.data.UPDATE_TEST_TEXT_VAL_2}`),
+      );
+    });
+
+    test("throws error toast if form submitted with empty title field", async () => {
+      // add an empty value to the input and submit
+      await titleInput.fill("");
+      await submitUpdateBtn.click();
+      // assert the error toast message
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("updates the item when an updated year is entered", async () => {
+      // get the year input and submit an updated value
+      const yearInput = await activeForm.getByRole("textbox", { name: "year" });
+      await yearInput.fill("1234");
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test("throws error toast if form submitted with empty year field", async () => {
+      // get the year input and submit an empty value
+      const yearInput = await activeForm.getByRole("textbox", { name: "year" });
+      await yearInput.fill("");
+      await submitUpdateBtn.click();
+      // assert the error toast message
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if form submitted with with year that is not 4 digits in length", async () => {
+      // get the year input and submit an empty value
+      const yearInput = await activeForm.getByRole("textbox", { name: "year" });
+      await yearInput.fill(constants.data.INVALID_FORMAT_YEAR);
+      await submitUpdateBtn.click();
+      // assert the error toast message
+      await expect(toast).toHaveText(constants.toast.valErr.YEAR_FORMAT_MSG);
+    });
+
+    test("throws error toast if form submitted with with year that is not a number", async () => {
+      // get the year input and submit an empty value
+      const yearInput = await activeForm.getByRole("textbox", { name: "year" });
+      await yearInput.fill(constants.data.INVALID_TYPE_YEAR);
+      await submitUpdateBtn.click();
+      // assert the error toast message
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.YEAR_TYPE_MSG),
+      );
+    });
+
+    test("resets the page after a valid update", async () => {
+      // just submit with no changes
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+
+      // locate the items that should be reset and assert
+      const activeNavBtn = await page.locator(".active-nav-btn");
+      const idInput = await page.getByLabel("id to update");
+      const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
+      await expect(activeForm).not.toBeVisible();
+      await expect(activeNavBtn).toHaveCount(0);
+      await expect(idInput).toBeEmpty();
+      await expect(deleteBtn).toHaveAttribute("inert");
+    });
+
+    test("updates the item when an updated valid location is entered", async () => {
+      const locationInput = await activeForm.getByRole("textbox", {
+        name: "location",
+      });
+      await locationInput.fill(constants.data.UPDATE_VALID_LOCATION);
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test("throws toast when an updated invalid location is entered", async () => {
+      const locationInput = await activeForm.getByRole("textbox", {
+        name: "location",
+      });
+      await locationInput.fill(constants.data.INVALID_LOCATION);
+      await submitUpdateBtn.click();
+      await expect(toast).toHaveText(
+        constants.toast.valErr.LOCATION_INVALID_MSG,
+      );
+    });
+
+    test("throws toast when no location is entered", async () => {
+      const locationInput = await activeForm.getByRole("textbox", {
+        name: "location",
+      });
+      await locationInput.fill("");
+      await submitUpdateBtn.click();
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
   });
 
   test.describe("CD SINGLES", () => {
