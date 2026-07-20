@@ -438,6 +438,42 @@ test.describe("LOOKUP - RECORDS", () => {
 
   // helper function to assert the data
   async function assertRecordData() {
+    // some results are not rendered yet due to the inifinite scrolling
+    // need to scroll the page down if needed
+    // at some point i may need to make this a global func to use elsewhere
+    while (true) {
+      // 1. Check if the text has appeared inside the div yet
+      const textFound = await resultsDiv.evaluate((el, text) => {
+        return el.textContent.includes(text);
+      }, testRecordObj.id);
+
+      if (textFound) {
+        break; // Success! The text is loaded.
+      }
+
+      // 2. Check if we have hit the absolute bottom of the container
+      const isAtBottom = await page.evaluate(() => {
+        return (
+          Math.ceil(window.innerHeight + window.scrollY) >=
+          document.documentElement.scrollHeight
+        );
+      });
+
+      // Exit if we cannot scroll further (handles non-scrollable screens)
+      if (isAtBottom) {
+        break;
+      }
+
+      // 3. Scroll the PAGE down by one viewport height
+      //    to trigger appending the next slice of data
+      await page.evaluate(() => {
+        window.scrollBy(0, window.innerHeight);
+      });
+
+      // Brief pause for the DOM to append the items
+      await page.waitForTimeout(50);
+    }
+
     await expect(resultsDiv).toContainText(testRecordObj.id);
     await expect(resultsDiv).toContainText(testRecordObj.artist);
     await expect(resultsDiv).toContainText(testRecordObj.title);
