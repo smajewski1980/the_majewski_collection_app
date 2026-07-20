@@ -534,6 +534,10 @@ test.describe("UPDATE ITEMS", () => {
       // need to reset the session list to be able to see if the update actually went through
       await resetSessionList();
 
+      // make sure we are actually updating the value
+      await expect(artistInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.artist,
+      );
       await artistInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
       await submitUpdateBtn.click();
 
@@ -542,9 +546,53 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test.skip("updates the item when an updated title is entered", async () => {});
-    test.skip("updates the item when an updated year is entered", async () => {});
-    test.skip("updates the item when an updated valid case type is entered", async () => {});
+    test("updates the item when an updated title is entered", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList();
+
+      // make sure we are actually updating the value
+      await expect(titleInput).toHaveValue(
+        constants.data.UPDATE_TEST_TEXT_VAL_2,
+      );
+      await titleInput.fill(updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.title);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.title),
+      );
+    });
+
+    test("updates the item when an updated year is entered", async () => {
+      const updatedYear = "1234";
+
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList();
+
+      // make sure we are actually updating the value
+      await expect(yearInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.year,
+      );
+      await yearInput.fill(updatedYear);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(updatedYear));
+    });
+
+    test("updates the item when an updated valid case type is entered", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList();
+
+      // make sure we are actually updating the value
+      await expect(caseTypeInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.case_type,
+      );
+      await caseTypeInput.fill(constants.data.VALID_LOCATION);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.VALID_LOCATION),
+      );
+    });
 
     test("throws error toast if form submitted with empty year field", async () => {
       await yearInput.fill("");
@@ -555,9 +603,32 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test.skip("throws error toast if form submitted with with year that is not 4 digits in length", async () => {});
-    test.skip("throws error toast if form submitted with with year that is not a number", async () => {});
-    test.skip("throws error toast when an updated invalid case type is entered", async () => {});
+    test("throws error toast if form submitted with with year that is not 4 digits in length", async () => {
+      await yearInput.fill(constants.data.INVALID_FORMAT_YEAR);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_FORMAT_YEAR),
+      );
+    });
+
+    test("throws error toast if form submitted with with year that is not a number", async () => {
+      await yearInput.fill(constants.data.INVALID_TYPE_YEAR);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_TYPE_YEAR),
+      );
+    });
+
+    test("throws error toast when an updated invalid case type is entered", async () => {
+      await caseTypeInput.fill(constants.data.INVALID_LOCATION);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_LOCATION),
+      );
+    });
 
     test("throws error toast when no case type is entered", async () => {
       await caseTypeInput.fill("");
