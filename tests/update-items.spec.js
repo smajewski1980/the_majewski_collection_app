@@ -176,10 +176,7 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("CD COMPS", () => {
-    let toast;
-    let titleInput;
-    let activeForm;
-    let submitUpdateBtn;
+    let toast, titleInput, activeForm, submitUpdateBtn;
     // add an item to update
     test.beforeAll(async () => {
       const rowCount = await electronApp.evaluate(
@@ -657,8 +654,100 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("CDS MAIN", () => {
-    test.skip("write some CDS MAIN tests", async () => {});
+    let toast,
+      artistInput,
+      titleInput,
+      locationInput,
+      submitUpdateBtn,
+      activeForm;
+
+    test.beforeAll(async () => {
+      const rowCount = await electronApp.evaluate(
+        async ({ app }, updateFormVals) => {
+          const { rowCount } = await global.dbPool.query(
+            "INSERT INTO cds VALUES($1, $2, $3, $4)",
+            [
+              updateFormVals.UPDATE_TEST_ITEM_CDS.id,
+              updateFormVals.UPDATE_TEST_ITEM_CDS.artist,
+              updateFormVals.UPDATE_TEST_ITEM_CDS.title,
+              updateFormVals.UPDATE_TEST_ITEM_CDS.location,
+            ],
+          );
+
+          if (rowCount) console.log("test cd successfully added");
+
+          return rowCount;
+        },
+        updateFormVals,
+      );
+
+      await expect(rowCount).toBe(1);
+    });
+
+    test.afterAll(async () => {
+      await electronApp.evaluate(async ({ app }, id) => {
+        const { rowCount } = await global.dbPool.query(
+          "DELETE FROM cds WHERE id = $1",
+          [id],
+        );
+
+        if (!rowCount) {
+          throw new Error("something went wrong, no rows deleted");
+        } else {
+          console.log("test cd was successfully deleted from db");
+        }
+      }, updateFormVals.UPDATE_TEST_ITEM_CDS.id);
+    });
+
+    test.beforeEach(async () => {
+      await page.reload();
+
+      toast = await page.locator(".page-message");
+      artistInput = await page.locator("#cds-main-artist");
+      titleInput = await page.locator("#cds-main-title");
+      locationInput = await page.locator("#cds-main-location");
+      activeForm = await page.locator(".active-form");
+      submitUpdateBtn = await activeForm.getByRole("button", {
+        name: "submit",
+      });
+      // select the format
+      const navBtn = await page.getByRole("button", {
+        name: "Cd-Main Catalog",
+      });
+      await navBtn.click();
+      // add the test id to the update id input
+      const idInput = await page.locator("#update-id");
+      await idInput.fill(updateFormVals.UPDATE_TEST_ITEM_CDS.id.toString());
+      // get and click the load data btn
+      const idSubmit = await page.getByRole("button", { name: "load data" });
+      await idSubmit.click();
+      // get the active form and assert its correct
+      await expect(activeForm).toHaveId("cd-main-form");
+      // assert a form field has correct value
+      await expect(titleInput).toHaveValue(
+        new RegExp(
+          `${updateFormVals.UPDATE_TEST_ITEM_CDS.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
+        ),
+      );
+    });
+
+    test("throws success toast if a valid update is submitted", async () => {
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test.skip("session list reflects a valid item update", async () => {});
+    test.skip("throws error toast if form submitted with empty artist field", async () => {});
+    test.skip("throws error toast if form submitted with empty title field", async () => {});
+    test.skip("throws error toast if form submitted with empty location field", async () => {});
+    test.skip("throws error toast if form submitted with an invalid location field", async () => {});
+    test.skip("resets the page after a valid update", async () => {});
+    test.skip("updates the item if an updated artist is submitted", async () => {});
+    test.skip("updates the item if an updated title is submitted", async () => {});
+    test.skip("updates the item if an updated location is submitted", async () => {});
   });
+
   test.describe("RECORDS", () => {
     test.skip("write some RECORDS tests", async () => {});
   });
