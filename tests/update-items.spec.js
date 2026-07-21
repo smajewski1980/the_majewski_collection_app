@@ -71,6 +71,30 @@ test.describe("UPDATE ITEMS", () => {
       toast = await page.locator(".page-message");
     });
 
+    test.describe("INCREMENT LOCATION", () => {
+      test("toast is thrown if increment location is checked without a form loaded", async () => {
+        await page.getByRole("checkbox").click();
+
+        await expect(toast).toHaveText(
+          constants.toast.valErr.NO_ACTIVE_FORM_MSG,
+        );
+      });
+
+      test("increment location stays unchecked when clicked without a form loaded", async () => {
+        const checkbox = await page.getByRole("checkbox");
+        await checkbox.click();
+
+        await expect(toast).toHaveText(
+          constants.toast.valErr.NO_ACTIVE_FORM_MSG,
+        );
+        await expect(checkbox).not.toBeChecked();
+      });
+
+      test.skip("INCREMENT LOCATION checkbox shows toast if no location is selected", () => {});
+      test.skip("INCREMENT LOCATION checkbox shows toast if the selected location is invalid to increment", () => {});
+      test.skip("INCREMENT LOCATION checkbox increments the location of the active form", () => {});
+    });
+
     test("delete button is inert when the page loads", async () => {
       const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
       await expect(deleteBtn).toHaveAttribute("inert");
@@ -93,20 +117,6 @@ test.describe("UPDATE ITEMS", () => {
       await expect(toast).toHaveText(
         constants.toast.valErr.UPDATE_NO_SEL_FORMAT_MSG,
       );
-    });
-
-    test("toast is thrown if increment location is checked without a form loaded", async () => {
-      await page.getByRole("checkbox").click();
-
-      await expect(toast).toHaveText(constants.toast.valErr.NO_ACTIVE_FORM_MSG);
-    });
-
-    test("increment location stays unchecked when clicked without a form loaded", async () => {
-      const checkbox = await page.getByRole("checkbox");
-      await checkbox.click();
-
-      await expect(toast).toHaveText(constants.toast.valErr.NO_ACTIVE_FORM_MSG);
-      await expect(checkbox).not.toBeChecked();
     });
 
     dataArray.forEach((type) => {
@@ -533,7 +543,7 @@ test.describe("UPDATE ITEMS", () => {
 
     test("updates the item when an updated artist is entered", async () => {
       // need to reset the session list to be able to see if the update actually went through
-      await resetSessionList();
+      await resetSessionList(setup);
 
       // make sure we are actually updating the value
       await expect(artistInput).toHaveValue(
@@ -847,9 +857,44 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("RECORDS", () => {
-    test.skip("write some RECORDS tests", async () => {});
+    test.skip("throws success toast if a valid update is submitted", async () => {});
+    test.skip("session list reflects a valid item update", async () => {});
+    test.skip("throws error toast if empty artist field is submitted", async () => {});
+    test.skip("throws error toast if empty title field is submitted", async () => {});
+    test.skip("throws error toast if empty location field is submitted", async () => {});
+    test.skip("throws error toast when an invalid updated location is submitted", async () => {});
+    test.skip("throws error toast if empty year field is submitted", async () => {});
+    test.skip("throws error toast if form submitted with with year that is not 4 digits in length", async () => {});
+    test.skip("throws error toast if form submitted with with year that is not a number", async () => {});
+    test.skip("throws error toast if empty label field is submitted", async () => {});
+    test.skip("updates the item when an updated artist is submitted", async () => {});
+    test.skip("updates the item when an updated title is submitted", async () => {});
+    test.skip("updates the item when an updated valid location is submitted", async () => {});
+    test.skip("updates the item when an updated year is submitted", async () => {});
+    test.skip("updates the item when an updated diameter is submitted", async () => {});
+    test.skip("updates the item when an updated sleeve condition is submitted", async () => {});
+    test.skip("updates the item when an updated record condition is submitted", async () => {});
+    test.skip("updates the item when an updated label is submitted", async () => {});
+    test.skip("resets the page after a valid update", async () => {});
   });
+
   test.describe("TAPES", () => {
-    test.skip("write some TAPES tests", async () => {});
+    test.skip("throws success toast if a valid update is submitted", async () => {});
+    test.skip("session list reflects a valid item update", async () => {});
+    test.skip("throws error toast if empty artist field is submitted", async () => {});
+    test.skip("throws error toast if empty title field is submitted", async () => {});
+    test.skip("throws error toast if empty location field is submitted", async () => {});
+    test.skip("throws error toast when an invalid updated location is submitted", async () => {});
+    test.skip("throws error toast if empty year field is submitted", async () => {});
+    test.skip("throws error toast if form submitted with with year that is not 4 digits in length", async () => {});
+    test.skip("throws error toast if form submitted with with year that is not a number", async () => {});
+    test.skip("throws error toast if neither needs repair radio btn are checked", async () => {});
+    test.skip("updates the item when an updated artist is submitted", async () => {});
+    test.skip("updates the item when an updated title is submitted", async () => {});
+    test.skip("updates the item when an updated valid location is submitted", async () => {});
+    test.skip("updates the item when an updated year is submitted", async () => {});
+    test.skip("updates the item when an updated needs repair state is submitted", async () => {});
+    test.skip("updates the item when an updated tape speed is submitted", async () => {});
+    test.skip("resets the page after a valid update", async () => {});
   });
 });
