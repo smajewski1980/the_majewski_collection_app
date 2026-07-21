@@ -33,6 +33,57 @@ test.afterAll(async () => {
 });
 
 test.describe("ADD ITEMS", () => {
+  async function deleteJustAddedItem(idType, type) {
+    // get the last added id
+    const success = await electronApp.evaluate(
+      async ({ app }, { typeStr, format }) => {
+        // finese the format string for the db
+        let formattedType;
+        switch (format) {
+          case "Cd-Compilations":
+            formattedType = "cd_compilations";
+            break;
+          case "Cd-Singles":
+            formattedType = "cd_singles";
+            break;
+          case "Cd-Main Catalog":
+            formattedType = "cds";
+            break;
+          case "Records":
+            formattedType = "records";
+            break;
+          case "Tapes":
+            formattedType = "tapes";
+            break;
+        }
+        // get the id
+        const res = await global.dbPool.query(
+          `SELECT ${typeStr} FROM ${formattedType} ORDER BY ${typeStr} DESC LIMIT 1`,
+        );
+        // since it may be id, title_id, or single_id the val is converted like this
+        let idNum = Object.values(res.rows[0])[0];
+        // if we got the id, log it
+        if (res.rowCount) {
+          console.log("just added id to delete was retreived", idNum);
+        }
+        // query the pool and delete the id
+        const { rowCount } = await global.dbPool.query(
+          `DELETE FROM ${formattedType} WHERE ${typeStr} = ${idNum}`,
+        );
+        if (rowCount) {
+          return true;
+        } else return false;
+      },
+      { typeStr: idType, format: type },
+    );
+
+    if (await success) {
+      console.log("last added item was successfully deleted");
+    } else {
+      console.log("something went wrong, last added item was not deleted");
+    }
+  }
+
   test.describe("NAV buttons render the proper forms", () => {
     test.beforeEach(async () => {
       await page.reload();
@@ -410,6 +461,18 @@ test.describe("ADD ITEMS", () => {
           await submitBtn.click();
 
           await expect(toast).toHaveText(constants.toast.ADD_SUCCESS_MSG);
+
+          // cleanup
+          let idType;
+          if (type === "Cd-Compilations") {
+            idType = "title_id";
+          } else if (type === "Cd-Singles") {
+            idType = "single_id";
+          } else {
+            idType = "id";
+          }
+
+          await deleteJustAddedItem(idType, type);
         });
       });
     });
@@ -699,6 +762,9 @@ test.describe("ADD ITEMS", () => {
         await expect(sessionList).toHaveText(
           new RegExp(constants.data.VALID_COMP_TRACK.replace("|", " - ")),
         );
+
+        // cleanup
+        await deleteJustAddedItem("title_id", "Cd-Compilations");
       });
 
       test("cd-singles form added item gets added to the session list", async () => {
@@ -741,6 +807,9 @@ test.describe("ADD ITEMS", () => {
         await expect(sessionList).toHaveText(
           new RegExp(constants.data.VALID_SINGLES_TRACK),
         );
+
+        // cleanup
+        await deleteJustAddedItem("single_id", "Cd-Singles");
       });
 
       test("cd-main form added item gets added to the session list", async () => {
@@ -775,6 +844,9 @@ test.describe("ADD ITEMS", () => {
         await expect(sessionList).toHaveText(
           new RegExp(constants.data.VALID_LOCATION),
         );
+
+        // cleanup
+        await deleteJustAddedItem("id", "Cd-Main Catalog");
       });
 
       test("records form added item gets added to the session list", async () => {
@@ -819,6 +891,9 @@ test.describe("ADD ITEMS", () => {
         await expect(sessionList).toHaveText(
           new RegExp(constants.data.VALID_RECORD_LABEL),
         );
+
+        // cleanup
+        await deleteJustAddedItem("id", "Records");
       });
 
       test("tapes form added item gets added to the session list", async () => {
@@ -862,6 +937,9 @@ test.describe("ADD ITEMS", () => {
         );
         await expect(sessionList).toHaveText(/No/);
         await expect(sessionList).toHaveText(/na/);
+
+        // cleanup
+        await deleteJustAddedItem("id", "Tapes");
       });
     });
   });
