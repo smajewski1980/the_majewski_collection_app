@@ -34,6 +34,27 @@ test.afterAll(async () => {
 });
 
 test.describe("UPDATE ITEMS", () => {
+  async function checkPageStateReset() {
+    const activeForm = await page.locator(".active-form");
+    // locate the items that should be reset and assert
+    const activeNavBtn = await page.locator(".active-nav-btn");
+    const idInput = await page.getByLabel("id to update");
+    const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
+    await expect(activeForm).not.toBeVisible();
+    await expect(activeNavBtn).toHaveCount(0);
+    await expect(idInput).toBeEmpty();
+    await expect(deleteBtn).toHaveAttribute("inert");
+  }
+
+  async function resetSessionList(setup) {
+    await electronApp.evaluate(async ({ global }) => {
+      globalThis.sessionStore.currAdded = [];
+      globalThis.sessionStore.isFirstSessionAdd = true;
+    });
+    await page.reload();
+    await setup();
+  }
+
   test.describe("General page tests", () => {
     let toast;
 
@@ -333,15 +354,7 @@ test.describe("UPDATE ITEMS", () => {
       await submitUpdateBtn.click();
       // assert the success toast message
       await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
-
-      // locate the items that should be reset and assert
-      const activeNavBtn = await page.locator(".active-nav-btn");
-      const idInput = await page.getByLabel("id to update");
-      const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
-      await expect(activeForm).not.toBeVisible();
-      await expect(activeNavBtn).toHaveCount(0);
-      await expect(idInput).toBeEmpty();
-      await expect(deleteBtn).toHaveAttribute("inert");
+      await checkPageStateReset();
     });
 
     test("updates the item when an updated valid location is entered", async () => {
@@ -421,15 +434,6 @@ test.describe("UPDATE ITEMS", () => {
       artistInput = await activeForm.getByRole("textbox", {
         name: "artist",
       });
-    }
-
-    async function resetSessionList() {
-      await electronApp.evaluate(async ({ global }) => {
-        globalThis.sessionStore.currAdded = [];
-        globalThis.sessionStore.isFirstSessionAdd = true;
-      });
-      await page.reload();
-      await setup();
     }
 
     // add an item to update
@@ -545,7 +549,7 @@ test.describe("UPDATE ITEMS", () => {
 
     test("updates the item when an updated title is entered", async () => {
       // need to reset the session list to be able to see if the update actually went through
-      await resetSessionList();
+      await resetSessionList(setup);
 
       // make sure we are actually updating the value
       await expect(titleInput).toHaveValue(
@@ -563,7 +567,7 @@ test.describe("UPDATE ITEMS", () => {
       const updatedYear = "1234";
 
       // need to reset the session list to be able to see if the update actually went through
-      await resetSessionList();
+      await resetSessionList(setup);
 
       // make sure we are actually updating the value
       await expect(yearInput).toHaveValue(
@@ -577,7 +581,7 @@ test.describe("UPDATE ITEMS", () => {
 
     test("updates the item when an updated valid case type is entered", async () => {
       // need to reset the session list to be able to see if the update actually went through
-      await resetSessionList();
+      await resetSessionList(setup);
 
       // make sure we are actually updating the value
       await expect(caseTypeInput).toHaveValue(
@@ -641,15 +645,7 @@ test.describe("UPDATE ITEMS", () => {
       await submitUpdateBtn.click();
       // assert the success toast message
       await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
-
-      // locate the items that should be reset and assert
-      const activeNavBtn = await page.locator(".active-nav-btn");
-      const idInput = await page.getByLabel("id to update");
-      const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
-      await expect(activeForm).not.toBeVisible();
-      await expect(activeNavBtn).toHaveCount(0);
-      await expect(idInput).toBeEmpty();
-      await expect(deleteBtn).toHaveAttribute("inert");
+      await checkPageStateReset();
     });
   });
 
@@ -659,7 +655,39 @@ test.describe("UPDATE ITEMS", () => {
       titleInput,
       locationInput,
       submitUpdateBtn,
-      activeForm;
+      activeForm,
+      sessionList;
+
+    async function setup() {
+      toast = await page.locator(".page-message");
+      artistInput = await page.locator("#cds-main-artist");
+      titleInput = await page.locator("#cds-main-title");
+      locationInput = await page.locator("#cds-main-location");
+      activeForm = await page.locator(".active-form");
+      submitUpdateBtn = await activeForm.getByRole("button", {
+        name: "submit",
+      });
+      sessionList = await page.locator("#session-list");
+      // select the format
+      const navBtn = await page.getByRole("button", {
+        name: "Cd-Main Catalog",
+      });
+      await navBtn.click();
+      // add the test id to the update id input
+      const idInput = await page.locator("#update-id");
+      await idInput.fill(updateFormVals.UPDATE_TEST_ITEM_CDS.id.toString());
+      // get and click the load data btn
+      const idSubmit = await page.getByRole("button", { name: "load data" });
+      await idSubmit.click();
+      // get the active form and assert its correct
+      await expect(activeForm).toHaveId("cd-main-form");
+      // assert a form field has correct value
+      await expect(titleInput).toHaveValue(
+        new RegExp(
+          `${updateFormVals.UPDATE_TEST_ITEM_CDS.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
+        ),
+      );
+    }
 
     test.beforeAll(async () => {
       const rowCount = await electronApp.evaluate(
@@ -701,51 +729,121 @@ test.describe("UPDATE ITEMS", () => {
 
     test.beforeEach(async () => {
       await page.reload();
-
-      toast = await page.locator(".page-message");
-      artistInput = await page.locator("#cds-main-artist");
-      titleInput = await page.locator("#cds-main-title");
-      locationInput = await page.locator("#cds-main-location");
-      activeForm = await page.locator(".active-form");
-      submitUpdateBtn = await activeForm.getByRole("button", {
-        name: "submit",
-      });
-      // select the format
-      const navBtn = await page.getByRole("button", {
-        name: "Cd-Main Catalog",
-      });
-      await navBtn.click();
-      // add the test id to the update id input
-      const idInput = await page.locator("#update-id");
-      await idInput.fill(updateFormVals.UPDATE_TEST_ITEM_CDS.id.toString());
-      // get and click the load data btn
-      const idSubmit = await page.getByRole("button", { name: "load data" });
-      await idSubmit.click();
-      // get the active form and assert its correct
-      await expect(activeForm).toHaveId("cd-main-form");
-      // assert a form field has correct value
-      await expect(titleInput).toHaveValue(
-        new RegExp(
-          `${updateFormVals.UPDATE_TEST_ITEM_CDS.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
-        ),
-      );
+      await setup();
     });
 
     test("throws success toast if a valid update is submitted", async () => {
+      // just resubmit the loaded item
       await submitUpdateBtn.click();
 
       await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
     });
 
-    test.skip("session list reflects a valid item update", async () => {});
-    test.skip("throws error toast if form submitted with empty artist field", async () => {});
-    test.skip("throws error toast if form submitted with empty title field", async () => {});
-    test.skip("throws error toast if form submitted with empty location field", async () => {});
-    test.skip("throws error toast if form submitted with an invalid location field", async () => {});
-    test.skip("resets the page after a valid update", async () => {});
-    test.skip("updates the item if an updated artist is submitted", async () => {});
-    test.skip("updates the item if an updated title is submitted", async () => {});
-    test.skip("updates the item if an updated location is submitted", async () => {});
+    test("session list reflects a valid item update", async () => {
+      const sessionList = await page.locator("#session-list");
+      await expect(sessionList).toHaveText(
+        new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_CDS.id}`),
+      );
+      await expect(sessionList).toHaveText(
+        new RegExp(`${updateFormVals.UPDATE_TEST_ITEM_CDS.artist}`),
+      );
+    });
+
+    test("throws error toast if form submitted with empty artist field", async () => {
+      await artistInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if form submitted with empty title field", async () => {
+      await titleInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if form submitted with empty location field", async () => {
+      await locationInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if form submitted with an invalid location field", async () => {
+      await locationInput.fill(constants.data.INVALID_LOCATION);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.LOCATION_INVALID_MSG,
+      );
+    });
+
+    test("resets the page after a valid update", async () => {
+      // just resubmit the loaded item
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+
+      await checkPageStateReset();
+    });
+
+    test("updates the item if an updated artist is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(artistInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_CDS.artist,
+      );
+
+      await artistInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
+    test("updates the item if an updated title is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(titleInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_CDS.title,
+      );
+
+      await titleInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
+    test("updates the item if an updated location is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(locationInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_CDS.location,
+      );
+
+      await locationInput.fill(constants.data.CDS_TEST_LOC_VAL_W_NUM);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.CDS_TEST_LOC_VAL_W_NUM),
+      );
+    });
   });
 
   test.describe("RECORDS", () => {
