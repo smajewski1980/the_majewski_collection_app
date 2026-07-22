@@ -857,7 +857,110 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("RECORDS", () => {
-    test.skip("throws success toast if a valid update is submitted", async () => {});
+    let toast,
+      artistInput,
+      titleInput,
+      locationInput,
+      yearInput,
+      diameterInput,
+      slvCondInput,
+      recCondInput,
+      labelInput,
+      submitUpdateBtn,
+      activeForm,
+      sessionList;
+
+    async function setup() {
+      toast = await page.locator(".page-message");
+      artistInput = await page.locator("#records-artist");
+      titleInput = await page.locator("#records-title");
+      locationInput = await page.locator("#records-location");
+      locationInput = await page.locator("#records-year");
+      locationInput = await page.locator("#records-diameter");
+      locationInput = await page.locator("#records-sleeve-cond");
+      locationInput = await page.locator("#records-record-cond");
+      locationInput = await page.locator("#records-label");
+      activeForm = await page.locator(".active-form");
+      submitUpdateBtn = await activeForm.getByRole("button", {
+        name: "submit",
+      });
+      sessionList = await page.locator("#session-list");
+      // select the format
+      const navBtn = await page.getByRole("button", {
+        name: "RECORDS",
+      });
+      await navBtn.click();
+      // add the test id to the update id input
+      const idInput = await page.locator("#update-id");
+      await idInput.fill(updateFormVals.UPDATE_TEST_ITEM_RECORDS.id.toString());
+      // get and click the load data btn
+      const idSubmit = await page.getByRole("button", { name: "load data" });
+      await idSubmit.click();
+      // get the active form and assert its correct
+      await expect(activeForm).toHaveId("records-form");
+      // assert a form field has correct value
+      await expect(titleInput).toHaveValue(
+        new RegExp(
+          `${updateFormVals.UPDATE_TEST_ITEM_RECORDS.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
+        ),
+      );
+    }
+
+    test.beforeAll(async () => {
+      const rowCount = await electronApp.evaluate(
+        async ({ app }, updateFormVals) => {
+          const { rowCount } = await global.dbPool.query(
+            "INSERT INTO records VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+            [
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.id,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.artist,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.title,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.location,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.year,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.diameter,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.sleeve_condition,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.record_condition,
+              updateFormVals.UPDATE_TEST_ITEM_RECORDS.label,
+            ],
+          );
+
+          if (rowCount) console.log("test record successfully added");
+
+          return rowCount;
+        },
+        updateFormVals,
+      );
+
+      await expect(rowCount).toBe(1);
+    });
+
+    test.afterAll(async () => {
+      await electronApp.evaluate(async ({ app }, id) => {
+        const { rowCount } = await global.dbPool.query(
+          "DELETE FROM records WHERE id = $1",
+          [id],
+        );
+
+        if (!rowCount) {
+          throw new Error("something went wrong, no rows deleted");
+        } else {
+          console.log("test record was successfully deleted from db");
+        }
+      }, updateFormVals.UPDATE_TEST_ITEM_RECORDS.id);
+    });
+
+    test.beforeEach(async () => {
+      await page.reload();
+      await setup();
+    });
+
+    test("throws success toast if a valid update is submitted", async () => {
+      // just resubmit the loaded item
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
     test.skip("session list reflects a valid item update", async () => {});
     test.skip("throws error toast if empty artist field is submitted", async () => {});
     test.skip("throws error toast if empty title field is submitted", async () => {});
