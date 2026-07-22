@@ -95,6 +95,8 @@ test.describe("UPDATE ITEMS", () => {
       test.skip("INCREMENT LOCATION checkbox increments the location of the active form", () => {});
     });
 
+    test.skip("the session list persists between pages", () => {});
+
     test("delete button is inert when the page loads", async () => {
       const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
       await expect(deleteBtn).toHaveAttribute("inert");
@@ -207,7 +209,7 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("CD COMPS", () => {
-    let toast, titleInput, activeForm, submitUpdateBtn;
+    let toast, titleInput, activeForm, submitUpdateBtn, sessionList;
     // add an item to update
     test.beforeAll(async () => {
       const rowCount = await electronApp.evaluate(
@@ -260,8 +262,7 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test.beforeEach(async () => {
-      await page.reload();
+    async function setup() {
       toast = await page.locator(".page-message");
       // select the format
       const navBtn = await page.getByRole("button", {
@@ -286,9 +287,15 @@ test.describe("UPDATE ITEMS", () => {
           `${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
         ),
       );
+      sessionList = await page.locator("#session-list");
       submitUpdateBtn = await activeForm.getByRole("button", {
         name: "submit",
       });
+    }
+
+    test.beforeEach(async () => {
+      await page.reload();
+      await setup();
     });
 
     test("throws success toast if an updated title is submitted", async () => {
@@ -300,7 +307,8 @@ test.describe("UPDATE ITEMS", () => {
     });
 
     test("session list reflects a valid item update", async () => {
-      const sessionList = await page.locator("#session-list");
+      await resetSessionList(setup);
+      await submitUpdateBtn.click();
       await expect(sessionList).toHaveText(
         new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id}`),
       );
@@ -513,6 +521,8 @@ test.describe("UPDATE ITEMS", () => {
     });
 
     test("session list reflects a valid item update", async () => {
+      await resetSessionList(setup);
+      await submitUpdateBtn.click();
       await expect(sessionList).toHaveText(
         new RegExp(
           `id: ${updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id}`,
@@ -750,7 +760,8 @@ test.describe("UPDATE ITEMS", () => {
     });
 
     test("session list reflects a valid item update", async () => {
-      const sessionList = await page.locator("#session-list");
+      await resetSessionList(setup);
+      await submitUpdateBtn.click();
       await expect(sessionList).toHaveText(
         new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_CDS.id}`),
       );
@@ -875,11 +886,11 @@ test.describe("UPDATE ITEMS", () => {
       artistInput = await page.locator("#records-artist");
       titleInput = await page.locator("#records-title");
       locationInput = await page.locator("#records-location");
-      locationInput = await page.locator("#records-year");
-      locationInput = await page.locator("#records-diameter");
-      locationInput = await page.locator("#records-sleeve-cond");
-      locationInput = await page.locator("#records-record-cond");
-      locationInput = await page.locator("#records-label");
+      yearInput = await page.locator("#records-year");
+      diameterInput = await page.locator("#records-diameter");
+      slvCondInput = await page.locator("#records-sleeve-cond");
+      recCondInput = await page.locator("#records-record-cond");
+      labelInput = await page.locator("#records-label");
       activeForm = await page.locator(".active-form");
       submitUpdateBtn = await activeForm.getByRole("button", {
         name: "submit",
@@ -961,24 +972,222 @@ test.describe("UPDATE ITEMS", () => {
       await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
     });
 
-    test.skip("session list reflects a valid item update", async () => {});
-    test.skip("throws error toast if empty artist field is submitted", async () => {});
-    test.skip("throws error toast if empty title field is submitted", async () => {});
-    test.skip("throws error toast if empty location field is submitted", async () => {});
-    test.skip("throws error toast when an invalid updated location is submitted", async () => {});
-    test.skip("throws error toast if empty year field is submitted", async () => {});
-    test.skip("throws error toast if form submitted with with year that is not 4 digits in length", async () => {});
-    test.skip("throws error toast if form submitted with with year that is not a number", async () => {});
-    test.skip("throws error toast if empty label field is submitted", async () => {});
-    test.skip("updates the item when an updated artist is submitted", async () => {});
-    test.skip("updates the item when an updated title is submitted", async () => {});
-    test.skip("updates the item when an updated valid location is submitted", async () => {});
-    test.skip("updates the item when an updated year is submitted", async () => {});
-    test.skip("updates the item when an updated diameter is submitted", async () => {});
-    test.skip("updates the item when an updated sleeve condition is submitted", async () => {});
-    test.skip("updates the item when an updated record condition is submitted", async () => {});
-    test.skip("updates the item when an updated label is submitted", async () => {});
-    test.skip("resets the page after a valid update", async () => {});
+    test("session list reflects a valid item update", async () => {
+      await resetSessionList(setup);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_RECORDS.id}`),
+      );
+      await expect(sessionList).toHaveText(
+        new RegExp(`${updateFormVals.UPDATE_TEST_ITEM_RECORDS.artist}`),
+      );
+    });
+
+    test("throws error toast if empty artist field is submitted", async () => {
+      await artistInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if empty title field is submitted", async () => {
+      await titleInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if empty location field is submitted", async () => {
+      await locationInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast when an invalid updated location is submitted", async () => {
+      await locationInput.fill(constants.data.INVALID_LOCATION);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.LOCATION_INVALID_MSG,
+      );
+    });
+
+    test("throws error toast if empty year field is submitted", async () => {
+      await yearInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.NO_EMPTY_FIELDS_MSG),
+      );
+    });
+
+    test("throws error toast if form submitted with with year that is not 4 digits in length", async () => {
+      await yearInput.fill(constants.data.INVALID_FORMAT_YEAR);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_FORMAT_YEAR),
+      );
+    });
+
+    test("throws error toast if form submitted with with year that is not a number", async () => {
+      await yearInput.fill(constants.data.INVALID_TYPE_YEAR);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_TYPE_YEAR),
+      );
+    });
+
+    test("throws error toast if empty label field is submitted", async () => {
+      await labelInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.NO_EMPTY_FIELDS_MSG),
+      );
+    });
+
+    test("updates the item when an updated artist is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(artistInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.artist,
+      );
+
+      await artistInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
+    test("updates the item when an updated title is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(titleInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.title,
+      );
+
+      await titleInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
+    test("updates the item when an updated valid location is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(locationInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.location,
+      );
+
+      await locationInput.fill(constants.data.CDS_TEST_LOC_VAL_W_NUM);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.CDS_TEST_LOC_VAL_W_NUM),
+      );
+    });
+
+    test("updates the item when an updated year is submitted", async () => {
+      const updatedYear = "1234";
+      await resetSessionList(setup);
+      // make sure we are actually updating the value
+      await expect(yearInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.year,
+      );
+
+      await yearInput.fill(updatedYear);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(updatedYear));
+    });
+
+    test("updates the item when an updated diameter is submitted", async () => {
+      const updatedDiameter = "10 inch";
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(diameterInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.diameter,
+      );
+
+      await diameterInput.selectOption(updatedDiameter);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(updatedDiameter));
+    });
+
+    test("updates the item when an updated sleeve condition is submitted", async () => {
+      const updatedCond = /\*/;
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(slvCondInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.sleeve_condition,
+      );
+
+      await slvCondInput.selectOption(updatedCond);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(updatedCond));
+    });
+
+    test("updates the item when an updated record condition is submitted", async () => {
+      const updatedCond = /\*/;
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(recCondInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.record_condition,
+      );
+
+      await recCondInput.selectOption(updatedCond);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(updatedCond));
+    });
+
+    test("updates the item when an updated label is submitted", async () => {
+      await resetSessionList(setup);
+      // make sure we are actually updating the value
+      await expect(labelInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_RECORDS.label,
+      );
+
+      await labelInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
+    test("resets the page after a valid update", async () => {
+      // just submit with no changes
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+      await checkPageStateReset();
+    });
   });
 
   test.describe("TAPES", () => {
