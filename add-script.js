@@ -658,24 +658,26 @@ cdSinglesForm.addEventListener("submit", handleCdSinglesForm);
 recordsForm.addEventListener("submit", handleRecordsForm);
 tapesForm.addEventListener("submit", handleTapesForm);
 
-incrementCheckbox.addEventListener("change", (e) => {
-  e.preventDefault();
+if (document.title === constants.pageTitle.ADD_PAGE_TITLE) {
+  incrementCheckbox.addEventListener("change", (e) => {
+    e.preventDefault();
 
-  if (!currentForm) {
-    e.target.checked = false;
-    toasty(constants.toast.valErr.NO_ACTIVE_FORM_MSG, constants.color.ERROR);
-    return;
-  }
+    if (!currentForm) {
+      e.target.checked = false;
+      toasty(constants.toast.valErr.NO_ACTIVE_FORM_MSG, constants.color.ERROR);
+      return;
+    }
 
-  if (currentForm === "cd-singles-form") {
-    e.target.checked = false;
-    toasty(constants.toast.valErr.NO_INCR_AVAIL_MSG, constants.color.ERROR);
-    return;
-  } else {
-    handleCheckbox(forms);
-    toggleIncFlag();
-  }
-});
+    if (currentForm === "cd-singles-form") {
+      e.target.checked = false;
+      toasty(constants.toast.valErr.NO_INCR_AVAIL_MSG, constants.color.ERROR);
+      return;
+    } else {
+      handleCheckbox(forms);
+      toggleIncFlag();
+    }
+  });
+}
 
 if (document.title === constants.pageTitle.ADD_PAGE_TITLE) {
   btnLoadLast.addEventListener("click", async (e) => {

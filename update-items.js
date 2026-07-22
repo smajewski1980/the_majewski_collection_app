@@ -29,6 +29,13 @@ import {
   handleRecordsForm,
   handleTapesForm,
 } from "./add-script.js";
+import {
+  incrementCheckbox,
+  incrementFlag,
+  toggleIncFlag,
+  handleIncrementReset,
+  handleCheckbox,
+} from "./handle-loc-incr.js";
 import utils from "./utils.js";
 import constants from "./constants.js";
 const mainEl = document.querySelector("main");
@@ -62,6 +69,27 @@ function handleUpdateNavBtnClick(e) {
   currentForm = e.target.dataset.form;
   removeActiveClass(navButtons);
   e.target.classList.add("active-nav-btn");
+}
+
+if (document.title === constants.pageTitle.UPDATE_PAGE_TITLE) {
+  incrementCheckbox.addEventListener("change", (e) => {
+    e.preventDefault();
+
+    if (!currentForm) {
+      e.target.checked = false;
+      toasty(constants.toast.valErr.NO_ACTIVE_FORM_MSG, constants.color.ERROR);
+      return;
+    }
+
+    if (currentForm === "cd-singles-form") {
+      e.target.checked = false;
+      toasty(constants.toast.valErr.NO_INCR_AVAIL_MSG, constants.color.ERROR);
+      return;
+    } else {
+      handleCheckbox(forms);
+      toggleIncFlag();
+    }
+  });
 }
 
 /**

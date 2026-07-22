@@ -72,7 +72,10 @@ export async function handleCheckbox(arr) {
   try {
     // grab the active location input and the datalist
     activeInput = activeForm[0].querySelector("input[name='location']");
-
+    if (document.title === constants.pageTitle.UPDATE_PAGE_TITLE) {
+      activeInput.focus();
+      activeInput.blur();
+    }
     if (!activeInput.value) {
       toasty(constants.toast.valErr.NO_LOC_SEL_INCR_MSG, constants.color.ERROR);
       incrementCheckbox.checked = false;
@@ -81,7 +84,6 @@ export async function handleCheckbox(arr) {
     }
 
     const datalist = activeInput.nextElementSibling;
-
     // the window.confirm didnt work here in electron
     // this button provides a confirm check
     btnConfirm.style.display = "block";
@@ -94,7 +96,6 @@ export async function handleCheckbox(arr) {
         const currOption = optionEls.filter(
           (el) => el.textContent === activeInput.value,
         );
-
         handleIncrementLocation(currOption[0], activeInput);
 
         // incrementFlag = true;
