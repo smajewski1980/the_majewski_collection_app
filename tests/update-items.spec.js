@@ -95,8 +95,6 @@ test.describe("UPDATE ITEMS", () => {
       test.skip("INCREMENT LOCATION checkbox increments the location of the active form", () => {});
     });
 
-    test.skip("the session list persists between pages", () => {});
-
     test("delete button is inert when the page loads", async () => {
       const deleteBtn = await page.getByRole("button", { name: "DELETE ITEM" });
       await expect(deleteBtn).toHaveAttribute("inert");
@@ -315,6 +313,28 @@ test.describe("UPDATE ITEMS", () => {
       await expect(sessionList).toHaveText(
         new RegExp(`${constants.data.UPDATE_TEST_TEXT_VAL_2}`),
       );
+    });
+
+    test("the session list persists between pages", async () => {
+      await resetSessionList(setup);
+      await submitUpdateBtn.click();
+      await expect(sessionList).toHaveText(
+        new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id}`),
+      );
+      await expect(sessionList).toHaveText(
+        new RegExp(`${constants.data.UPDATE_TEST_TEXT_VAL_2}`),
+      );
+      await page.getByAltText("the majewski collection").click();
+      await page.getByRole("link", { name: "ADD ITEMS" }).click();
+      await expect(sessionList).toHaveText(
+        new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id}`),
+      );
+      await expect(sessionList).toHaveText(
+        new RegExp(`${constants.data.UPDATE_TEST_TEXT_VAL_2}`),
+      );
+      // cleanup
+      await page.getByAltText("the majewski collection").click();
+      await page.getByRole("link", { name: "UPDATE ITEMS" }).click();
     });
 
     test("throws error toast if form submitted with empty title field", async () => {
