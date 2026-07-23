@@ -1311,22 +1311,277 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("TAPES", () => {
-    test.skip("throws success toast if a valid update is submitted", async () => {});
-    test.skip("session list reflects a valid item update", async () => {});
-    test.skip("throws error toast if empty artist field is submitted", async () => {});
-    test.skip("throws error toast if empty title field is submitted", async () => {});
-    test.skip("throws error toast if empty location field is submitted", async () => {});
-    test.skip("throws error toast when an invalid updated location is submitted", async () => {});
-    test.skip("throws error toast if empty year field is submitted", async () => {});
-    test.skip("throws error toast if form submitted with with year that is not 4 digits in length", async () => {});
-    test.skip("throws error toast if form submitted with with year that is not a number", async () => {});
-    test.skip("throws error toast if neither needs repair radio btn are checked", async () => {});
-    test.skip("updates the item when an updated artist is submitted", async () => {});
-    test.skip("updates the item when an updated title is submitted", async () => {});
-    test.skip("updates the item when an updated valid location is submitted", async () => {});
-    test.skip("updates the item when an updated year is submitted", async () => {});
-    test.skip("updates the item when an updated needs repair state is submitted", async () => {});
-    test.skip("updates the item when an updated tape speed is submitted", async () => {});
-    test.skip("resets the page after a valid update", async () => {});
+    let toast,
+      artistInput,
+      titleInput,
+      locationInput,
+      yearInput,
+      needsRepairYesInput,
+      needsRepairNoInput,
+      speedInput,
+      submitUpdateBtn,
+      activeForm,
+      sessionList;
+
+    async function setup() {
+      toast = await page.locator(".page-message");
+      artistInput = await page.locator("#tapes-artist");
+      titleInput = await page.locator("#tapes-title");
+      locationInput = await page.locator("#tapes-location");
+      yearInput = await page.locator("#tapes-year");
+      needsRepairYesInput = await page.getByRole("radio", { name: "Yes" });
+      needsRepairNoInput = await page.getByRole("radio", { name: "No" });
+      speedInput = await page.locator("#tape-speed");
+      activeForm = await page.locator(".active-form");
+      submitUpdateBtn = await activeForm.getByRole("button", {
+        name: "submit",
+      });
+      sessionList = await page.locator("#session-list");
+      // select the format
+      const navBtn = await page.getByRole("button", {
+        name: "TAPES",
+      });
+      await navBtn.click();
+      // add the test id to the update id input
+      const idInput = await page.locator("#update-id");
+      await idInput.fill(updateFormVals.UPDATE_TEST_ITEM_TAPES.id.toString());
+      // get and click the load data btn
+      const idSubmit = await page.getByRole("button", { name: "load data" });
+      await idSubmit.click();
+      // get the active form and assert its correct
+      await expect(activeForm).toHaveId("tapes-form");
+      // assert a form field has correct value
+      await expect(titleInput).toHaveValue(
+        new RegExp(
+          `${updateFormVals.UPDATE_TEST_ITEM_TAPES.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
+        ),
+      );
+    }
+
+    test.beforeAll(async () => {
+      const rowCount = await electronApp.evaluate(
+        async ({ app }, updateFormVals) => {
+          const { rowCount } = await global.dbPool.query(
+            "INSERT INTO tapes VALUES($1, $2, $3, $4, $5, $6, $7)",
+            [
+              updateFormVals.UPDATE_TEST_ITEM_TAPES.id,
+              updateFormVals.UPDATE_TEST_ITEM_TAPES.artist,
+              updateFormVals.UPDATE_TEST_ITEM_TAPES.title,
+              updateFormVals.UPDATE_TEST_ITEM_TAPES.location,
+              updateFormVals.UPDATE_TEST_ITEM_TAPES.year,
+              updateFormVals.UPDATE_TEST_ITEM_TAPES.needs_repair,
+              updateFormVals.UPDATE_TEST_ITEM_TAPES.speed,
+            ],
+          );
+
+          if (rowCount) console.log("test tape successfully added");
+
+          return rowCount;
+        },
+        updateFormVals,
+      );
+
+      await expect(rowCount).toBe(1);
+    });
+
+    test.afterAll(async () => {
+      await electronApp.evaluate(async ({ app }, id) => {
+        const { rowCount } = await global.dbPool.query(
+          "DELETE FROM tapes WHERE id = $1",
+          [id],
+        );
+
+        if (!rowCount) {
+          throw new Error("something went wrong, no rows deleted");
+        } else {
+          console.log("test tape was successfully deleted from db");
+        }
+      }, updateFormVals.UPDATE_TEST_ITEM_TAPES.id);
+    });
+
+    test.beforeEach(async () => {
+      await page.reload();
+      await setup();
+    });
+
+    test("throws success toast if a valid update is submitted", async () => {
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test("session list reflects a valid item update", async () => {
+      await resetSessionList(setup);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(`id: ${updateFormVals.UPDATE_TEST_ITEM_TAPES.id}`),
+      );
+      await expect(sessionList).toHaveText(
+        new RegExp(`${updateFormVals.UPDATE_TEST_ITEM_TAPES.artist}`),
+      );
+    });
+
+    test("throws error toast if empty artist field is submitted", async () => {
+      await artistInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if empty title field is submitted", async () => {
+      await titleInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast if empty location field is submitted", async () => {
+      await locationInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
+      );
+    });
+
+    test("throws error toast when an invalid updated location is submitted", async () => {
+      await locationInput.fill(constants.data.INVALID_LOCATION);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_LOCATION),
+      );
+    });
+
+    test("throws error toast if empty year field is submitted", async () => {
+      await yearInput.fill("");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.NO_EMPTY_FIELDS_MSG),
+      );
+    });
+
+    test("throws error toast if form submitted with with year that is not 4 digits in length", async () => {
+      await yearInput.fill(constants.data.INVALID_FORMAT_YEAR);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_FORMAT_YEAR),
+      );
+    });
+
+    test("throws error toast if form submitted with with year that is not a number", async () => {
+      await yearInput.fill(constants.data.INVALID_TYPE_YEAR);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.INVALID_TYPE_YEAR),
+      );
+    });
+
+    test("updates the item when an updated artist is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(artistInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_TAPES.artist,
+      );
+
+      await artistInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
+    test("updates the item when an updated title is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(titleInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_TAPES.title,
+      );
+
+      await titleInput.fill(constants.data.UPDATE_TEST_TEXT_VAL_2);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.UPDATE_TEST_TEXT_VAL_2),
+      );
+    });
+
+    test("updates the item when an updated valid location is submitted", async () => {
+      // need to reset the session list to be able to see if the update actually went through
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(locationInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_TAPES.location,
+      );
+
+      await locationInput.fill(constants.data.CDS_TEST_LOC_VAL_W_NUM);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(
+        new RegExp(constants.data.CDS_TEST_LOC_VAL_W_NUM),
+      );
+    });
+
+    test("updates the item when an updated year is submitted", async () => {
+      const updatedYear = "1234";
+      await resetSessionList(setup);
+      // make sure we are actually updating the value
+      await expect(yearInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_TAPES.year,
+      );
+
+      await yearInput.fill(updatedYear);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(updatedYear));
+    });
+
+    test("updates the item when an updated needs repair state is submitted", async () => {
+      await resetSessionList(setup);
+      // make sure we are actually updating the value
+      await expect(needsRepairNoInput).toBeChecked();
+
+      await needsRepairYesInput.check();
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(", Yes ,"));
+    });
+
+    test("updates the item when an updated tape speed is submitted", async () => {
+      const updatedSpeed = "7 1/2 ips";
+      await resetSessionList(setup);
+
+      // make sure we are actually updating the value
+      await expect(speedInput).toHaveValue(
+        updateFormVals.UPDATE_TEST_ITEM_TAPES.speed,
+      );
+
+      await speedInput.selectOption(updatedSpeed);
+      await submitUpdateBtn.click();
+
+      await expect(sessionList).toHaveText(new RegExp(updatedSpeed));
+    });
+
+    test("resets the page after a valid update", async () => {
+      // just submit with no changes
+      await submitUpdateBtn.click();
+      // assert the success toast message
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+      await checkPageStateReset();
+    });
   });
 });
