@@ -56,7 +56,7 @@ test.describe("UPDATE ITEMS", () => {
   }
 
   test.describe("General page tests", () => {
-    let toast;
+    let toast, locationInput, activeForm;
 
     const dataArray = [
       "Cd-Compilations",
@@ -72,8 +72,75 @@ test.describe("UPDATE ITEMS", () => {
     });
 
     test.describe("INCREMENT LOCATION", () => {
+      let checkbox;
+
+      test.beforeAll(async () => {
+        checkbox = await page.getByRole("checkbox");
+      });
+
+      async function setup() {
+        const rowCount = await electronApp.evaluate(
+          async ({ app }, updateFormVals) => {
+            const { rowCount } = await global.dbPool.query(
+              "INSERT INTO cds VALUES($1, $2, $3, $4)",
+              [
+                updateFormVals.UPDATE_TEST_ITEM_CDS.id,
+                updateFormVals.UPDATE_TEST_ITEM_CDS.artist,
+                updateFormVals.UPDATE_TEST_ITEM_CDS.title,
+                updateFormVals.UPDATE_TEST_ITEM_CDS.location,
+              ],
+            );
+
+            if (rowCount) console.log("test cd successfully added");
+
+            return rowCount;
+          },
+          updateFormVals,
+        );
+
+        await expect(rowCount).toBe(1);
+
+        toast = await page.locator(".page-message");
+        locationInput = await page.locator("#cds-main-location");
+        activeForm = await page.locator(".active-form");
+        // select the format
+        await page
+          .getByRole("button", {
+            name: "Cd-Main Catalog",
+          })
+          .click();
+        // add the test id to the update id input
+        await page
+          .locator("#update-id")
+          .fill(updateFormVals.UPDATE_TEST_ITEM_CDS.id.toString());
+        // get and click the load data btn
+        await page.getByRole("button", { name: "load data" }).click();
+        // get the active form and assert its correct
+        await expect(activeForm).toHaveId("cd-main-form");
+        // assert a form field has correct value
+        const titleInput = await activeForm.locator("#cds-main-title");
+        await expect(titleInput).toHaveValue(
+          updateFormVals.UPDATE_TEST_ITEM_CDS.title,
+        );
+      }
+
+      async function teardown() {
+        await electronApp.evaluate(async ({ app }, id) => {
+          const { rowCount } = await global.dbPool.query(
+            "DELETE FROM cds WHERE id = $1",
+            [id],
+          );
+
+          if (!rowCount) {
+            throw new Error("something went wrong, no rows deleted");
+          } else {
+            console.log("test cd was successfully deleted from db");
+          }
+        }, updateFormVals.UPDATE_TEST_ITEM_CDS.id);
+      }
+
       test("toast is thrown if increment location is checked without a form loaded", async () => {
-        await page.getByRole("checkbox").click();
+        await checkbox.click();
 
         await expect(toast).toHaveText(
           constants.toast.valErr.NO_ACTIVE_FORM_MSG,
@@ -81,7 +148,6 @@ test.describe("UPDATE ITEMS", () => {
       });
 
       test("increment location stays unchecked when clicked without a form loaded", async () => {
-        const checkbox = await page.getByRole("checkbox");
         await checkbox.click();
 
         await expect(toast).toHaveText(
@@ -90,9 +156,43 @@ test.describe("UPDATE ITEMS", () => {
         await expect(checkbox).not.toBeChecked();
       });
 
-      test.skip("INCREMENT LOCATION checkbox shows toast if no location is selected", () => {});
-      test.skip("INCREMENT LOCATION checkbox shows toast if the selected location is invalid to increment", () => {});
-      test.skip("INCREMENT LOCATION checkbox increments the location of the active form", () => {});
+      test("INCREMENT LOCATION checkbox shows toast if no location is selected", async () => {
+        await setup();
+        await locationInput.fill("");
+        await checkbox.click();
+
+        await expect(toast).toHaveText(
+          constants.toast.valErr.NO_LOC_SEL_INCR_MSG,
+        );
+
+        await teardown();
+      });
+
+      test("INCREMENT LOCATION checkbox shows toast if the selected location is invalid to increment", async () => {
+        await setup();
+        await locationInput.fill(constants.data.INVALID_LOCATION);
+        await checkbox.click();
+        await page.getByRole("button", { name: "Are You Sure?" }).click();
+
+        await expect(toast).toHaveText(
+          constants.toast.valErr.NO_INCR_AVAIL_MSG,
+        );
+
+        await teardown();
+      });
+
+      test("INCREMENT LOCATION checkbox increments the location of the active form", async () => {
+        await setup();
+        await expect(locationInput).toHaveValue(
+          updateFormVals.UPDATE_TEST_ITEM_CDS.location,
+        );
+        await checkbox.click();
+        await page.getByRole("button", { name: "Are You Sure?" }).click();
+
+        await expect(locationInput).toHaveValue("Good Location 48");
+
+        await teardown();
+      });
     });
 
     test("delete button is inert when the page loads", async () => {
