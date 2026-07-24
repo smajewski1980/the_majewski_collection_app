@@ -54,13 +54,11 @@ async function handleUpdateCdComp(e, compData) {
 
     // loop through the tracks and create the parmeters array for the insert
     const tracksInsertVals = [];
-    let trackIdCounter = 0;
-    tracks.forEach((tr) => {
-      const trackId = trackIds[trackIdCounter];
+    tracks.forEach((tr, idx) => {
+      const trackId = trackIds[idx];
       const artist = tr[0];
       const trackName = tr[1];
       tracksInsertVals.push(trackId, artist, trackName, title_id);
-      trackIdCounter++;
     });
 
     // construct the variables string for the tracks insert

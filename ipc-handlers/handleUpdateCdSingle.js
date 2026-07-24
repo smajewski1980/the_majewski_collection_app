@@ -14,7 +14,9 @@ const pool = require("../dbconnect");
  * @returns {number}
  */
 async function handleUpdateCdSingle(e, singleData) {
-  const { single_id, artist, title, year, caseType, tracks } = singleData;
+  const { single_id, artist, title, year, caseType } = singleData;
+  let { tracks } = singleData;
+  let newTracks = null;
 
   const client = await pool.connect();
 
@@ -28,10 +30,15 @@ async function handleUpdateCdSingle(e, singleData) {
 
     if (!trackIds.length) return 0;
 
+    if (tracks.length < trackIds.length) {
+      throw new Error("Can not DELETE tracks here yet, only update or add.");
+    }
+
     // if attempting to add additional tracks
-    // will address this later
     if (tracks.length > trackIds.length) {
-      throw new Error("Can not ADD tracks here yet, only update.");
+      // separate the old tracks to update and the new to insert
+      newTracks = tracks.slice(trackIds.length);
+      tracks = tracks.slice(0, trackIds.length);
     }
 
     await client.query("BEGIN");
@@ -42,16 +49,15 @@ async function handleUpdateCdSingle(e, singleData) {
       [artist, title, year, caseType, single_id],
     );
 
-    console.log("single update row count", singleRes.rowCount);
+    console.log("singles updated", singleRes.rowCount);
 
     // construct a formatted array to use in the update query
     const tracksArray = [];
     let queryVars = "";
-    let trackIdCounter = 0;
-    tracks.forEach((tr) => {
-      tracksArray.push(tr, single_id, trackIds[trackIdCounter]);
-      trackIdCounter++;
+    tracks.forEach((tr, idx) => {
+      tracksArray.push(tr, single_id, trackIds[idx]);
     });
+    // construct the variables string for the tracks insert
     for (let i = 1; i < tracksArray.length; i += 3) {
       queryVars += `($${i}, $${i + 1}, $${i + 2})`;
       if (i < tracksArray.length - 2) {
@@ -66,9 +72,32 @@ async function handleUpdateCdSingle(e, singleData) {
         tracksArray,
       );
 
+      if (newTracks) {
+        // loop through the tracks and create the parmeters array for the insert
+        const newTrackInsertVals = [];
+        newTracks.forEach((newTrack) => {
+          newTrackInsertVals.push(newTrack, single_id);
+        });
+        // construct the variables string for the tracks insert
+        let newTrackParamVarsStr = "";
+        for (let i = 1; i < newTrackInsertVals.length; i += 2) {
+          newTrackParamVarsStr += `($${i}, $${i + 1})`;
+          if (i < newTrackInsertVals.length - 1) {
+            newTrackParamVarsStr += ",";
+          }
+        }
+        const newTracksRes = await client.query(
+          `INSERT INTO cd_singles_tracks (track_name, single_id) VALUES ${newTrackParamVarsStr}`,
+          newTrackInsertVals,
+        );
+        console.log(
+          `total tracks updated: ${tracksRes.rowCount + newTracksRes.rowCount}`,
+        );
+        console.log("number of new tracks added: ", newTracksRes.rowCount);
+      }
+
       await client.query("COMMIT");
 
-      console.log(`tracks updated: ${tracksRes.rowCount}`);
       return tracksRes.rowCount;
     } catch (error) {
       await client.query("ROLLBACK");
