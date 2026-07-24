@@ -204,7 +204,7 @@ export async function handleCdCompsForm(e) {
       if (res < 1) {
         throw new Error(constants.toast.UPDATE_DB_ERR_MSG);
       }
-      console.log(data);
+
       addToSessionStore("", [data, "update-color", currForm.id], "currAdded");
       toasty(constants.toast.UPDATE_SUCCESS_MSG, constants.color.SUCCESS);
       resetUpdateForm();

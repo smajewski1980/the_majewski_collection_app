@@ -14,7 +14,9 @@ const pool = require("../dbconnect.js");
  */
 async function handleUpdateCdComp(e, compData) {
   // console.log(compData);
-  const { title_id, title, year, location, tracks } = compData;
+  const { title_id, title, year, location } = compData;
+  let { tracks } = compData;
+  let newTracks = null;
 
   const client = await pool.connect();
 
@@ -28,10 +30,16 @@ async function handleUpdateCdComp(e, compData) {
 
     if (!trackIds.length) return 0;
 
+    // not sure if we need to worry about this one...
+    if (tracks.length < trackIds.length) {
+      throw new Error("Can not DELETE tracks here yet, only update or add.");
+    }
+
     // if attempting to add additional tracks
-    // will address this later
     if (tracks.length > trackIds.length) {
-      throw new Error("Can not ADD tracks here yet, only update.");
+      // separate the old tracks to update and the new to insert
+      newTracks = tracks.slice(trackIds.length);
+      tracks = tracks.slice(0, trackIds.length);
     }
 
     await client.query("BEGIN");
@@ -70,10 +78,35 @@ async function handleUpdateCdComp(e, compData) {
         tracksInsertVals,
       );
 
+      if (newTracks) {
+        // loop through the tracks and create the parmeters array for the insert
+        const newTrackInsertVals = [];
+        newTracks.forEach((nt, idx) => {
+          const artist = nt[0];
+          const trackName = nt[1];
+          newTrackInsertVals.push(artist, trackName, title_id);
+        });
+        // construct the variables string for the tracks insert
+        let newTrackParamVarsStr = "";
+        for (let i = 1; i < newTrackInsertVals.length; i += 3) {
+          newTrackParamVarsStr += `($${i},$${i + 1},$${i + 2})`;
+          if (i < newTrackInsertVals.length - 2) {
+            newTrackParamVarsStr += ",";
+          }
+        }
+
+        const newTracksRes = await client.query(
+          `INSERT INTO cd_compilations_tracks (artist, track_name, title_id) VALUES ${newTrackParamVarsStr}`,
+          newTrackInsertVals,
+        );
+        console.log("number of new tracks added: ", newTracksRes.rowCount);
+      }
+
       await client.query("COMMIT");
 
       console.log("number of title rows updated: ", titleRes.rowCount);
       console.log("number of track rows updated: ", tracksRes.rowCount);
+
       return tracksRes.rowCount;
     } catch (error) {
       await client.query("ROLLBACK");
