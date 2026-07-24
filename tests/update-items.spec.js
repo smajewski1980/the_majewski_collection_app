@@ -307,7 +307,12 @@ test.describe("UPDATE ITEMS", () => {
   });
 
   test.describe("CD COMPS", () => {
-    let toast, titleInput, activeForm, submitUpdateBtn, sessionList;
+    let toast,
+      titleInput,
+      activeForm,
+      submitUpdateBtn,
+      sessionList,
+      tracksInput;
     // add an item to update
     test.beforeAll(async () => {
       const rowCount = await electronApp.evaluate(
@@ -324,10 +329,13 @@ test.describe("UPDATE ITEMS", () => {
           if (res) console.log("test cd comp successfully added");
 
           const trackRes = await global.dbPool.query(
-            "INSERT INTO cd_compilations_tracks(artist, track_name, title_id) VALUES ($1, $2, $3)",
+            "INSERT INTO cd_compilations_tracks(artist, track_name, title_id) VALUES ($1, $2, $3), ($4, $5, $6)",
             [
               updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[0],
               updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[1],
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id,
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[2],
+              updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[3],
               updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title_id,
             ],
           );
@@ -338,7 +346,7 @@ test.describe("UPDATE ITEMS", () => {
         },
         updateFormVals,
       );
-      await expect(rowCount).toBe(1);
+      await expect(rowCount).toBe(2);
     });
     // delete the added item
     test.afterAll(async () => {
@@ -385,6 +393,7 @@ test.describe("UPDATE ITEMS", () => {
           `${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.title}|${constants.data.UPDATE_TEST_TEXT_VAL_2}`,
         ),
       );
+      tracksInput = await page.getByRole("textbox", { name: "tracks" });
       sessionList = await page.locator("#session-list");
       submitUpdateBtn = await activeForm.getByRole("button", {
         name: "submit",
@@ -485,6 +494,74 @@ test.describe("UPDATE ITEMS", () => {
       await expect(toast).toHaveText(
         new RegExp(constants.toast.valErr.YEAR_TYPE_MSG),
       );
+    });
+
+    test("throws error toast if track delete is attempted", async () => {
+      await tracksInput.fill(
+        `${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[0]}|${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[1]}`,
+      );
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.UPDATE_TRACKS_NO_DELETE),
+      );
+    });
+
+    test("throws error toast if new track to add has no artist", async () => {
+      const current = await tracksInput.inputValue();
+      await tracksInput.fill(current + "\n|track no artist");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.NO_ARTIST_MSG),
+      );
+    });
+
+    test("throws error toast if new track to add has no track name", async () => {
+      const current = await tracksInput.inputValue();
+      await tracksInput.fill(current + "\nartist no track|");
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.valErr.NO_TRACKNAME_MSG),
+      );
+    });
+
+    test("updates the item when submitted with additional tracks", async () => {
+      const current = await tracksInput.inputValue();
+      await tracksInput.fill(
+        current +
+          `\n${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[2]}|${updateFormVals.UPDATE_TEST_ITEM_CD_COMP.tracks[3]}`,
+      );
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test("the track counter for the textarea reflects what line the cursor is on", async () => {
+      // 1. Get the ID of the input field
+      const inputId = await tracksInput.getAttribute("id");
+      // 2. Locate the label pointing to that ID
+      const label = page.locator(`label[for="${inputId}"]`);
+      await expect(label).toHaveText("tracks");
+
+      await tracksInput.evaluate((el) => {
+        el.focus();
+        const length = el.value.length;
+        el.setSelectionRange(length, length);
+      });
+      await page.keyboard.press("ArrowDown");
+
+      await expect(label).toHaveText("track 3");
+      // Move the cursor up exactly one line
+      await page.keyboard.press("ArrowUp");
+      await expect(label).toHaveText("track 2");
+
+      await titleInput.evaluate((el) => {
+        el.focus();
+      });
+
+      await expect(label).toHaveText("tracks");
     });
 
     test("resets the page after a valid update", async () => {
@@ -779,6 +856,10 @@ test.describe("UPDATE ITEMS", () => {
         new RegExp(constants.toast.valErr.NO_EMPTY_FIELDS_MSG),
       );
     });
+
+    test.skip("throws error toast if track delete is attempted", async () => {});
+    test.skip("updates the item when submitted with additional tracks", async () => {});
+    test.skip("the track counter for the textarea reflects what line the cursor is on", () => {});
 
     test("resets the page after a valid update", async () => {
       // just submit with no changes

@@ -27,6 +27,8 @@ const constants = {
         "Please enter a valid number to search by that field.",
       LOOKUP_YEAR_RANGE_MSG:
         "Please enter a valid 4 digit year between 1885 and the current year.",
+      UPDATE_TRACKS_NO_DELETE:
+        "Can not DELETE tracks here yet, only update or add.",
     },
     ERROR_NO_COMPS_MSG: "No Cd-Compilations found with that id.",
     ERROR_NO_SINGLES_MSG: "No Cd-Singles found with that id.",
@@ -45,11 +47,13 @@ const constants = {
     INVALID_TYPE_YEAR: "Unicorn",
     VALID_FORMAT_YEAR: "1980",
     VALID_ARTIST: "Test Artist",
+    VALID_ARTIST_2: "Test Artist 2",
     VALID_TITLE: "Test Title",
     VALID_RECORD_LABEL: "Test Label",
     VALID_COMP_TRACK: "artist name|track name",
     VALID_SINGLES_TRACK: "trackname",
     VALID_TRACKNAME: "Test Trackname",
+    VALID_TRACKNAME_2: "Test Trackname 2",
     MOCK_CD_DATA: {
       id: "id: 4747",
       artist: "MOCK CD MAIN ARTIST",
@@ -118,7 +122,12 @@ const updateFormVals = {
     title: constants.data.UPDATE_TEST_TEXT_VAL_1,
     year: new Date().getFullYear().toString(),
     location: constants.data.VALID_LOCATION,
-    tracks: [constants.data.VALID_ARTIST, constants.data.VALID_TRACKNAME],
+    tracks: [
+      constants.data.VALID_ARTIST,
+      constants.data.VALID_TRACKNAME,
+      constants.data.VALID_ARTIST_2,
+      constants.data.VALID_TRACKNAME_2,
+    ],
   },
   UPDATE_TEST_ITEM_CD_SINGLE: {
     single_id: constants.data.UPDATE_TEST_ITEM_ID,

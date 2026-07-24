@@ -32,6 +32,7 @@ async function handleUpdateCdComp(e, compData) {
 
     // not sure if we need to worry about this one...
     if (tracks.length < trackIds.length) {
+      // if changed, update in constants.UPDATE_TRACKS_NO_DELETE
       throw new Error("Can not DELETE tracks here yet, only update or add.");
     }
 
