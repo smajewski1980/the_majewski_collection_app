@@ -612,6 +612,7 @@ test.describe("UPDATE ITEMS", () => {
       submitUpdateBtn,
       yearInput,
       caseTypeInput,
+      tracksInput,
       sessionList,
       artistInput;
 
@@ -645,6 +646,7 @@ test.describe("UPDATE ITEMS", () => {
       });
       yearInput = await activeForm.getByRole("textbox", { name: "year" });
       caseTypeInput = await page.locator("#cd-singles-case-type");
+      tracksInput = await page.getByRole("textbox", { name: "tracks" });
       sessionList = await page.locator("#session-list");
       artistInput = await activeForm.getByRole("textbox", {
         name: "artist",
@@ -668,10 +670,12 @@ test.describe("UPDATE ITEMS", () => {
           if (res) console.log("test cd single successfully added");
 
           const trackRes = await global.dbPool.query(
-            "INSERT INTO cd_singles_tracks(single_id, track_name) VALUES ($1, $2)",
+            "INSERT INTO cd_singles_tracks(single_id, track_name) VALUES ($1, $2),($3, $4)",
             [
               updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id,
               updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.tracks[0],
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.single_id,
+              updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.tracks[1],
             ],
           );
 
@@ -681,7 +685,7 @@ test.describe("UPDATE ITEMS", () => {
         },
         updateFormVals,
       );
-      await expect(rowCount).toBe(1);
+      await expect(rowCount).toBe(2);
     });
 
     // delete the added item
@@ -857,9 +861,52 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test.skip("throws error toast if track delete is attempted", async () => {});
-    test.skip("updates the item when submitted with additional tracks", async () => {});
-    test.skip("the track counter for the textarea reflects what line the cursor is on", () => {});
+    test("throws error toast if track delete is attempted", async () => {
+      await tracksInput.fill(
+        updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.tracks[0],
+      );
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(
+        new RegExp(constants.toast.UPDATE_TRACKS_NO_DELETE),
+      );
+    });
+
+    test("updates the item when submitted with additional tracks", async () => {
+      const current = await tracksInput.inputValue();
+      await tracksInput.fill(
+        current + `\n${updateFormVals.UPDATE_TEST_ITEM_CD_SINGLE.tracks[1]}`,
+      );
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
+    test("the track counter for the textarea reflects what line the cursor is on", async () => {
+      // 1. Get the ID of the input field
+      const inputId = await tracksInput.getAttribute("id");
+      // 2. Locate the label pointing to that ID
+      const label = page.locator(`label[for="${inputId}"]`);
+      await expect(label).toHaveText("tracks");
+
+      await tracksInput.evaluate((el) => {
+        el.focus();
+        const length = el.value.length;
+        el.setSelectionRange(length, length);
+      });
+      await page.keyboard.press("ArrowDown");
+
+      await expect(label).toHaveText("track 3");
+      // Move the cursor up exactly one line
+      await page.keyboard.press("ArrowUp");
+      await expect(label).toHaveText("track 2");
+
+      await titleInput.evaluate((el) => {
+        el.focus();
+      });
+
+      await expect(label).toHaveText("tracks");
+    });
 
     test("resets the page after a valid update", async () => {
       // just submit with no changes

@@ -52,6 +52,7 @@ const constants = {
     VALID_RECORD_LABEL: "Test Label",
     VALID_COMP_TRACK: "artist name|track name",
     VALID_SINGLES_TRACK: "trackname",
+    VALID_SINGLES_TRACK_2: "trackname 2",
     VALID_TRACKNAME: "Test Trackname",
     VALID_TRACKNAME_2: "Test Trackname 2",
     MOCK_CD_DATA: {
@@ -135,7 +136,10 @@ const updateFormVals = {
     title: constants.data.UPDATE_TEST_TEXT_VAL_1,
     year: new Date().getFullYear().toString(),
     case_type: "Digipack",
-    tracks: [constants.data.VALID_SINGLES_TRACK],
+    tracks: [
+      constants.data.VALID_SINGLES_TRACK,
+      constants.data.VALID_SINGLES_TRACK_2,
+    ],
   },
   UPDATE_TEST_ITEM_CDS: {
     id: constants.data.UPDATE_TEST_ITEM_ID,
