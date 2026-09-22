@@ -202,6 +202,7 @@
     display: grid;
     grid-template-columns: 55% 43%;
     padding-inline: 2rem;
+    min-height: calc(100dvh - 225px);
 
     h2 {
       text-align: start;
@@ -311,6 +312,32 @@
           accent-color: light-dark(var(--clr-records));
         }
       }
+
+      .form-group:has(#records-sleeve-cond),
+      .form-group:has(#records-record-cond) {
+        display: inline-block;
+        text-align: center;
+      }
+      .form-groups-wrapper {
+        display: grid;
+      }
+
+      .conditions-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      .form-group:has(#records-label) {
+        margin-block-start: -1.5rem;
+      }
+      .form-group:has(#records-artist) {
+        margin-block-start: 0;
+      }
+
+      #records-label {
+        margin-block-end: 0;
+      }
     }
 
     #tapes-form.active-form {
@@ -350,6 +377,10 @@
 
       h2 {
         margin-block-end: 1rem;
+      }
+
+      .form-group:first-child:not(.conditions-wrapper .form-group) {
+        margin-block-start: 1rem;
       }
 
       .form-group {
@@ -457,6 +488,8 @@
     .increment-wrapper {
       width: 100%;
       grid-column: 2;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr;
 
       .increment-inner-wrapper {
         display: flex;
