@@ -1,4 +1,13 @@
 #update-body {
+  header {
+    margin: 0 0 1rem;
+  }
+
+  main .increment-wrapper {
+    grid-template-rows: auto 1fr;
+    padding-block-end: 2rem;
+  }
+
   #update-id-form {
     font-size: 1.125rem;
     margin-block-end: 1rem;
