@@ -68,3 +68,11 @@ body:has(#index-main) {
 #btn-update-confirm {
   background-color: var(--body-bg);
 }
+
+p:has(#total-qty-span) {
+  font-size: 2rem;
+  text-align: center;
+  margin-block-end: 1.5rem;
+  color: var(--accent-purple);
+  letter-spacing: 2px;
+}

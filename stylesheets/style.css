@@ -110,7 +110,7 @@ body:not(#add-body):not(#update-body) {
 
 #home-logo {
   max-width: 400px;
-  margin-block-end: 2rem;
+  margin-block-end: 1rem;
 }
 
 button {

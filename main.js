@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu, dialog } = require("electron/main");
 const path = require("node:path");
 const fs = require("node:fs");
+const handleGetTotalItemQty = require("./ipc-handlers/handleGetTotalItemQty");
 const handleGetRecordsFields = require("./ipc-handlers/handleGetRecordsFields");
 const handleGetTapesFields = require("./ipc-handlers/handleGetTapesFields");
 const handleGetCdsFields = require("./ipc-handlers/handleGetCdsFields");
@@ -65,6 +66,7 @@ const sessionStore = {
 app.commandLine.appendSwitch("enable-experimental-web-platform-features");
 
 app.whenReady().then(() => {
+  ipcMain.handle("getTotalItemQty", handleGetTotalItemQty);
   ipcMain.handle("getRecordsFields", handleGetRecordsFields);
   ipcMain.handle("getTapesFields", handleGetTapesFields);
   ipcMain.handle("getCdsFields", handleGetCdsFields);
