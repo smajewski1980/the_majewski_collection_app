@@ -574,23 +574,23 @@ test.describe("ADD ITEMS", () => {
       await page.reload();
     });
 
-    test.describe("The PUSH ME/load last button", () => {
+    test.describe("The RELOAD LAST button", () => {
       test("PUSH ME button is inert when page loads", async () => {
-        const button = await page.getByRole("button", { name: "PUSH ME" });
+        const button = await page.getByRole("button", { name: "RELOAD LAST" });
         await expect(button).toHaveAttribute("inert");
       });
 
-      test("PUSH ME button is enabled when sessionStore.isFirstSessionAdd = false", async () => {
+      test("RELOAD LAST button is enabled when sessionStore.isFirstSessionAdd = false", async () => {
         await electronApp.evaluate(async ({ global }) => {
           globalThis.sessionStore.isFirstSessionAdd = false;
         });
         await page.reload();
-        const button = await page.getByRole("button", { name: "PUSH ME" });
+        const button = await page.getByRole("button", { name: "RELOAD LAST" });
 
         await expect(button).not.toHaveAttribute("inert");
       });
 
-      test("PUSH ME button loads the last entry to the form when pressed", async () => {
+      test("RELOAD LAST button loads the last entry to the form when pressed", async () => {
         // add a mock object to the sessionstore
         await electronApp.evaluate(async ({ global }, cdData) => {
           const data = [cdData, "cds-main-color", "cd-main-form"];
@@ -604,7 +604,7 @@ test.describe("ADD ITEMS", () => {
         });
         await cdFormatBtn.click();
         // click the load last item btn
-        const button = await page.getByRole("button", { name: "PUSH ME" });
+        const button = await page.getByRole("button", { name: "RELOAD LAST" });
         await button.click();
         // assert the form vals are loaded
         const activeForm = await page.locator(".active-form");
@@ -622,7 +622,7 @@ test.describe("ADD ITEMS", () => {
         );
       });
 
-      test("PUSH ME button throws toast if selected nav btn doesn't match the active form", async () => {
+      test("RELOAD LAST button throws toast if selected nav btn doesn't match the active form", async () => {
         // the added cd is still in the sessionStore
         // load form for a different format
         const tapeFormatBtn = await page.getByRole("button", {
@@ -630,7 +630,7 @@ test.describe("ADD ITEMS", () => {
         });
         await tapeFormatBtn.click();
         // click the load last item btn
-        const button = await page.getByRole("button", { name: "PUSH ME" });
+        const button = await page.getByRole("button", { name: "RELOAD LAST" });
         await button.click();
 
         const toast = await page.locator(".page-message");
@@ -638,12 +638,12 @@ test.describe("ADD ITEMS", () => {
         expect(toast).toHaveText(constants.toast.valErr.FORM_MISMATCH_MSG);
       });
 
-      test("PUSH ME button throws toast if clicked with no active form", async () => {
-        // continuing with the cd in the session store so the push me btn will be enabled
+      test("RELOAD LAST button throws toast if clicked with no active form", async () => {
+        // continuing with the cd in the session store so the RELOAD LAST btn will be enabled
         await page.reload();
 
         // click the load last item btn
-        const button = await page.getByRole("button", { name: "PUSH ME" });
+        const button = await page.getByRole("button", { name: "RELOAD LAST" });
         await button.click();
 
         const toast = await page.locator(".page-message");

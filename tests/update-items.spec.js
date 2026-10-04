@@ -1,8 +1,8 @@
 import { test, expect, _electron as electron } from "@playwright/test";
 import constants, { updateFormVals } from "../constants.js";
 import * as path from "path";
-import { listenerCount } from "process";
-import { session } from "electron";
+// import { listenerCount } from "process";
+// import { session } from "electron";
 let electronApp;
 let page;
 const testDataPath = path.join(__dirname, "testOutputFiles");
@@ -396,7 +396,7 @@ test.describe("UPDATE ITEMS", () => {
       tracksInput = await page.getByRole("textbox", { name: "tracks" });
       sessionList = await page.locator("#session-list");
       submitUpdateBtn = await activeForm.getByRole("button", {
-        name: "submit",
+        name: "UPDATE ITEM",
       });
     }
 
@@ -642,7 +642,7 @@ test.describe("UPDATE ITEMS", () => {
         ),
       );
       submitUpdateBtn = await activeForm.getByRole("button", {
-        name: "submit",
+        name: "UPDATE ITEM",
       });
       yearInput = await activeForm.getByRole("textbox", { name: "year" });
       caseTypeInput = await page.locator("#cd-singles-case-type");
@@ -933,7 +933,7 @@ test.describe("UPDATE ITEMS", () => {
       locationInput = await page.locator("#cds-main-location");
       activeForm = await page.locator(".active-form");
       submitUpdateBtn = await activeForm.getByRole("button", {
-        name: "submit",
+        name: "UPDATE ITEM",
       });
       sessionList = await page.locator("#session-list");
       // select the format
@@ -1141,7 +1141,7 @@ test.describe("UPDATE ITEMS", () => {
       labelInput = await page.locator("#records-label");
       activeForm = await page.locator(".active-form");
       submitUpdateBtn = await activeForm.getByRole("button", {
-        name: "submit",
+        name: "UPDATE ITEM",
       });
       sessionList = await page.locator("#session-list");
       // select the format
@@ -1462,7 +1462,7 @@ test.describe("UPDATE ITEMS", () => {
       speedInput = await page.locator("#tape-speed");
       activeForm = await page.locator(".active-form");
       submitUpdateBtn = await activeForm.getByRole("button", {
-        name: "submit",
+        name: "UPDATE ITEM",
       });
       sessionList = await page.locator("#session-list");
       // select the format

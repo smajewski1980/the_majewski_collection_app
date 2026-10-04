@@ -156,8 +156,8 @@ export async function updateUiSessionList() {
 
   sessionList.innerHTML = "";
   utils.addedItemsTitle.innerText = listLength
-    ? `${listLength} items modified this session:`
-    : "Items modified this session:";
+    ? `${listLength} Item${listLength > 1 ? "s" : ""} Modified This Session:`
+    : "Items Modified This Session:";
 
   // this gets refreshed when a page is loaded
   // if there isnt anything in the list yet return

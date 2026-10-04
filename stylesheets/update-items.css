@@ -40,4 +40,10 @@
       opacity: 0.5;
     }
   }
+
+  form:has(h2) {
+    button {
+      font-size: 1rem;
+    }
+  }
 }

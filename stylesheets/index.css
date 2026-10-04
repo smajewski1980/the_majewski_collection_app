@@ -76,3 +76,9 @@ p:has(#total-qty-span) {
   color: var(--accent-purple);
   letter-spacing: 2px;
 }
+
+#total-qty-span {
+  display: inline-block;
+  width: 6ch;
+  font-size: 2.75rem;
+}
