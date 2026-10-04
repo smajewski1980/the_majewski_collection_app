@@ -134,8 +134,20 @@ datalist {
   scroll-margin-top: 7rem;
 }
 
+@media (min-width: 1700px) {
+  #update-body,
+  #add-body {
+    header {
+      display: grid;
+      grid-template-columns: 55% 43%;
+      justify-content: normal;
+    }
+  }
+}
+
 header {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
   margin-block-end: 2.5rem;
