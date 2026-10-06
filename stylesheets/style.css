@@ -11,6 +11,7 @@
   --accent-purple: hsl(300, 34%, 70%);
   --bg-color: light-dark(white, black);
   --error-color: hsl(335, 100%, 50%);
+  --success-color: hsl(90, 100%, 50%);
   --reg-font:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -250,22 +251,26 @@ body:not(#add-body):not(#update-body) {
   }
 }
 
-.page-message {
-  --msg-clr: var(--error-color);
+.page-message-wrapper {
   position: fixed;
   font-size: 1.5rem;
   font-family: var(--reg-font);
   top: 8rem;
-  left: -35rem;
-  max-width: 30ch;
+  width: 30ch;
+  z-index: 9999;
+}
+
+.page-message {
+  --msg-clr: var(--error-color);
+  transform: translateX(-35rem);
   border-inline-start: 5px solid var(--msg-clr);
   border-radius: 25px;
   corner-top-left-shape: scoop;
   corner-bottom-left-shape: scoop;
   padding: 1rem 2rem;
   color: white;
-  z-index: 9999;
   background-color: hsl(from var(--msg-clr) h s l / 0.5);
+  margin-block-end: 0.5rem;
 }
 
 .msg-animation {
@@ -277,14 +282,14 @@ body:not(#add-body):not(#update-body) {
 }
 @keyframes toast-in {
   to {
-    left: 1rem;
+    transform: translateX(1rem);
   }
 }
 @keyframes toast-out {
   from {
-    left: 1rem;
+    transform: translateX(1rem);
   }
   to {
-    left: -35rem;
+    transform: translateX(-35rem);
   }
 }

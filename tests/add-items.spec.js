@@ -154,7 +154,7 @@ test.describe("ADD ITEMS", () => {
 
       test.beforeEach(async () => {
         await page.reload();
-        toast = await page.locator(".page-message");
+        toast = await page.locator(".page-message-wrapper");
       });
 
       dataArray.forEach(async (type) => {
@@ -481,7 +481,7 @@ test.describe("ADD ITEMS", () => {
     test.describe("The cd-singles form", () => {
       test("Throws no tracks toast if submit with no tracks.", async () => {
         await page.reload();
-        const toast = await page.locator(".page-message");
+        const toast = await page.locator(".page-message-wrapper");
         const navBtn = await page.getByRole("button", { name: "Cd-Singles" });
         await navBtn.click();
 
@@ -517,7 +517,7 @@ test.describe("ADD ITEMS", () => {
         });
         await navBtn.click();
         // the needed elements
-        toast = await page.locator(".page-message");
+        toast = await page.locator(".page-message-wrapper");
         submitBtn = await page.locator(".active-form button");
         const titleField = await page.locator(
           '.active-form input[name="title"]',
@@ -633,7 +633,7 @@ test.describe("ADD ITEMS", () => {
         const button = await page.getByRole("button", { name: "RELOAD LAST" });
         await button.click();
 
-        const toast = await page.locator(".page-message");
+        const toast = await page.locator(".page-message-wrapper");
 
         expect(toast).toHaveText(constants.toast.valErr.FORM_MISMATCH_MSG);
       });
@@ -646,7 +646,7 @@ test.describe("ADD ITEMS", () => {
         const button = await page.getByRole("button", { name: "RELOAD LAST" });
         await button.click();
 
-        const toast = await page.locator(".page-message");
+        const toast = await page.locator(".page-message-wrapper");
 
         expect(toast).toHaveText(constants.toast.valErr.NO_ACTIVE_FORM_MSG);
       });
@@ -662,7 +662,7 @@ test.describe("ADD ITEMS", () => {
 
         confirmBtn = page.getByRole("button", { name: "Are You Sure?" });
         checkbox = await page.getByLabel("INCREMENT LOCATION");
-        toast = await page.locator(".page-message");
+        toast = await page.locator(".page-message-wrapper");
       });
 
       test("INCREMENT LOCATION checkbox shows toast if no form is loaded", async () => {

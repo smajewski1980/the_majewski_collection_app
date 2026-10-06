@@ -1,7 +1,8 @@
 import utils from "./utils.js";
 import constants from "./constants.js";
 const sessionList = document.getElementById("session-list");
-let isToastShowing = false;
+const toastWrapper = document.querySelector(".page-message-wrapper");
+let isToastShowing = false; //maybe dont need this after the toast refactor
 
 /**
  * this takes the current forms id string and returns a class string for styling
@@ -86,33 +87,27 @@ export function noEmptyFields(data, tracksTrigger) {
  * @returns {void}
  */
 export function toasty(msg, color, duration = 5000) {
-  const msgEl = document.querySelector(".page-message");
-
+  // create a base toast element
+  const msgEl = document.createElement("div");
+  // styles and fly in
+  msgEl.classList.add("page-message", "msg-animation");
+  msgEl.innerText = msg;
+  // the color is error red in css,
+  // change it here for a success msg
   if (color === "green") {
-    msgEl.style.setProperty("--msg-clr", "chartreuse");
+    msgEl.style.setProperty("--msg-clr", "var(--success-color)");
   }
-  // if it's already showing, just append current msg to text
-  // maybe later, make array of current toast messages to compare against
-  // to prevent being able to keep hitting the button and having a ton keep popping in
-  if (isToastShowing) {
-    msgEl.innerText += `\n\n${msg}`;
-  } else {
-    isToastShowing = true;
-    msgEl.innerText = msg;
-    msgEl.classList.add("msg-animation");
-    // remove the toast
+  // fly out and burn the toast
+  setTimeout(() => {
+    msgEl.classList.add("msg-animation-undo");
+    msgEl.classList.remove("msg-animation");
+    // remove the undo animation class after it runs
     setTimeout(() => {
-      msgEl.classList.add("msg-animation-undo");
-      msgEl.classList.remove("msg-animation");
-      // remove the undo animation class after it runs
-      setTimeout(() => {
-        msgEl.innerText = "";
-        msgEl.classList.remove("msg-animation-undo");
-        isToastShowing = false;
-        msgEl.style.setProperty("--msg-clr", "var(--error-color)");
-      }, 500);
-    }, duration);
-  }
+      msgEl.remove();
+    }, 500);
+  }, duration);
+  // add the toast to the top of the list
+  toastWrapper.prepend(msgEl);
 }
 
 /**

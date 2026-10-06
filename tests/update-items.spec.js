@@ -68,7 +68,7 @@ test.describe("UPDATE ITEMS", () => {
 
     test.beforeEach(async () => {
       await page.reload();
-      toast = await page.locator(".page-message");
+      toast = await page.locator(".page-message-wrapper");
     });
 
     test.describe("INCREMENT LOCATION", () => {
@@ -100,7 +100,7 @@ test.describe("UPDATE ITEMS", () => {
 
         await expect(rowCount).toBe(1);
 
-        toast = await page.locator(".page-message");
+        toast = await page.locator(".page-message-wrapper");
         locationInput = await page.locator("#cds-main-location");
         activeForm = await page.locator(".active-form");
         // select the format
@@ -369,7 +369,7 @@ test.describe("UPDATE ITEMS", () => {
     });
 
     async function setup() {
-      toast = await page.locator(".page-message");
+      toast = await page.locator(".page-message-wrapper");
       // select the format
       const navBtn = await page.getByRole("button", {
         name: "Cd-Compilations",
@@ -617,7 +617,7 @@ test.describe("UPDATE ITEMS", () => {
       artistInput;
 
     async function setup() {
-      toast = await page.locator(".page-message");
+      toast = await page.locator(".page-message-wrapper");
       // select the format
       const navBtn = await page.getByRole("button", {
         name: "Cd-Singles",
@@ -927,7 +927,7 @@ test.describe("UPDATE ITEMS", () => {
       sessionList;
 
     async function setup() {
-      toast = await page.locator(".page-message");
+      toast = await page.locator(".page-message-wrapper");
       artistInput = await page.locator("#cds-main-artist");
       titleInput = await page.locator("#cds-main-title");
       locationInput = await page.locator("#cds-main-location");
@@ -1130,7 +1130,7 @@ test.describe("UPDATE ITEMS", () => {
       sessionList;
 
     async function setup() {
-      toast = await page.locator(".page-message");
+      toast = await page.locator(".page-message-wrapper");
       artistInput = await page.locator("#records-artist");
       titleInput = await page.locator("#records-title");
       locationInput = await page.locator("#records-location");
@@ -1452,7 +1452,7 @@ test.describe("UPDATE ITEMS", () => {
       sessionList;
 
     async function setup() {
-      toast = await page.locator(".page-message");
+      toast = await page.locator(".page-message-wrapper");
       artistInput = await page.locator("#tapes-artist");
       titleInput = await page.locator("#tapes-title");
       locationInput = await page.locator("#tapes-location");

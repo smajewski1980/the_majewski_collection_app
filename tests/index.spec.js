@@ -132,7 +132,7 @@ test.describe("HOMEPAGE", () => {
     test("Success toast is thrown after the update web catalog process", async () => {
       await page.reload();
 
-      const toast = await page.locator(".page-message");
+      const toast = await page.locator(".page-message-wrapper");
       await clickUpdateWebAndConfBtns();
 
       await expect(toast).toHaveText(constants.toast.WEB_UPDATE_SUCCESS_MSG);
