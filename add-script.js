@@ -115,8 +115,9 @@ function handleNavBtnClick(e) {
       showForm(e.target.dataset.form, e.target);
     });
   } else {
-    // document.startViewTransition(() => {})
-    showForm(e.target.dataset.form, e.target);
+    document.startViewTransition(() => {
+      showForm(e.target.dataset.form, e.target);
+    });
     // on the initial load, display the increment location option and the main element
     initialShowForm(mainEl);
     initialLoad = false;
@@ -449,7 +450,7 @@ export async function handleRecordsForm(e) {
   const currPage = document.title;
   // disable the form until the submit is complete to prevent resending the same item
   const currForm = e.target;
-  utils.makeInert(currForm, false);
+  utils.makeInert(currForm, true);
 
   const formData = new FormData(recordsForm);
 

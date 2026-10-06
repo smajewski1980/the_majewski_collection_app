@@ -2,7 +2,6 @@ import utils from "./utils.js";
 import constants from "./constants.js";
 const sessionList = document.getElementById("session-list");
 const toastWrapper = document.querySelector(".page-message-wrapper");
-let isToastShowing = false; //maybe dont need this after the toast refactor
 
 /**
  * this takes the current forms id string and returns a class string for styling
