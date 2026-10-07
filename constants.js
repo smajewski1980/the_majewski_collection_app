@@ -1,25 +1,26 @@
 const constants = {
   toast: {
-    ADD_SUCCESS_MSG: "item successfully added",
+    ADD_SUCCESS_MSG: "Item has been successfully added.",
     WEB_UPDATE_SUCCESS_MSG: "The data for the web catalog has been updated.",
-    UPDATE_SUCCESS_MSG: "item successfully updated",
+    UPDATE_SUCCESS_MSG: "Item has been successfully updated.",
     UPDATE_DB_ERR_MSG: "Please check your fields, no rows have been updated.",
     DELETE_CONFIRM_MSG: "Are you sure you want to delete this item?",
     DELETE_ABORT_MSG: "Delete aborted.",
     valErr: {
       NO_EMPTY_FIELDS_MSG: "All fields must be filled out.",
-      YEAR_FORMAT_MSG: "Year must be 4 digits",
+      YEAR_FORMAT_MSG: "Year must be 4 digits.",
       YEAR_TYPE_MSG: "Year must be a number.",
       NO_TRACKS_MSG: "Please add some tracks.",
       LOCATION_INVALID_MSG: "Location field does not contain a valid value.",
       NO_LOC_SEL_INCR_MSG: "Select a location to increment first.",
       NO_INCR_AVAIL_MSG: "That location can not be incremented.",
-      NO_ACTIVE_FORM_MSG: "Please load a format's entry form first.",
+      NO_ACTIVE_FORM_MSG: "Please load a form first.",
       FORM_MISMATCH_MSG:
         "The active form does not match the format of the last entry.",
-      TRACK_FORMAT_MSG: "Check your track data. Must be <artist>|<title>.",
-      NO_ARTIST_MSG: "All tracks must have an artist",
-      NO_TRACKNAME_MSG: "All tracks must have a track name",
+      TRACK_FORMAT_MSG:
+        "Check your track data, must be formatted <artist>|<title>.",
+      NO_ARTIST_MSG: "All tracks must have an artist.",
+      NO_TRACKNAME_MSG: "All tracks must have a track name.",
       UPDATE_NO_ID_MSG: "Please enter an id to update.",
       UPDATE_NO_SEL_FORMAT_MSG: "Please select a format to update an item.",
       LOOKUP_NO_FIELD_MSG: "Please select a field to search.",

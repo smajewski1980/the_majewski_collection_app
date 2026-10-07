@@ -75,7 +75,7 @@ test.describe("UPDATE ITEMS", () => {
       let checkbox;
 
       test.beforeAll(async () => {
-        checkbox = await page.getByRole("checkbox");
+        checkbox = await page.locator("#increment-location");
       });
 
       async function setup() {
