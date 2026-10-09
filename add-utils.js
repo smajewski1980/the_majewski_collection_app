@@ -291,9 +291,7 @@ export async function isLocValValid(locVal, validArr) {
   const addPage = constants.pageTitle.ADD_PAGE_TITLE;
   const updatePage = constants.pageTitle.UPDATE_PAGE_TITLE;
   const currPage = document.title;
-  const res = await getCurrentLocations.getCurrentLocations(
-    "getCurrentLocations",
-  );
+  const res = await getAllLocations.getAllLocations("getAllLocations");
 
   if (currPage === addPage && validArr.includes(locVal)) {
     return true;

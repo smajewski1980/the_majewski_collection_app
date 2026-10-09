@@ -16,6 +16,10 @@ contextBridge.exposeInMainWorld("getCurrentLocations", {
   getCurrentLocations: (channel, data) => ipcRenderer.invoke(channel, data),
 });
 
+contextBridge.exposeInMainWorld("getAllLocations", {
+  getAllLocations: (channel, data) => ipcRenderer.invoke(channel, data),
+});
+
 contextBridge.exposeInMainWorld("getTotalItemQty", {
   getTotalItemQty: (channel, data) => ipcRenderer.invoke(channel, data),
 });

@@ -1,4 +1,5 @@
 import { toasty, getFormClassStr } from "./add-utils.js";
+import constants from "./constants.js";
 
 /**
  * filters a datalist to only have options that start with a given value
@@ -87,6 +88,8 @@ function handlePopulateListForCurrForm() {
  * @returns {void}
  */
 function addCustomDatalistListeners(input, datalist) {
+  // get all Inputs for the enter/tab listener
+  const allInputs = Array.from(document.querySelectorAll("input"));
   // when  the input gains focus, populate and show the datalist
   input.addEventListener("focus", (e) => {
     handlePopulateListForCurrForm();
@@ -148,7 +151,17 @@ function addCustomDatalistListeners(input, datalist) {
 
       // if an invalid input val is submitted
       if (!options[currOptionIdx]?.value) {
-        toasty("that is not a valid option", null);
+        // if we update a location that is stale, bypass the dropdowns error and focus the next element
+        if (document.title === constants.pageTitle.UPDATE_PAGE_TITLE) {
+          // find index of current input
+          const currentIndex = allInputs.indexOf(e.target);
+          // focus next input
+          allInputs[currentIndex + 1].focus();
+
+          return;
+        }
+
+        toasty("that is not a valid location option", null);
         currOptionIdx = -1;
         return;
       }
