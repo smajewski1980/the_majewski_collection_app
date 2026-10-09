@@ -56,6 +56,7 @@ const constants = {
     VALID_SINGLES_TRACK_2: "trackname 2",
     VALID_TRACKNAME: "Test Trackname",
     VALID_TRACKNAME_2: "Test Trackname 2",
+    // VALID_STALE_LOCATION: "", hopefully we can find one that works for all or make a few
     MOCK_CD_DATA: {
       id: "id: 4747",
       artist: "MOCK CD MAIN ARTIST",

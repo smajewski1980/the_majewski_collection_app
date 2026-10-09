@@ -6,7 +6,7 @@
   background: var(--body-bg);
   font-family: var(--reg-font);
   display: grid;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   transition:
     background-color 200ms,
     color 200ms;
@@ -220,6 +220,24 @@
       width: 8rem;
     }
 
+    .form-groups-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 93%;
+    }
+
+    .form-group:last-of-type {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-group:last-of-type textarea {
+      flex-grow: 1;
+      resize: none;
+    }
+
     .form-group {
       position: relative;
 
@@ -250,6 +268,10 @@
           accent-color: light-dark(var(--clr-cd-comps));
         }
       }
+
+      textarea {
+        height: 9lh;
+      }
     }
 
     #cd-singles-form.active-form {
@@ -272,6 +294,9 @@
           color: light-dark(var(--clr-cd-singles));
           accent-color: light-dark(var(--clr-cd-singles));
         }
+      }
+      textarea {
+        height: 6lh;
       }
     }
 
@@ -332,9 +357,10 @@
       }
 
       .conditions-wrapper {
-        display: flex;
+        /* display: flex; */
         justify-content: center;
         gap: 1rem;
+        margin-inline: auto;
       }
 
       .form-group:has(#records-label) {
@@ -415,7 +441,7 @@
         select {
           field-sizing: content;
           min-width: 50%;
-          max-width: 95%;
+          max-width: 90%;
         }
 
         input:focus-visible,
