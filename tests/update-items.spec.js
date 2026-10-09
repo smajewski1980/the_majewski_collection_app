@@ -603,6 +603,8 @@ test.describe("UPDATE ITEMS", () => {
         constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
       );
     });
+
+    test.skip("updates the item if given a non current valid cd-comp location", () => {});
   });
 
   test.describe("CD SINGLES", () => {
@@ -1113,6 +1115,8 @@ test.describe("UPDATE ITEMS", () => {
         new RegExp(constants.data.CDS_TEST_LOC_VAL_W_NUM),
       );
     });
+
+    test.skip("updates the item if given a non current valid cds-main location", () => {});
   });
 
   test.describe("RECORDS", () => {
@@ -1354,6 +1358,8 @@ test.describe("UPDATE ITEMS", () => {
         new RegExp(constants.data.CDS_TEST_LOC_VAL_W_NUM),
       );
     });
+
+    test.skip("updates the item if given a non current valid records location", () => {});
 
     test("updates the item when an updated year is submitted", async () => {
       const updatedYear = "1234";
@@ -1663,6 +1669,8 @@ test.describe("UPDATE ITEMS", () => {
         new RegExp(constants.data.CDS_TEST_LOC_VAL_W_NUM),
       );
     });
+
+    test.skip("updates the item if given a non current valid tapes location", () => {});
 
     test("updates the item when an updated year is submitted", async () => {
       const updatedYear = "1234";
