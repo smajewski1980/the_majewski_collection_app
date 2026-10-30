@@ -9,7 +9,7 @@ async function handleUpdateWeb(e) {
   try {
     if (dialog) dialog.close();
 
-    // 1. Setup the real-time listener first!
+    // 1. Setup the real-time listener first
     const removeListener = window.serverToast.onToastMessage((res) => {
       if (res === "MESSAGE COMPLETE") {
         console.log("Stream finished. Cleaning up listeners.");
@@ -17,7 +17,7 @@ async function handleUpdateWeb(e) {
         toasty(constants.toast.WEB_UPDATE_SUCCESS_MSG, "green", 10000);
       } else {
         console.log("Processing message:", res);
-        toasty(res, "green", 10000); // Logs now pop up one-by-one as they happen!
+        toasty(res, "green", 10000); // Logs now pop up one-by-one as they happen
       }
     });
 
