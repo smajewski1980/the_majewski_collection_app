@@ -582,6 +582,15 @@ test.describe("UPDATE ITEMS", () => {
       await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
     });
 
+    test("updates the item if given a non current valid cd-comp location", async () => {
+      const locationInput = await activeForm.getByRole("textbox", {
+        name: "location",
+      });
+      await locationInput.fill(constants.data.VALID_STALE_LOCATION_CD_COMPS);
+      await submitUpdateBtn.click();
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
+
     test("throws toast when an updated invalid location is entered", async () => {
       const locationInput = await activeForm.getByRole("textbox", {
         name: "location",
@@ -603,8 +612,6 @@ test.describe("UPDATE ITEMS", () => {
         constants.toast.valErr.NO_EMPTY_FIELDS_MSG,
       );
     });
-
-    test.skip("updates the item if given a non current valid cd-comp location", () => {});
   });
 
   test.describe("CD SINGLES", () => {
@@ -1116,7 +1123,12 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test.skip("updates the item if given a non current valid cds-main location", () => {});
+    test("updates the item if given a non current valid cds-main location", async () => {
+      await locationInput.fill(constants.data.VALID_STALE_LOCATION_CDS);
+      await submitUpdateBtn.click();
+
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
   });
 
   test.describe("RECORDS", () => {
@@ -1359,7 +1371,11 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test.skip("updates the item if given a non current valid records location", () => {});
+    test("updates the item if given a non current valid records location", async () => {
+      await locationInput.fill(constants.data.VALID_STALE_LOCATION_RECORDS);
+      await submitUpdateBtn.click();
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
 
     test("updates the item when an updated year is submitted", async () => {
       const updatedYear = "1234";
@@ -1670,7 +1686,11 @@ test.describe("UPDATE ITEMS", () => {
       );
     });
 
-    test.skip("updates the item if given a non current valid tapes location", () => {});
+    test("updates the item if given a non current valid tapes location", async () => {
+      await locationInput.fill(constants.data.VALID_STALE_LOCATION_TAPES);
+      await submitUpdateBtn.click();
+      await expect(toast).toHaveText(constants.toast.UPDATE_SUCCESS_MSG);
+    });
 
     test("updates the item when an updated year is submitted", async () => {
       const updatedYear = "1234";
