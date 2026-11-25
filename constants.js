@@ -1,7 +1,7 @@
 const constants = {
   toast: {
     ADD_SUCCESS_MSG: "Item has been successfully added.",
-    WEB_UPDATE_SUCCESS_MSG: "The data for the web catalog has been updated.",
+    WEB_UPDATE_SUCCESS_MSG: "✅ The data for the web catalog has been updated.",
     UPDATE_SUCCESS_MSG: "Item has been successfully updated.",
     UPDATE_DB_ERR_MSG: "Please check your fields, no rows have been updated.",
     DELETE_CONFIRM_MSG: "Are you sure you want to delete this item?",

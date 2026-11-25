@@ -14,10 +14,10 @@ async function handleUpdateWeb(e) {
       if (res === "MESSAGE COMPLETE") {
         console.log("Stream finished. Cleaning up listeners.");
         removeListener();
-        toasty(constants.toast.WEB_UPDATE_SUCCESS_MSG, "green", 10000);
+        toasty(constants.toast.WEB_UPDATE_SUCCESS_MSG, "green", 7000);
       } else {
         console.log("Processing message:", res);
-        toasty(res, "green", 10000); // Logs now pop up one-by-one as they happen
+        toasty(res, "green", 5000); // Logs now pop up one-by-one as they happen
       }
     });
 

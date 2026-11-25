@@ -13,7 +13,7 @@ async function handleWebChangesGit(e) {
     await flushIPC();
   };
 
-  if (process.env.TEST_OUTPUT_PATH) {
+  if (process.env.DB_NAME === "test_music_catalog") {
     console.log("THIS IS A TEST, NO GIT COMMANDS WERE RUN");
     await sendLog("MESSAGE COMPLETE");
     return;
@@ -51,32 +51,34 @@ async function handleWebChangesGit(e) {
     );
 
     if (!status.trim() && isCherry) {
-      await sendLog("🚀 Found leftover commits. Pushing now...");
+      await sendLog("Found leftover commits. Pushing now...");
       await execFileAsync("git", ["push"], execOptions);
       await sendLog(
-        "🎉 Push of leftover commits was successful! CI/CD deployment triggered.",
+        "✅ Push of leftover commits was successful! A new deploy has been triggered.",
       );
       await sendLog("MESSAGE COMPLETE");
       return;
     }
 
     if (!status.trim()) {
-      await sendLog("✅ No data changes detected. CI/CD trigger skipped.");
+      await sendLog(
+        "No data changes detected. New deployment trigger skipped.",
+      );
       await sendLog("MESSAGE COMPLETE");
       return;
     }
 
-    await sendLog("📦 Staging updated JSON files...");
+    await sendLog("Staging updated data files...");
     await execFileAsync("git", ["add", "*.json"], execOptions);
 
-    await sendLog("✍️ Creating automated commit...");
+    await sendLog("Creating automated commit...");
     const commitMessage = `data: automated json update [${new Date().toISOString()}]`;
     await execFileAsync("git", ["commit", "-m", commitMessage], execOptions);
 
-    await sendLog("🚀 Pushing to remote to trigger CI/CD pipeline...");
+    await sendLog("Pushing to remote to trigger new deployment...");
     await execFileAsync("git", ["push"], execOptions);
 
-    await sendLog("🎉 Push successful! CI/CD deployment triggered.");
+    await sendLog("✅ Push successful! New deployment has been triggered.");
     await sendLog("MESSAGE COMPLETE");
   } catch (error) {
     console.error("❌ Automated Git sync failed!");
