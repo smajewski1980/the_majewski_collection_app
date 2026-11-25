@@ -5,6 +5,7 @@ const updateButton = document.getElementById("btn-update-confirm");
 
 async function handleUpdateWeb(e) {
   const dialog = e.target.closest("dialog");
+  let noChange = false;
 
   try {
     if (dialog) dialog.close();
@@ -14,8 +15,13 @@ async function handleUpdateWeb(e) {
       if (res === "MESSAGE COMPLETE") {
         console.log("Stream finished. Cleaning up listeners.");
         removeListener();
-        toasty(constants.toast.WEB_UPDATE_SUCCESS_MSG, "green", 7000);
+
+        if (!noChange)
+          toasty(constants.toast.WEB_UPDATE_SUCCESS_MSG, "green", 7000);
       } else {
+        if (res === "No data changes detected. New deployment trigger skipped.")
+          noChange = true;
+
         console.log("Processing message:", res);
         toasty(res, "green", 5000); // Logs now pop up one-by-one as they happen
       }
