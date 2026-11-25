@@ -139,7 +139,6 @@ app.on("window-all-closed", () => {
 });
 
 // create backup logs of the session data before exit
-// still have to change to not log the test/dev sessions, only legit ones
 app.on("will-quit", () => {
   if (
     sessionStore.env === "test_music_catalog" ||
