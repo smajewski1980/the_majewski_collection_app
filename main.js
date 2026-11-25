@@ -141,10 +141,18 @@ app.on("window-all-closed", () => {
 // create backup logs of the session data before exit
 // still have to change to not log the test/dev sessions, only legit ones
 app.on("will-quit", () => {
-  const now = new Date(Date.now());
+  if (
+    sessionStore.env === "test_music_catalog" ||
+    !sessionStore.currAdded.length
+  )
+    return;
+
+  const now = new Date();
+  const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+  const localISOTime = new Date(now.getTime() - offsetMs).toISOString();
   const newDir = "session-logs";
   const data = JSON.stringify(sessionStore);
-  const filenameSuffix = now.toISOString().split(".")[0].replaceAll(":", "_");
+  const filenameSuffix = localISOTime.split(".")[0].replaceAll(":", "_");
   const filepath = path.join(
     app.getPath("userData"),
     newDir,
